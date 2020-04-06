@@ -1,0 +1,5 @@
+rootProject.name = 'java-clientlibs'
+include 'java8'
+include 'java11'
+include 'java-common-artifacts'
+

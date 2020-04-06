@@ -1,0 +1,5 @@
+{
+  "status": 422,
+  "message": "Input domain parameter (\"fullcontact\") does not contain a valid domain.",
+  "requestId": "23355ab5-76a6-4618-b63e-34f7236b6e2b"
+}
