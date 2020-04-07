@@ -12,7 +12,9 @@ version '1.0-SNAPSHOT'
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     repositories {
         mavenCentral()
@@ -58,7 +60,54 @@ subprojects {
         publications {
             mavenjava(MavenPublication) { publication ->
                 project.shadow.component(publication)
+
+                artifact javadocJar
+                artifact sourcesJar
+
+                pom {
+                    name = 'Client libraries for FullContact v3 APIs'
+                    description = 'Client libraries for FullContact v3 APIs'
+                    url = 'https://github.com/fullcontact/fullcontact-java-client'
+                    scm {
+                        url = 'https://github.com/fullcontact/fullcontact-java-client'
+                        connection = 'scm:git:git://github.com/fullcontact/fullcontact-java-client.git'
+                    }
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = 'FullContact'
+                            organization = 'FullContact'
+                            organizationUrl = 'https://www.fullcontact.com/'
+                        }
+                    }
+                    organization {
+                        name = 'FullContact'
+                        url = 'https://www.fullcontact.com/'
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                name = 'sonatype'
+                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
             }
         }
     }
+
+    signing {
+        sign publishing.publications
+    }
 }
+
