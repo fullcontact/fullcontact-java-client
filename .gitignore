@@ -57,3 +57,4 @@ Temporary Items
 /java11/build/
 /java-common-artifacts/build/
 /Javadocs/
+/gradle.properties
