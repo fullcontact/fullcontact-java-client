@@ -1,9 +1,6 @@
 ## Java Client
 A Java client for the FullContact V3 API.
 
-## Add to your Project
-:TODO
-
 ## Working with FullContact Client
 FullContact client supports v3 Enrich APIs which are super simplified to easily 
 enrich Person and Company data. All the API requests are over HTTPS using POST method 
