@@ -1,8 +1,46 @@
 ## Java Client
-A Java client for the FullContact V3 API.
+The official [FullContact](https://www.fullcontact.com/) Java Client Library for the FullContact V3 APIs.
+
+- [Java11+](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11) client 
+- [Java8+](https://github.com/fullcontact/fullcontact-java-client/tree/master/java8) client.
+
 
 ## Add to your Project
-:TODO
+
+### Gradle users
+
+Add this dependency to your project's build file:
+
+- Java11+
+```groovy
+implementation 'com.fullcontact.client:java11:1.0.0'
+```
+- Java8+
+```groovy
+implementation 'com.fullcontact.client:java8:1.0.0'
+```
+
+### Maven users
+
+Add this dependency to your project's POM:
+
+- Java11+
+```xml
+<dependency>
+  <groupId>com.fullcontact.client</groupId>
+  <artifactId>java11</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+- Java8+
+```xml
+<dependency>
+  <groupId>com.fullcontact.client</groupId>
+  <artifactId>java8</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 
 ## Working with FullContact Client
 FullContact client supports v3 Enrich APIs which are super simplified to easily 
@@ -22,5 +60,3 @@ and common snags is still important.
 
 Once you’re on board with the API behavior, FullContact Client library should simplify 
 your integration.
-Click here for [Java11+](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11) client 
-or [Java8+](https://github.com/fullcontact/fullcontact-java-client/tree/master/java8) client.

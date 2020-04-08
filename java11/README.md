@@ -1,6 +1,34 @@
 # Java11 Client
 API Clients for FullContact on V3 APIs supports Java11+
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.fullcontact.client/java11)](https://mvnrepository.com/artifact/com.fullcontact.client/java11)
+
+## Add to your Project
+
+### Requirements
+
+- Java 11 or later
+
+### Gradle users
+
+Add this dependency to your project's build file:
+
+```groovy
+implementation 'com.fullcontact.client:java11:1.0.0'
+```
+
+### Maven users
+
+Add this dependency to your project's POM:
+
+```xml
+<dependency>
+  <groupId>com.fullcontact.client</groupId>
+  <artifactId>java11</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 ## Dependencies
 
 __[Gson](https://github.com/google/gson)__ v2.8.6: Java library to convert Java Objects to JSON

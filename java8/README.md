@@ -1,6 +1,34 @@
 # Java8 Client
 API Clients for FullContact on V3 APIs supports Java8+
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.fullcontact.client/java8)](https://mvnrepository.com/artifact/com.fullcontact.client/java8)
+
+## Add to your Project
+
+### Requirements
+
+- Java 1.8 or later
+
+### Gradle users
+
+Add this dependency to your project's build file:
+
+```groovy
+implementation 'com.fullcontact.client:java8:1.0.0'
+```
+
+### Maven users
+
+Add this dependency to your project's POM:
+
+```xml
+<dependency>
+  <groupId>com.fullcontact.client</groupId>
+  <artifactId>java8</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 ## Dependencies
 
 __[Retrofit2](https://github.com/square/retrofit/)__ v2.7.0 : HTTP Client used for Java 8
