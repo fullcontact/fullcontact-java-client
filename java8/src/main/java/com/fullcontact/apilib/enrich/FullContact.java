@@ -11,6 +11,8 @@ import com.fullcontact.apilib.models.Response.CompanyResponse;
 import com.fullcontact.apilib.models.Response.CompanySearchResponse;
 import com.fullcontact.apilib.models.Response.CompanySearchResponseList;
 import com.fullcontact.apilib.models.Response.PersonResponse;
+import com.fullcontact.apilib.retry.DefaultRetryHandler;
+import com.fullcontact.apilib.retry.RetryHandler;
 import com.fullcontact.apilib.test.MockInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -42,10 +44,10 @@ public class FullContact implements AutoCloseable {
   private final OkHttpClient httpClient;
   private final FullContactApi client;
   private final CredentialsProvider credentialsProvider;
+  private final RetryHandler retryHandler;
   private final Map<String, String> headers;
   private final String userAgent;
   private final long connectTimeoutMillis;
-  private final int retryAttempts, retryDelayMillis;
   private final ScheduledExecutorService executor;
   private static final Gson gson = new Gson();
   private static final Type companySearchResponseType =
@@ -59,8 +61,7 @@ public class FullContact implements AutoCloseable {
    * @param headers custom client headers
    * @param userAgent client UserAgent
    * @param connectTimeoutMillis connection timout for all requests
-   * @param retryAttempts number of retry attempts allowed
-   * @param retryDelayMillis delay time for each retry
+   * @param retryHandler RetryHandler specified for client
    */
   @Builder
   public FullContact(
@@ -68,23 +69,15 @@ public class FullContact implements AutoCloseable {
       Map<String, String> headers,
       String userAgent,
       long connectTimeoutMillis,
-      int retryAttempts,
-      int retryDelayMillis) {
+      RetryHandler retryHandler) {
     this.credentialsProvider = credentialsProvider;
+    this.retryHandler = retryHandler;
     this.headers = headers != null ? Collections.unmodifiableMap(headers) : null;
     this.userAgent = userAgent;
     this.httpClient = this.configureHTTPClientBuilder().build();
     this.client = this.configureRetrofit().create(FullContactApi.class);
     this.connectTimeoutMillis = connectTimeoutMillis > 0 ? connectTimeoutMillis : 3000;
-    this.retryDelayMillis = retryDelayMillis > 0 ? retryDelayMillis : 1000;
     this.executor = new ScheduledThreadPoolExecutor(5);
-    if (retryAttempts > 0 && retryAttempts <= 5) {
-      this.retryAttempts = retryAttempts;
-    } else if (retryAttempts > 5) {
-      this.retryAttempts = 5;
-    } else {
-      this.retryAttempts = 1;
-    }
   }
   /**
    * Method to build and create OkHttpClient. All the custom headers and auth key is added here.
@@ -137,8 +130,8 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * Method for Person Enrich. It converts the request to json, send the Asynchronous request using
-   * HTTP POST method. It also handles retries based on retry condition.
+   * Method for Person Enrich without any custom RetryHandler, it passes the request to enrich
+   * method with retryHandler specified at Fullcontact Client level.
    *
    * @param personRequest original request sent by client
    * @return completed CompletableFuture with PersonResponse
@@ -148,6 +141,21 @@ public class FullContact implements AutoCloseable {
    */
   public CompletableFuture<PersonResponse> enrich(PersonRequest personRequest)
       throws FullContactException {
+    return this.enrich(personRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Person Enrich. It converts the request to json, send the Asynchronous request using
+   * HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with PersonResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<PersonResponse> enrich(
+      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
     }
@@ -159,17 +167,42 @@ public class FullContact implements AutoCloseable {
         (httpResponse, throwable) -> {
           if (throwable != null) {
             handleAutoRetryForPersonEnrich(
-                responseCompletableFutureResult, httpResponse, personRequest, throwable, 0);
-          } else if (!shouldRetry(httpResponse.code())) {
+                responseCompletableFutureResult,
+                httpResponse,
+                personRequest,
+                throwable,
+                0,
+                retryHandler);
+          } else if (!retryHandler.shouldRetry(httpResponse.code())) {
             responseCompletableFutureResult.complete(httpResponse);
           } else {
             handleAutoRetryForPersonEnrich(
-                responseCompletableFutureResult, httpResponse, personRequest, null, 0);
+                responseCompletableFutureResult,
+                httpResponse,
+                personRequest,
+                null,
+                0,
+                retryHandler);
           }
           return null;
         });
 
     return responseCompletableFutureResult.thenApply(FullContact::getPersonResponse);
+  }
+
+  /**
+   * Method for Company Enrich without any custom RetryHandler, it passes the request to enrich
+   * method with retryHandler specified at Fullcontact Client level.
+   *
+   * @param companyRequest original request sent by client
+   * @return completed CompletableFuture with CompanyResponse
+   * @throws FullContactException exception if client is shutdown or request validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<CompanyResponse> enrich(CompanyRequest companyRequest)
+      throws FullContactException {
+    return this.enrich(companyRequest, this.retryHandler);
   }
 
   /**
@@ -182,8 +215,8 @@ public class FullContact implements AutoCloseable {
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
-  public CompletableFuture<CompanyResponse> enrich(CompanyRequest companyRequest)
-      throws FullContactException {
+  public CompletableFuture<CompanyResponse> enrich(
+      CompanyRequest companyRequest, RetryHandler retryHandler) throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
     }
@@ -196,16 +229,41 @@ public class FullContact implements AutoCloseable {
         (httpResponse, throwable) -> {
           if (throwable != null) {
             handleAutoRetryForCompanyEnrich(
-                responseCompletableFutureResult, httpResponse, companyRequest, throwable, 0);
-          } else if (!shouldRetry(httpResponse.code())) {
+                responseCompletableFutureResult,
+                httpResponse,
+                companyRequest,
+                throwable,
+                0,
+                retryHandler);
+          } else if (!retryHandler.shouldRetry(httpResponse.code())) {
             responseCompletableFutureResult.complete(httpResponse);
           } else {
             handleAutoRetryForCompanyEnrich(
-                responseCompletableFutureResult, httpResponse, companyRequest, null, 0);
+                responseCompletableFutureResult,
+                httpResponse,
+                companyRequest,
+                null,
+                0,
+                retryHandler);
           }
           return null;
         });
     return responseCompletableFutureResult.thenApply(FullContact::getCompanyResponse);
+  }
+
+  /**
+   * Method for Company Search without any custom RetryHandler, it passes the request to search
+   * method with retryHandler specified at Fullcontact Client level.
+   *
+   * @param companyRequest original request sent by client
+   * @return completed CompletableFuture with CompanySearchResponseList
+   * @throws FullContactException exception if client is shutdown or request validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<CompanySearchResponseList> search(CompanyRequest companyRequest)
+      throws FullContactException {
+    return this.search(companyRequest, this.retryHandler);
   }
 
   /**
@@ -218,8 +276,8 @@ public class FullContact implements AutoCloseable {
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
-  public CompletableFuture<CompanySearchResponseList> search(CompanyRequest companyRequest)
-      throws FullContactException {
+  public CompletableFuture<CompanySearchResponseList> search(
+      CompanyRequest companyRequest, RetryHandler retryHandler) throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
     }
@@ -236,12 +294,18 @@ public class FullContact implements AutoCloseable {
                 companySearchResponse,
                 companyRequest,
                 throwable,
-                0);
-          } else if (!shouldRetry(companySearchResponse.code())) {
+                0,
+                retryHandler);
+          } else if (!retryHandler.shouldRetry(companySearchResponse.code())) {
             responseCompletableFutureResult.complete(companySearchResponse);
           } else {
             handleAutoRetryForCompanySearch(
-                responseCompletableFutureResult, companySearchResponse, companyRequest, null, 0);
+                responseCompletableFutureResult,
+                companySearchResponse,
+                companyRequest,
+                null,
+                0,
+                retryHandler);
           }
           return null;
         });
@@ -320,15 +384,6 @@ public class FullContact implements AutoCloseable {
     companySearchResponseList.statusCode = response.code();
     return companySearchResponseList;
   }
-  /**
-   * Method specifies the retry condition based on HttpResponse status code
-   *
-   * @param statusCode httpResponse status code
-   * @return true if should retry
-   */
-  protected static boolean shouldRetry(int statusCode) {
-    return (statusCode == 429 || statusCode == 503);
-  }
 
   /**
    * This method handles Auto Retry in case retry condition is true. It keeps retrying till the
@@ -350,8 +405,9 @@ public class FullContact implements AutoCloseable {
       Response<PersonResponse> personResponse,
       PersonRequest personRequest,
       Throwable throwable,
-      int retryAttemptsDone) {
-    if (retryAttemptsDone < this.retryAttempts) {
+      int retryAttemptsDone,
+      RetryHandler retryHandler) {
+    if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
       retryAttemptsDone++;
       int finalRetryAttemptsDone = retryAttemptsDone;
       this.executor.schedule(
@@ -366,8 +422,9 @@ public class FullContact implements AutoCloseable {
                         retryPersonResponse,
                         personRequest,
                         retryThrowable,
-                        finalRetryAttemptsDone);
-                  } else if (!shouldRetry(retryPersonResponse.code())) {
+                        finalRetryAttemptsDone,
+                        retryHandler);
+                  } else if (!retryHandler.shouldRetry(retryPersonResponse.code())) {
                     responseCompletableFutureResult.complete(retryPersonResponse);
                   } else {
                     handleAutoRetryForPersonEnrich(
@@ -375,14 +432,15 @@ public class FullContact implements AutoCloseable {
                         retryPersonResponse,
                         personRequest,
                         null,
-                        finalRetryAttemptsDone);
+                        finalRetryAttemptsDone,
+                        retryHandler);
                   }
                   return null;
                 });
           },
-          this.retryDelayMillis * (long) Math.pow(2, retryAttemptsDone - 1),
+          retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
           TimeUnit.MILLISECONDS);
-    } else if (throwable != null && retryAttemptsDone == this.retryAttempts) {
+    } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
       responseCompletableFutureResult.completeExceptionally(throwable);
     } else {
       responseCompletableFutureResult.complete(personResponse);
@@ -409,8 +467,9 @@ public class FullContact implements AutoCloseable {
       Response<CompanyResponse> companyResponse,
       CompanyRequest companyRequest,
       Throwable throwable,
-      int retryAttemptsDone) {
-    if (retryAttemptsDone < this.retryAttempts) {
+      int retryAttemptsDone,
+      RetryHandler retryHandler) {
+    if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
       retryAttemptsDone++;
       int finalRetryAttemptsDone = retryAttemptsDone;
       this.executor.schedule(
@@ -425,8 +484,9 @@ public class FullContact implements AutoCloseable {
                         retryHttpResponse,
                         companyRequest,
                         retryThrowable,
-                        finalRetryAttemptsDone);
-                  } else if (!shouldRetry(retryHttpResponse.code())) {
+                        finalRetryAttemptsDone,
+                        retryHandler);
+                  } else if (!retryHandler.shouldRetry(retryHttpResponse.code())) {
                     responseCompletableFutureResult.complete(retryHttpResponse);
                   } else {
                     handleAutoRetryForCompanyEnrich(
@@ -434,14 +494,15 @@ public class FullContact implements AutoCloseable {
                         retryHttpResponse,
                         companyRequest,
                         null,
-                        finalRetryAttemptsDone);
+                        finalRetryAttemptsDone,
+                        retryHandler);
                   }
                   return null;
                 });
           },
-          this.retryDelayMillis * (long) Math.pow(2, retryAttemptsDone - 1),
+          retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
           TimeUnit.MILLISECONDS);
-    } else if (throwable != null && retryAttemptsDone == this.retryAttempts) {
+    } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
       responseCompletableFutureResult.completeExceptionally(throwable);
     } else {
       responseCompletableFutureResult.complete(companyResponse);
@@ -467,8 +528,9 @@ public class FullContact implements AutoCloseable {
       Response<JsonElement> companySearchResponse,
       CompanyRequest companyRequest,
       Throwable throwable,
-      int retryAttemptsDone) {
-    if (retryAttemptsDone < this.retryAttempts) {
+      int retryAttemptsDone,
+      RetryHandler retryHandler) {
+    if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
       retryAttemptsDone++;
       int finalRetryAttemptsDone = retryAttemptsDone;
       this.executor.schedule(
@@ -483,8 +545,9 @@ public class FullContact implements AutoCloseable {
                         retryHttpResponse,
                         companyRequest,
                         retryThrowable,
-                        finalRetryAttemptsDone);
-                  } else if (!shouldRetry(retryHttpResponse.code())) {
+                        finalRetryAttemptsDone,
+                        retryHandler);
+                  } else if (!retryHandler.shouldRetry(retryHttpResponse.code())) {
                     responseCompletableFutureResult.complete(retryHttpResponse);
                   } else {
                     handleAutoRetryForCompanySearch(
@@ -492,14 +555,15 @@ public class FullContact implements AutoCloseable {
                         retryHttpResponse,
                         companyRequest,
                         null,
-                        finalRetryAttemptsDone);
+                        finalRetryAttemptsDone,
+                        retryHandler);
                   }
                   return null;
                 });
           },
-          this.retryDelayMillis * (long) Math.pow(2, retryAttemptsDone - 1),
+          retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
           TimeUnit.MILLISECONDS);
-    } else if (throwable != null && retryAttemptsDone == this.retryAttempts) {
+    } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
       responseCompletableFutureResult.completeExceptionally(throwable);
     } else {
       responseCompletableFutureResult.complete(companySearchResponse);
@@ -542,17 +606,15 @@ public class FullContact implements AutoCloseable {
     public FullContact build() throws FullContactException {
       this.validate();
       return new FullContact(
-          credentialsProvider,
-          headers,
-          userAgent,
-          connectTimeoutMillis,
-          retryAttempts,
-          retryDelayMillis);
+          credentialsProvider, headers, userAgent, connectTimeoutMillis, retryHandler);
     }
 
     private void validate() throws FullContactException {
       if (this.credentialsProvider == null) {
         this.credentialsProvider = new DefaultCredentialProvider();
+      }
+      if (this.retryHandler == null) {
+        this.retryHandler = new DefaultRetryHandler();
       }
     }
 
@@ -601,24 +663,13 @@ public class FullContact implements AutoCloseable {
     }
 
     /**
-     * Builder method to provide number of retry attempts that can be done in case of a failed
-     * response. Default value is 1
+     * Builder method to provide {@link com.fullcontact.apilib.retry.RetryHandler}
      *
-     * @param retryAttempts Number of retry Attempts
+     * @param retryHandler custom RetryHandler
      * @return FullContactBuilder
      */
-    public FullContactBuilder retryAttempts(int retryAttempts) {
-      this.retryAttempts = retryAttempts;
-      return this;
-    }
-    /**
-     * Builder method to provide delay time for each retry attempt. Default value is 1000ms
-     *
-     * @param retryDelayMillis Delay time in milliseconds before each retry request
-     * @return FullContactBuilder
-     */
-    public FullContactBuilder retryDelayMillis(int retryDelayMillis) {
-      this.retryDelayMillis = retryDelayMillis;
+    public FullContactBuilder retryHandler(RetryHandler retryHandler) {
+      this.retryHandler = retryHandler;
       return this;
     }
   }
