@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Date {
-  private Integer year, month, day;
+  private int year, month, day;
 }
