@@ -57,6 +57,29 @@ public class CompanySearchResponseTest {
   }
 
   @Test
+  public void companyResponseCustomRetryHandlerTest()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_071");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+    CompanyRequest companyRequest =
+        FullContact.buildCompanyRequest().companyName("fullcontact").build();
+    CompanySearchResponseList response =
+        fcTest.search(companyRequest, new CustomRetryHandler()).get();
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(200, response.getStatusCode());
+    Assert.assertEquals("OK", response.getMessage());
+    Assert.assertEquals(
+        "fullcontact.com", response.getCompanySearchResponses().get(0).getLookupDomain());
+    Assert.assertEquals(
+        "FullContact Inc.", response.getCompanySearchResponses().get(0).getOrgName());
+  }
+
+  @Test
   public void responseStatus400Test()
       throws FullContactException, InterruptedException, ExecutionException {
     CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");

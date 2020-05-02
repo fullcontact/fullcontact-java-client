@@ -61,4 +61,14 @@ public class FullContactClientTest {
       Assert.assertEquals("API Key can't be Empty", e.getMessage());
     }
   }
+
+  @Test
+  public void customRetryHandlerClientTest() throws FullContactException {
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(new StaticApiKeyCredentialProvider("api-key"))
+            .connectTimeoutMillis(2000)
+            .retryHandler(new CustomRetryHandler())
+            .build();
+  }
 }

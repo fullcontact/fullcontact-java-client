@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonRequestTest {
+public class ResolveRequestBuildTest {
   private static final Gson gson = new Gson();
 
   @Test

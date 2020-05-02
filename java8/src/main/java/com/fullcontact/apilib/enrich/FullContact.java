@@ -509,7 +509,7 @@ public class FullContact implements AutoCloseable {
     ResolveResponse resolveResponse;
     if (response.isSuccessful() && response.body() != null) {
       resolveResponse = gson.fromJson(response.body(), ResolveResponse.class);
-      if (response.code() == 200) {
+      if (response.code() == 200 || response.code() == 204) {
         resolveResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
       }
     } else {
