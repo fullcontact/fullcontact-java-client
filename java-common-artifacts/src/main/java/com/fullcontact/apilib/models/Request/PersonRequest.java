@@ -1,6 +1,7 @@
 package com.fullcontact.apilib.models.Request;
 
 import com.fullcontact.apilib.FullContactException;
+import com.fullcontact.apilib.GsonExclude;
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
@@ -19,11 +20,26 @@ import java.util.List;
 public class PersonRequest {
   @With private PersonName name;
   @With private Location location;
-  private String webhookUrl;
+  private String webhookUrl, recordId, personId;
   private Confidence confidence;
-  private boolean infer;
-  @Singular private List<String> phones, emails, dataFilters, maids;
+  @GsonExclude private boolean infer;
+  @Singular private List<String> phones;
+  @Singular private List<String> emails;
+  @Singular @GsonExclude private List<String> dataFilters;
+  @Singular private List<String> maids;
+
   @Singular private List<Profile> profiles;
+
+  /**
+   * Method to validate request for Identity map. It validates that personId should be null
+   *
+   * @throws FullContactException if domain is null or empty
+   */
+  public void validateForIdentityMap() throws FullContactException {
+    if (this.personId != null) {
+      throw new FullContactException("Invalid map request, person id must be empty");
+    }
+  }
 
   public static class PersonRequestBuilder {
     private boolean infer = true;
@@ -48,6 +64,8 @@ public class PersonRequest {
           name,
           location,
           webhookUrl,
+          recordId,
+          personId,
           confidence,
           infer,
           phones,

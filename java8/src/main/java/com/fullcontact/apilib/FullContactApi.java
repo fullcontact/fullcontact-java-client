@@ -1,10 +1,7 @@
 package com.fullcontact.apilib;
 
-import com.fullcontact.apilib.models.Request.CompanyRequest;
-import com.fullcontact.apilib.models.Request.PersonRequest;
-import com.fullcontact.apilib.models.Response.CompanyResponse;
-import com.fullcontact.apilib.models.Response.PersonResponse;
 import com.google.gson.JsonElement;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -18,11 +15,20 @@ import java.util.concurrent.CompletableFuture;
 public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_PERSON_ENRICH)
-  CompletableFuture<Response<PersonResponse>> personEnrich(@Body PersonRequest personRequest);
+  CompletableFuture<Response<JsonElement>> personEnrich(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_COMPANY_ENRICH)
-  CompletableFuture<Response<CompanyResponse>> companyEnrich(@Body CompanyRequest companyRequest);
+  CompletableFuture<Response<JsonElement>> companyEnrich(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_COMPANY_SEARCH)
-  CompletableFuture<Response<JsonElement>> companySearch(@Body CompanyRequest companyRequest);
+  CompletableFuture<Response<JsonElement>> companySearch(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_IDENTITY_MAP)
+  CompletableFuture<Response<JsonElement>> identityMap(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_IDENTITY_RESOLVE)
+  CompletableFuture<Response<JsonElement>> identityResolve(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_IDENTITY_DELETE)
+  CompletableFuture<Response<JsonElement>> identityDelete(@Body RequestBody body);
 }

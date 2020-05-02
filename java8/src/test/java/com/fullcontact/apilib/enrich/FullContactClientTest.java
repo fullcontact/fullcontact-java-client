@@ -14,12 +14,7 @@ public class FullContactClientTest {
     customHeader.put("Reporting-Key", "clientXYZ");
     try {
       FullContact fcTest =
-          FullContact.builder()
-              .retryDelayMillis(2000)
-              .retryAttempts(7)
-              .userAgent("user-Agent")
-              .headers(customHeader)
-              .build();
+          FullContact.builder().userAgent("user-Agent").headers(customHeader).build();
       fcTest.close();
     } catch (FullContactException fce) {
       Assert.assertEquals(
@@ -34,8 +29,6 @@ public class FullContactClientTest {
     FullContact fcTest =
         FullContact.builder()
             .credentialsProvider(new StaticApiKeyCredentialProvider("test-api-key"))
-            .retryDelayMillis(2000)
-            .retryAttempts(7)
             .userAgent("user-Agent")
             .headers(customHeader)
             .build();

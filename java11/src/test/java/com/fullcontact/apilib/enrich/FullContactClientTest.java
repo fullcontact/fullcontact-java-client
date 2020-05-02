@@ -8,48 +8,13 @@ import java.util.HashMap;
 
 public class FullContactClientTest {
 
-  /*@Test
-  public void clientBuildTestWithDefaultKey1() throws FullContactException {
-    HashMap<String, String> customHeader = new HashMap<>();
-    customHeader.put("Reporting-Key", "clientXYZ");
-    FullContact fcTest =
-        FullContact.builder()
-            .retryDelayMillis(2000)
-            .retryAttempts(4)
-            .userAgent("user-Agent")
-            .headers(customHeader)
-            .build();
-    fcTest.close();
-  }
-
-  @Test
-  public void clientBuildTestWithDefaultKey2() throws FullContactException {
-    HashMap<String, String> customHeader = new HashMap<>();
-    customHeader.put("Reporting-Key", "clientXYZ");
-    FullContact fcTest =
-        FullContact.builder()
-            .credentialsProvider(new DefaultCredentialProvider("FC_TEST_API_KEY"))
-            .retryDelayMillis(2000)
-            .retryAttempts(7)
-            .userAgent("user-Agent")
-            .headers(customHeader)
-            .build();
-
-    fcTest.close();
-  }*/
-
   @Test
   public void buildClientWithoutKeyTest() {
     HashMap<String, String> customHeader = new HashMap<>();
     customHeader.put("Reporting-Key", "clientXYZ");
     try {
       FullContact fcTest =
-          FullContact.builder()
-              .retryDelayMillis(2000)
-              .retryAttempts(7)
-              .userAgent("user-Agent")
-              .headers(customHeader)
-              .build();
+          FullContact.builder().userAgent("user-Agent").headers(customHeader).build();
       fcTest.close();
     } catch (FullContactException fce) {
       Assert.assertEquals(
@@ -64,8 +29,6 @@ public class FullContactClientTest {
     FullContact fcTest =
         FullContact.builder()
             .credentialsProvider(new StaticApiKeyCredentialProvider("test-api-key"))
-            .retryDelayMillis(2000)
-            .retryAttempts(7)
             .userAgent("user-Agent")
             .headers(customHeader)
             .build();

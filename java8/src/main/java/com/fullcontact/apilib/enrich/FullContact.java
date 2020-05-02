@@ -3,23 +3,23 @@ package com.fullcontact.apilib.enrich;
 import com.fullcontact.apilib.FCConstants;
 import com.fullcontact.apilib.FullContactApi;
 import com.fullcontact.apilib.FullContactException;
+import com.fullcontact.apilib.GsonExclude;
 import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.DefaultCredentialProvider;
 import com.fullcontact.apilib.models.Request.CompanyRequest;
 import com.fullcontact.apilib.models.Request.PersonRequest;
-import com.fullcontact.apilib.models.Response.CompanyResponse;
-import com.fullcontact.apilib.models.Response.CompanySearchResponse;
-import com.fullcontact.apilib.models.Response.CompanySearchResponseList;
-import com.fullcontact.apilib.models.Response.PersonResponse;
+import com.fullcontact.apilib.models.Response.*;
+import com.fullcontact.apilib.models.enums.FCApiEndpoint;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
 import com.fullcontact.apilib.test.MockInterceptor;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -35,9 +35,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The FullContact class represents FullContact client. It supports V3 Person Enrich, Company Enrich
- * and Company Search. It uses Retrofit for sending all requests. All requests are converted to JSON
- * and sent via POST method asynchronously
+ * The FullContact class represents FullContact client. It supports V3 Person Enrich, Company
+ * Enrich, Company Search and Resolve endpoints. It uses Retrofit for sending all requests. All
+ * requests are converted to JSON and sent via POST method asynchronously
  */
 public class FullContact implements AutoCloseable {
   private final String baseUrl = FCConstants.API_BASE_DEFAULT;
@@ -49,10 +49,26 @@ public class FullContact implements AutoCloseable {
   private final String userAgent;
   private final long connectTimeoutMillis;
   private final ScheduledExecutorService executor;
-  private static final Gson gson = new Gson();
+  private boolean isShutdown = false;
+  private static final MediaType JSONMediaType = MediaType.parse("application/json; charset=utf-8");
   private static final Type companySearchResponseType =
       new TypeToken<ArrayList<CompanySearchResponse>>() {}.getType();
-  private boolean isShutdown = false;
+  private static final Gson gson = new Gson();
+  private static final Gson gsonExclude =
+      new GsonBuilder()
+          .addSerializationExclusionStrategy(
+              new ExclusionStrategy() {
+                @Override
+                public boolean shouldSkipField(FieldAttributes f) {
+                  return f.getAnnotation(GsonExclude.class) != null;
+                }
+
+                @Override
+                public boolean shouldSkipClass(Class<?> clazz) {
+                  return false;
+                }
+              })
+          .create();
 
   /**
    * FullContact client constructor used to initialise the client
@@ -74,9 +90,9 @@ public class FullContact implements AutoCloseable {
     this.retryHandler = retryHandler;
     this.headers = headers != null ? Collections.unmodifiableMap(headers) : null;
     this.userAgent = userAgent;
+    this.connectTimeoutMillis = connectTimeoutMillis > 0 ? connectTimeoutMillis : 3000;
     this.httpClient = this.configureHTTPClientBuilder().build();
     this.client = this.configureRetrofit().create(FullContactApi.class);
-    this.connectTimeoutMillis = connectTimeoutMillis > 0 ? connectTimeoutMillis : 3000;
     this.executor = new ScheduledThreadPoolExecutor(5);
   }
   /**
@@ -84,7 +100,7 @@ public class FullContact implements AutoCloseable {
    *
    * @return OkHttpClient Builder
    */
-  private OkHttpClient.Builder configureHTTPClientBuilder() {
+  protected OkHttpClient.Builder configureHTTPClientBuilder() {
     OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     httpClientBuilder.addInterceptor(
         chain -> {
@@ -121,7 +137,7 @@ public class FullContact implements AutoCloseable {
    *
    * @return Retrofit client
    */
-  private Retrofit configureRetrofit() {
+  protected Retrofit configureRetrofit() {
     return new Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(this.baseUrl)
@@ -130,8 +146,9 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * Method for Person Enrich without any custom RetryHandler, it passes the request to enrich
-   * method with retryHandler specified at Fullcontact Client level.
+   * Method for Person Enrich without any custom RetryHandler, It converts the request to json, send
+   * the Asynchronous request using HTTP POST method. It also handles retries based on retryHandler
+   * specified at FullContact Client level.
    *
    * @param personRequest original request sent by client
    * @return completed CompletableFuture with PersonResponse
@@ -156,43 +173,24 @@ public class FullContact implements AutoCloseable {
    */
   public CompletableFuture<PersonResponse> enrich(
       PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
-    if (isShutdown) {
-      throw new FullContactException("FullContact client is shutdown. Please create a new client");
-    }
-    CompletableFuture<retrofit2.Response<PersonResponse>> responseCompletableFutureResult =
-        new CompletableFuture<>();
-    CompletableFuture<retrofit2.Response<PersonResponse>> responseCompletableFuture =
-        this.client.personEnrich(personRequest);
-    responseCompletableFuture.handle(
-        (httpResponse, throwable) -> {
-          if (throwable != null) {
-            handleAutoRetryForPersonEnrich(
-                responseCompletableFutureResult,
-                httpResponse,
-                personRequest,
-                throwable,
-                0,
-                retryHandler);
-          } else if (!retryHandler.shouldRetry(httpResponse.code())) {
-            responseCompletableFutureResult.complete(httpResponse);
-          } else {
-            handleAutoRetryForPersonEnrich(
-                responseCompletableFutureResult,
-                httpResponse,
-                personRequest,
-                null,
-                0,
-                retryHandler);
-          }
-          return null;
-        });
-
-    return responseCompletableFutureResult.thenApply(FullContact::getPersonResponse);
+    checkForShutdown();
+    CompletableFuture<Response<JsonElement>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(personRequest));
+    CompletableFuture<Response<JsonElement>> httpResponseCompletableFuture =
+        this.client.personEnrich(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.PERSON_ENRICH);
+    return responseCF.thenApply(FullContact::getPersonResponse);
   }
 
   /**
-   * Method for Company Enrich without any custom RetryHandler, it passes the request to enrich
-   * method with retryHandler specified at Fullcontact Client level.
+   * Method for Company Enrich without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
    *
    * @param companyRequest original request sent by client
    * @return completed CompletableFuture with CompanyResponse
@@ -217,47 +215,28 @@ public class FullContact implements AutoCloseable {
    */
   public CompletableFuture<CompanyResponse> enrich(
       CompanyRequest companyRequest, RetryHandler retryHandler) throws FullContactException {
-    if (isShutdown) {
-      throw new FullContactException("FullContact client is shutdown. Please create a new client");
-    }
-    companyRequest.validateForEnrich();
-    CompletableFuture<retrofit2.Response<CompanyResponse>> responseCompletableFutureResult =
-        new CompletableFuture<>();
-    CompletableFuture<retrofit2.Response<CompanyResponse>> responseCompletableFuture =
-        this.client.companyEnrich(companyRequest);
-    responseCompletableFuture.handle(
-        (httpResponse, throwable) -> {
-          if (throwable != null) {
-            handleAutoRetryForCompanyEnrich(
-                responseCompletableFutureResult,
-                httpResponse,
-                companyRequest,
-                throwable,
-                0,
-                retryHandler);
-          } else if (!retryHandler.shouldRetry(httpResponse.code())) {
-            responseCompletableFutureResult.complete(httpResponse);
-          } else {
-            handleAutoRetryForCompanyEnrich(
-                responseCompletableFutureResult,
-                httpResponse,
-                companyRequest,
-                null,
-                0,
-                retryHandler);
-          }
-          return null;
-        });
-    return responseCompletableFutureResult.thenApply(FullContact::getCompanyResponse);
+    checkForShutdown();
+    CompletableFuture<Response<JsonElement>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(companyRequest));
+    CompletableFuture<Response<JsonElement>> httpResponseCompletableFuture =
+        this.client.companyEnrich(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.COMPANY_ENRICH);
+    return responseCF.thenApply(FullContact::getCompanyResponse);
   }
 
   /**
-   * Method for Company Search without any custom RetryHandler, it passes the request to search
-   * method with retryHandler specified at Fullcontact Client level.
+   * Method for Company Search without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
    *
    * @param companyRequest original request sent by client
    * @return completed CompletableFuture with CompanySearchResponseList
-   * @throws FullContactException exception if client is shutdown or request validation
+   * @throws FullContactException exception if client is shutdown or request fails validation
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
@@ -272,56 +251,191 @@ public class FullContact implements AutoCloseable {
    *
    * @param companyRequest original request sent by client
    * @return completed CompletableFuture with CompanySearchResponseList
-   * @throws FullContactException exception if client is shutdown or request validation
+   * @throws FullContactException exception if client is shutdown or request fails validation
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
   public CompletableFuture<CompanySearchResponseList> search(
       CompanyRequest companyRequest, RetryHandler retryHandler) throws FullContactException {
-    if (isShutdown) {
-      throw new FullContactException("FullContact client is shutdown. Please create a new client");
-    }
-    companyRequest.validateForSearch();
-    CompletableFuture<retrofit2.Response<JsonElement>> responseCompletableFutureResult =
-        new CompletableFuture<>();
-    CompletableFuture<retrofit2.Response<JsonElement>> companySearchResponseListCompletableFuture =
-        this.client.companySearch(companyRequest);
-    companySearchResponseListCompletableFuture.handle(
-        (companySearchResponse, throwable) -> {
-          if (throwable != null) {
-            handleAutoRetryForCompanySearch(
-                responseCompletableFutureResult,
-                companySearchResponse,
-                companyRequest,
-                throwable,
-                0,
-                retryHandler);
-          } else if (!retryHandler.shouldRetry(companySearchResponse.code())) {
-            responseCompletableFutureResult.complete(companySearchResponse);
-          } else {
-            handleAutoRetryForCompanySearch(
-                responseCompletableFutureResult,
-                companySearchResponse,
-                companyRequest,
-                null,
-                0,
-                retryHandler);
-          }
-          return null;
-        });
-    return responseCompletableFutureResult.thenApply(FullContact::getCompanySearchResponse);
+    checkForShutdown();
+    CompletableFuture<Response<JsonElement>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(companyRequest));
+    CompletableFuture<Response<JsonElement>> httpResponseCompletableFuture =
+        this.client.companySearch(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.COMPANY_SEARCH);
+    return responseCF.thenApply(FullContact::getCompanySearchResponse);
   }
 
   /**
-   * This method resolves person enrich response and handle for different response codes
+   * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
+   * Client level.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityMap(PersonRequest personRequest)
+      throws FullContactException {
+    return this.identityMap(personRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityMap(
+      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
+    personRequest.validateForIdentityMap();
+    return resolveRequest(personRequest, retryHandler, FCApiEndpoint.IDENTITY_MAP);
+  }
+
+  /**
+   * Method for Identity Resolve. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
+   * Client level.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityResolve(PersonRequest personRequest)
+      throws FullContactException {
+    return this.identityResolve(personRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityResolve(
+      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
+    return resolveRequest(personRequest, retryHandler, FCApiEndpoint.IDENTITY_RESOLVE);
+  }
+
+  /**
+   * Method for Deleting mapped Record. It calls 'identity.delete' endpoint in Resolve. It converts
+   * the request to json, send the Asynchronous request using HTTP POST method. It also handles
+   * retries based on retryHandler specified at FullContact Client level.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityDelete(PersonRequest personRequest)
+      throws FullContactException {
+    return this.identityDelete(personRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Deleting mapped Record. It calls 'identity.delete' endpoint in Resolve. It converts
+   * the request to json, send the Asynchronous request using HTTP POST method. It also handles
+   * retries based on retryHandler specified.
+   *
+   * @param personRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityDelete(
+      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
+    return resolveRequest(personRequest, retryHandler, FCApiEndpoint.IDENTITY_DELETE);
+  }
+
+  protected CompletableFuture<ResolveResponse> resolveRequest(
+      PersonRequest personRequest, RetryHandler retryHandler, FCApiEndpoint fcApiEndpoint)
+      throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<Response<JsonElement>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gsonExclude.toJson(personRequest));
+    CompletableFuture<Response<JsonElement>> httpResponseCompletableFuture;
+    switch (fcApiEndpoint) {
+      case IDENTITY_MAP:
+        httpResponseCompletableFuture = this.client.identityMap(httpRequest);
+        break;
+      case IDENTITY_RESOLVE:
+        httpResponseCompletableFuture = this.client.identityResolve(httpRequest);
+        break;
+      case IDENTITY_DELETE:
+        httpResponseCompletableFuture = this.client.identityDelete(httpRequest);
+        break;
+      default:
+        throw new FullContactException("Wrong API Endpoint provided for Resolve");
+    }
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.PERSON_ENRICH);
+    return responseCF.thenApply(FullContact::getResolveResponse);
+  }
+
+  protected void checkForShutdown() throws FullContactException {
+    if (isShutdown) {
+      throw new FullContactException("FullContact client is shutdown. Please create a new client");
+    }
+  }
+
+  protected static RequestBody buildHttpRequest(String request) {
+    return RequestBody.create(JSONMediaType, request);
+  }
+
+  protected void handleHttpResponse(
+      RequestBody httpRequest,
+      RetryHandler retryHandler,
+      CompletableFuture<Response<JsonElement>> currentResponse,
+      CompletableFuture<Response<JsonElement>> responseCF,
+      FCApiEndpoint fcApiEndpoint) {
+    currentResponse.handle(
+        (httpResponse, throwable) -> {
+          if (throwable != null) {
+            handleAutoRetry(
+                responseCF, httpResponse, httpRequest, throwable, 0, retryHandler, fcApiEndpoint);
+          } else if (httpResponse != null && !retryHandler.shouldRetry(httpResponse.code())) {
+            responseCF.complete(httpResponse);
+          } else {
+            handleAutoRetry(
+                responseCF, httpResponse, httpRequest, null, 0, retryHandler, fcApiEndpoint);
+          }
+          return null;
+        });
+  }
+
+  /**
+   * This method creates person enrich response and handle for different response codes
    *
    * @param response raw response from person enrich API
    * @return PersonResponse
    */
-  protected static PersonResponse getPersonResponse(retrofit2.Response<PersonResponse> response) {
+  protected static PersonResponse getPersonResponse(retrofit2.Response<JsonElement> response) {
     PersonResponse personResponse;
     if (response.isSuccessful() && response.body() != null) {
-      personResponse = response.body();
+      personResponse = gson.fromJson(response.body(), PersonResponse.class);
       if (response.code() == 200) {
         personResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
       }
@@ -336,16 +450,15 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * This method resolves company enrich response and handle for different response codes
+   * This method creates company enrich response and handle for different response codes
    *
    * @param response raw response from company enrich API
    * @return CompanyResponse
    */
-  protected static CompanyResponse getCompanyResponse(
-      retrofit2.Response<CompanyResponse> response) {
+  protected static CompanyResponse getCompanyResponse(retrofit2.Response<JsonElement> response) {
     CompanyResponse companyResponse;
     if (response.isSuccessful() && response.body() != null) {
-      companyResponse = response.body();
+      companyResponse = gson.fromJson(response.body(), CompanyResponse.class);
       if (response.code() == 200) {
         companyResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
       }
@@ -358,8 +471,9 @@ public class FullContact implements AutoCloseable {
     companyResponse.statusCode = response.code();
     return companyResponse;
   }
+
   /**
-   * This method resolves company search response and handle for different response codes
+   * This method creates company search response and handle for different response codes
    *
    * @param response raw response from company search API
    * @return CompanySearchResponseList
@@ -386,116 +500,101 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * This method handles Auto Retry in case retry condition is true. It keeps retrying till the
-   * retryAttempts exhaust or the response is successful and completes the
-   * responseCompletableFutureResult based on result. For retrying, it schedules the request using
-   * ScheduledThreadPoolExecutor with retryDelayMillis delay time.
+   * This method create Resolve response and handle for different response codes
    *
-   * @param personRequest original request by client
-   * @param personResponse response of the last retry, used to complete
-   *     responseCompletableFutureResult if all retry attempts exhaust
-   * @param responseCompletableFutureResult result completableFuture which is completed here and
-   *     returned to client
-   * @param throwable exception from last retry, used to completeExceptionally
-   *     responseCompletableFutureResult if all retries exhaust
-   * @param retryAttemptsDone track the number of retry attempts already done
+   * @param response raw response from Resolve APIs
+   * @return ResolveResponse
    */
-  protected void handleAutoRetryForPersonEnrich(
-      CompletableFuture<Response<PersonResponse>> responseCompletableFutureResult,
-      Response<PersonResponse> personResponse,
-      PersonRequest personRequest,
-      Throwable throwable,
-      int retryAttemptsDone,
-      RetryHandler retryHandler) {
-    if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
-      retryAttemptsDone++;
-      int finalRetryAttemptsDone = retryAttemptsDone;
-      this.executor.schedule(
-          () -> {
-            CompletableFuture<Response<PersonResponse>> retryCompletableFuture =
-                this.client.personEnrich(personRequest);
-            retryCompletableFuture.handle(
-                (retryPersonResponse, retryThrowable) -> {
-                  if (retryThrowable != null) {
-                    handleAutoRetryForPersonEnrich(
-                        responseCompletableFutureResult,
-                        retryPersonResponse,
-                        personRequest,
-                        retryThrowable,
-                        finalRetryAttemptsDone,
-                        retryHandler);
-                  } else if (!retryHandler.shouldRetry(retryPersonResponse.code())) {
-                    responseCompletableFutureResult.complete(retryPersonResponse);
-                  } else {
-                    handleAutoRetryForPersonEnrich(
-                        responseCompletableFutureResult,
-                        retryPersonResponse,
-                        personRequest,
-                        null,
-                        finalRetryAttemptsDone,
-                        retryHandler);
-                  }
-                  return null;
-                });
-          },
-          retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
-          TimeUnit.MILLISECONDS);
-    } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
-      responseCompletableFutureResult.completeExceptionally(throwable);
+  protected static ResolveResponse getResolveResponse(retrofit2.Response<JsonElement> response) {
+    ResolveResponse resolveResponse;
+    if (response.isSuccessful() && response.body() != null) {
+      resolveResponse = gson.fromJson(response.body(), ResolveResponse.class);
+      if (response.code() == 200) {
+        resolveResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
     } else {
-      responseCompletableFutureResult.complete(personResponse);
+      resolveResponse = new ResolveResponse();
+      resolveResponse.message = response.message();
     }
+    resolveResponse.statusCode = response.code();
+    resolveResponse.isSuccessful =
+        (response.code() == 200) || (response.code() == 204) || (response.code() == 404);
+    return resolveResponse;
   }
 
   /**
    * This method handles Auto Retry in case retry condition is true. It keeps retrying till the
-   * retryAttempts exhaust or the response is successful and completes the
-   * responseCompletableFutureResult based on result. For retrying, it schedules the request using
-   * ScheduledThreadPoolExecutor with retryDelayMillis delay time.
+   * retryAttempts exhaust or the response is successful and completes the responseCF based on
+   * result. For retrying, it schedules the request using ScheduledThreadPoolExecutor with
+   * retryDelayMillis delay time.
    *
-   * @param companyRequest original request by client
-   * @param companyResponse response of the last retry, used to complete
-   *     responseCompletableFutureResult if all retry attempts exhaust
-   * @param responseCompletableFutureResult result completableFuture which is completed here and
-   *     returned to client
+   * @param httpRequest original request by client
+   * @param httpResponse response of the last retry, used to complete responseCF if all retry
+   *     attempts exhaust
+   * @param responseCF result completableFuture which is completed here and returned to client
    * @param throwable exception from last retry, used to completeExceptionally
    *     responseCompletableFutureResult if all retries exhaust
    * @param retryAttemptsDone track the number of retry attempts already done
+   * @param retryHandler RetryHandler used for current request
+   * @param fcApiEndpoint FullContact API Endpoint for current request
    */
-  protected void handleAutoRetryForCompanyEnrich(
-      CompletableFuture<Response<CompanyResponse>> responseCompletableFutureResult,
-      Response<CompanyResponse> companyResponse,
-      CompanyRequest companyRequest,
+  protected void handleAutoRetry(
+      CompletableFuture<Response<JsonElement>> responseCF,
+      Response<JsonElement> httpResponse,
+      RequestBody httpRequest,
       Throwable throwable,
       int retryAttemptsDone,
-      RetryHandler retryHandler) {
+      RetryHandler retryHandler,
+      FCApiEndpoint fcApiEndpoint) {
     if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
       retryAttemptsDone++;
       int finalRetryAttemptsDone = retryAttemptsDone;
       this.executor.schedule(
           () -> {
-            CompletableFuture<Response<CompanyResponse>> retryCompletableFuture =
-                this.client.companyEnrich(companyRequest);
-            retryCompletableFuture.handle(
-                (retryHttpResponse, retryThrowable) -> {
+            CompletableFuture<Response<JsonElement>> retryCF = null;
+            switch (fcApiEndpoint) {
+              case PERSON_ENRICH:
+                retryCF = this.client.personEnrich(httpRequest);
+                break;
+              case COMPANY_ENRICH:
+                retryCF = this.client.companyEnrich(httpRequest);
+                break;
+              case COMPANY_SEARCH:
+                retryCF = this.client.companySearch(httpRequest);
+                break;
+              case IDENTITY_MAP:
+                retryCF = this.client.identityMap(httpRequest);
+                break;
+              case IDENTITY_RESOLVE:
+                retryCF = this.client.identityResolve(httpRequest);
+                break;
+              case IDENTITY_DELETE:
+                retryCF = this.client.identityDelete(httpRequest);
+                break;
+            }
+            retryCF.handle(
+                (retryResponse, retryThrowable) -> {
                   if (retryThrowable != null) {
-                    handleAutoRetryForCompanyEnrich(
-                        responseCompletableFutureResult,
-                        retryHttpResponse,
-                        companyRequest,
+                    handleAutoRetry(
+                        responseCF,
+                        retryResponse,
+                        httpRequest,
                         retryThrowable,
                         finalRetryAttemptsDone,
-                        retryHandler);
-                  } else if (!retryHandler.shouldRetry(retryHttpResponse.code())) {
-                    responseCompletableFutureResult.complete(retryHttpResponse);
+                        retryHandler,
+                        fcApiEndpoint);
+                  } else if (retryResponse != null
+                      && !retryHandler.shouldRetry(retryResponse.code())) {
+                    responseCF.complete(retryResponse);
                   } else {
-                    handleAutoRetryForCompanyEnrich(
-                        responseCompletableFutureResult,
-                        retryHttpResponse,
-                        companyRequest,
+                    handleAutoRetry(
+                        responseCF,
+                        retryResponse,
+                        httpRequest,
                         null,
                         finalRetryAttemptsDone,
-                        retryHandler);
+                        retryHandler,
+                        fcApiEndpoint);
                   }
                   return null;
                 });
@@ -503,70 +602,9 @@ public class FullContact implements AutoCloseable {
           retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
           TimeUnit.MILLISECONDS);
     } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
-      responseCompletableFutureResult.completeExceptionally(throwable);
+      responseCF.completeExceptionally(throwable);
     } else {
-      responseCompletableFutureResult.complete(companyResponse);
-    }
-  }
-  /**
-   * This method handles Auto Retry in case retry condition is true. It keeps retrying till the
-   * retryAttempts exhaust or the response is successful and completes the
-   * responseCompletableFutureResult based on result. For retrying, it schedules the request using
-   * ScheduledThreadPoolExecutor with retryDelayMillis delay time.
-   *
-   * @param companyRequest reusing the same httpRequest built in enrich method
-   * @param companySearchResponse response of the last retry, used to complete
-   *     responseCompletableFutureResult if all retry attempts exhaust
-   * @param responseCompletableFutureResult result completableFuture which is completed here and
-   *     returned to client
-   * @param throwable exception from last retry, used to completeExceptionally
-   *     responseCompletableFutureResult if all retries exhaust
-   * @param retryAttemptsDone track the number of retry attempts already done
-   */
-  protected void handleAutoRetryForCompanySearch(
-      CompletableFuture<Response<JsonElement>> responseCompletableFutureResult,
-      Response<JsonElement> companySearchResponse,
-      CompanyRequest companyRequest,
-      Throwable throwable,
-      int retryAttemptsDone,
-      RetryHandler retryHandler) {
-    if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
-      retryAttemptsDone++;
-      int finalRetryAttemptsDone = retryAttemptsDone;
-      this.executor.schedule(
-          () -> {
-            CompletableFuture<Response<JsonElement>> retryCompletableFuture =
-                this.client.companySearch(companyRequest);
-            retryCompletableFuture.handle(
-                (retryHttpResponse, retryThrowable) -> {
-                  if (retryThrowable != null) {
-                    handleAutoRetryForCompanySearch(
-                        responseCompletableFutureResult,
-                        retryHttpResponse,
-                        companyRequest,
-                        retryThrowable,
-                        finalRetryAttemptsDone,
-                        retryHandler);
-                  } else if (!retryHandler.shouldRetry(retryHttpResponse.code())) {
-                    responseCompletableFutureResult.complete(retryHttpResponse);
-                  } else {
-                    handleAutoRetryForCompanySearch(
-                        responseCompletableFutureResult,
-                        retryHttpResponse,
-                        companyRequest,
-                        null,
-                        finalRetryAttemptsDone,
-                        retryHandler);
-                  }
-                  return null;
-                });
-          },
-          retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
-          TimeUnit.MILLISECONDS);
-    } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
-      responseCompletableFutureResult.completeExceptionally(throwable);
-    } else {
-      responseCompletableFutureResult.complete(companySearchResponse);
+      responseCF.complete(httpResponse);
     }
   }
 
