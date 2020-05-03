@@ -240,7 +240,7 @@ CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletabl
 - `identity.resolve`
 - `identity.delete`
 #### Resolve Request
-Resolve uses same `PersonRequest` object for its request as explained [above](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11#building-a-person-enrich-/-request).
+Resolve uses same `PersonRequest` object for its request as explained [above](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11##building-a-person-enrichresolve-request).
 
 #### Resolve Response
 All resolve methods returns a `CompletableFuture<ResolveResponse>`
