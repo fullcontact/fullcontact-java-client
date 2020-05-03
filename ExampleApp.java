@@ -35,8 +35,7 @@ public class App {
               .headers(customHeader)
               .credentialsProvider(staticCredentialsProvider)
               .connectTimeoutMillis(3000)
-              .retryAttempts(3)
-              .retryDelayMillis(1000)
+              .retryHandler(new CustomRetryHandler())
               .build();
 
       // Person Enrich: Request Build
@@ -62,6 +61,8 @@ public class App {
                       .url("https://www.linkedin.com/in/bartlorang")
                       .build())
               .webhookUrl("")
+              .recordId("customer123")
+              .personId("eYxWc0B-dKRxerTw_uQpxCssM_GyPaLErj0Eu3y2FrU6py1J")
               .build();
 
       // Person Enrich: sending Asynchronous Request
@@ -119,6 +120,37 @@ public class App {
                         .getCompanySearchResponses()
                         .get(0)
                         .getLookupDomain());
+          });
+
+      // Identity Map request
+      PersonRequest identityMapRequest =
+          FullContact.buildPersonRequest()
+              .email("bart@fullcontact.com")
+              .recordId("customer123")
+              .build();
+      // Identity Map Response
+      CompletableFuture<ResolveResponse> mapResponse = fcClient.identityMap(identityMapRequest);
+      mapResponse.thenAccept(
+          response -> {
+            System.out.println("identity.map " + response.toString());
+          });
+      // Identity Resolve Request
+      PersonRequest identityResolveRequest =
+          FullContact.buildPersonRequest().recordId("customer123").build();
+      // Identity Resolve Response
+      CompletableFuture<ResolveResponse> resolveResponse =
+          fcClient.identityResolve(identityResolveRequest);
+      resolveResponse.thenAccept(
+          response -> {
+            System.out.println("identity.resolve " + response.toString());
+          });
+
+      // Identity Delete Response
+      CompletableFuture<ResolveResponse> deleteResponse =
+          fcClient.identityDelete(identityResolveRequest);
+      deleteResponse.thenAccept(
+          response -> {
+            System.out.println("identity.delete " + response.toString());
           });
       Thread.sleep(5000);
       fcClient.close();

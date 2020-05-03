@@ -60,3 +60,13 @@ and common snags is still important.
 
 Once you’re on board with the API behavior, FullContact Client library should simplify 
 your integration.
+
+### Supported APIs
+- _Enrich_
+    - `person.enrich`
+    - `company.enrich`
+    - `company.search`
+- _Resolve_
+    - `identity.map`
+    - `identity.resolve`
+    - `identity.delete`

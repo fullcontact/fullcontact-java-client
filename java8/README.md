@@ -36,8 +36,25 @@ __[Retrofit2](https://github.com/square/retrofit/)__ v2.7.0 : HTTP Client used f
 __[Retrofit2 Gson Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson)__ v2.7.0: 
 Converter which uses [Gson](https://github.com/google/gson) for serialization to and from JSON
 
-### Building a FullContact Client for Java 11+
-Our Java 11 Client library uses in-built HTTP Client.
+## Providing Authentication to FullContact Client
+FullContact client uses ```CredentialsProvider``` interface for Authentication. Different ways 
+to provide authentication:
+
+- __Static API Key provider__: 
+```java
+CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("your-key");
+```
+- __Through System Environment Variable__:
+```java
+CredentialsProvider envCredentialsProvider = new DefaultCredentialProvider("ENV_VAR");
+```
+- If __no__ ```CredentialsProvider``` is specified while building FullContact Client,
+it automatically looks for API key from Environment variable ```"FC_API_KEY"```
+
+(Don't have an API key? You can pick one up for free [right here.](https://www.fullcontact.com/developer-portal/))
+
+
+## Building a FullContact Client
 Build your fcClient with:
 
 | Build Parameters | Description | Default value | isOptional |
@@ -46,16 +63,21 @@ Build your fcClient with:
 | `UserAgent` | Your User Agent | Not added to request header by default | Yes |
 | `Headers` | Any Custom Headers you want to add with every request, can include `Reporting-Key` as well. | No additional header | Yes |
 | `connectTimeoutMillis` | Connection timeout for request | 3000ms | Yes |
-| `retryAttempts` | Retry Attempts in case of 429 and 503; allowed value >= 1 and <= 5 | 5 | Yes |
-| `retryDelayMillis` | Delay time between each retry attempt | 1000ms | Yes |
+| `retryHandler` | RetryHandler object | `DefaultRetryHandler` | Yes |
+
  
 __Please note that you don't have to provide `Authorization` and `Content-Type` in the 
 custom Headers map as these will be automatically added using ```CredentialsProvider``` provided.__ 
 Custom headers provided will remain same and will be sent with every request made with this client. 
 If you wish to change the headers, build a new client and provide new custom headers while building.
 
-Our client will schedule a retry with same request, as per `retryAttempts` available,
- in case of `429`(rate limit error) or `503`(capacity limit error).
+#### RetryHandler
+- Although optional, a custom Retry handler can be created by implementing `RetryHandler` interface and then used to build FC client. 
+By default, client will use `DefaultRetryHandler` to schedule a retry for same request, with `retryAttempts = 1`, 
+`retryDelayMillis = 1000`, in case of `429`(rate limit error) or `503`(capacity limit error).
+
+- Different `retryHandler` can be specified at each request level, 
+By Default it will just use the `retryHandler` from client level.
 
 __Note: Don't forget to call close() for every client created, 
 at the end of application to avoid memory leak.__
@@ -64,12 +86,15 @@ FullContact fcClient = FullContact.builder()
                 .headers(customHeader)
                 .credentialsProvider(staticCredentialsProvider)
                 .connectTimeoutMillis(5000)
-                .retryAttempts(3)
-                .retryDelayMillis(2000)
+                .retryHandler(new CustomRetryHandler())
                 .build();
 ```
-
-#### Building a Person Enrich Request
+## Enrich
+[Enrich API Reference](https://dashboard.fullcontact.com/api-ref#enrich)
+- `person.enrich`
+- `company.enrich`
+- `company.search`
+#### Building a Person Enrich/Resolve Request
 Our V3 Person Enrich supports __Multi Field Request:__ ability to match on __one or many__ input fields
 
 You can build a Person Request by getting a builder from the fcClient or FullContact class
@@ -103,6 +128,8 @@ such as:
 - `confidence`: _Confidence Enum_
 - `infer`: _boolean_
 - `webhookUrl`: _String_
+- `recordId`: _String_
+- `personId`: _String_
 
 ```java
 PersonRequest personRequest = fcClient
@@ -115,7 +142,9 @@ PersonRequest personRequest = fcClient
                                     .city("Denver").region("Colorado").build())
                             .profile(Profile.builder().service("twitter").userName("bartlorang").build())
                             .profile(Profile.builder().service("linkedin").url("https://www.linkedin.com/in/bartlorang").build())
-                            .webhookUrl("")                            
+                            .webhookUrl("")
+                            .recordId("customer123")
+                            .personId("eYxWc0B-dKRxerTw_uQpxCssM_GyPaLErj0Eu3y2FrU6py1J")       
                             .build();
 ```
 #### Person Enrich Request and Response
@@ -204,3 +233,34 @@ CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletabl
           });
 ```
 
+
+## Resolve
+[Resolve API Reference](https://dashboard.fullcontact.com/api-ref#resolve-2)
+- `identity.map`
+- `identity.resolve`
+- `identity.delete`
+#### Resolve Request
+Resolve uses same `PersonRequest` object for its request as explained [above](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11#building-a-person-enrich-/-request).
+
+#### Resolve Response
+All resolve methods returns a `CompletableFuture<ResolveResponse>`
+
+```java
+CompletableFuture<ResolveResponse> mapResponse = fcClient.identityMap(personRequest);
+      mapResponse.thenAccept(
+          response -> {
+            System.out.println("identity.map " + response.toString());
+          });
+
+CompletableFuture<ResolveResponse> resolveResponse = fcClient.identityResolve(personRequest);
+resolveResponse.thenAccept(
+          response -> {
+            System.out.println("identity.resolve " + response.toString());
+          });
+
+CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(personRequest);
+      deleteResponse.thenAccept(
+          response -> {
+            System.out.println("identity.delete " + response.toString());
+          });
+```
