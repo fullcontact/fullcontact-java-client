@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Identifiers {
   private List<Maids> maids;
-  private List<String> personIds;
+  private List<String> personIds, recordIds;
 }
