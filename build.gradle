@@ -21,6 +21,14 @@ allprojects {
     }
 }
 
+def getRepositoryUsername() {
+    return hasProperty("ossrhUsername") ? ossrhUsername : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty("ossrhPassword") ? ossrhPassword : ""
+}
+
 subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -99,8 +107,8 @@ subprojects {
                 def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
                 url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
                 credentials {
-                    username ossrhUsername
-                    password ossrhPassword
+                    username getRepositoryUsername()
+                    password getRepositoryPassword()
                 }
             }
         }
