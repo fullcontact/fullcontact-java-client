@@ -3,7 +3,8 @@ package com.fullcontact.apilib.enrich;
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
-import com.fullcontact.apilib.models.Request.PersonRequest;
+import com.fullcontact.apilib.models.Profile;
+import com.fullcontact.apilib.models.Request.ResolveRequest;
 import com.fullcontact.apilib.models.Response.ResolveResponse;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,10 +38,10 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("marquitaross006@gmail.com").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("marquitaross006@gmail.com").build();
 
-    ResolveResponse response = fcTest.identityMap(personRequest).get();
+    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -58,9 +59,10 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest = FullContact.buildPersonRequest().recordId("customer123").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("test").recordId("customer123").build();
 
-    ResolveResponse response = fcTest.identityMap(personRequest).get();
+    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -80,9 +82,10 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest = FullContact.buildPersonRequest().recordId("customer123").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().phone("test").recordId("customer123").build();
 
-    ResolveResponse response = fcTest.identityMap(personRequest).get();
+    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(204, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -101,10 +104,10 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("marquitaross006@gmail.com").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("marquitaross006@gmail.com").build();
 
-    ResolveResponse response = fcTest.identityMap(personRequest, new CustomRetryHandler()).get();
+    ResolveResponse response = fcTest.identityMap(resolveRequest, new CustomRetryHandler()).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -122,9 +125,13 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest = FullContact.buildPersonRequest().recordId("customer123").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
+            .profile(Profile.builder().url("test").build())
+            .recordId("customer123")
+            .build();
 
-    ResolveResponse response = fcTest.identityMap(personRequest, new CustomRetryHandler()).get();
+    ResolveResponse response = fcTest.identityMap(resolveRequest, new CustomRetryHandler()).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -144,9 +151,10 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest = FullContact.buildPersonRequest().recordId("customer123").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("test").recordId("customer123").build();
 
-    ResolveResponse response = fcTest.identityMap(personRequest, new CustomRetryHandler()).get();
+    ResolveResponse response = fcTest.identityMap(resolveRequest, new CustomRetryHandler()).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(204, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -165,9 +173,9 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("marquitaross006@gmail.com").build();
-    ResolveResponse response = fcTest.identityMap(personRequest).get();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("marquitaross006@gmail.com").build();
+    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(400, response.getStatusCode());
     Assert.assertEquals("BadRequest", response.getMessage());
@@ -184,9 +192,9 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("marquitaross006@gmail.com").build();
-    ResolveResponse response = fcTest.identityMap(personRequest).get();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("marquitaross006@gmail.com").build();
+    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Unauthorized"));
@@ -203,9 +211,9 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("martesttyh97@gmail.com").build();
-    ResolveResponse response = fcTest.identityResolve(personRequest).get();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("martesttyh97@gmail.com").build();
+    ResolveResponse response = fcTest.identityResolve(resolveRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Not Found"));
@@ -222,9 +230,9 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("marte7@gmail.com").build();
-    ResolveResponse response = fcTest.identityDelete(personRequest).get();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("marte7@gmail.com").build();
+    ResolveResponse response = fcTest.identityDelete(resolveRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -241,8 +249,8 @@ public class ResolveResponseTest {
             .headers(customHeader)
             .build();
 
-    PersonRequest personRequest = FullContact.buildPersonRequest().email("marte7@gmail").build();
-    ResolveResponse response = fcTest.identityResolve(personRequest).get();
+    ResolveRequest resolveRequest = FullContact.buildResolveRequest().email("marte7@gmail").build();
+    ResolveResponse response = fcTest.identityResolve(resolveRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(

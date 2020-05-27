@@ -107,6 +107,11 @@ public class FullContact implements AutoCloseable {
     return CompanyRequest.builder();
   }
 
+  /** @return Resolve Request Builder for Resolve */
+  public static ResolveRequest.ResolveRequestBuilder buildResolveRequest() {
+    return ResolveRequest.builder();
+  }
+
   /**
    * Method for Person Enrich without any custom RetryHandler, It converts the request to json, send
    * the Asynchronous request using HTTP POST method. It also handles retries based on retryHandler

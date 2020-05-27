@@ -4,8 +4,7 @@ import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
-import com.fullcontact.apilib.models.Request.PersonRequest;
-import com.fullcontact.apilib.models.enums.Confidence;
+import com.fullcontact.apilib.models.Request.ResolveRequest;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,16 +23,12 @@ public class ResolveRequestBuildTest {
     List<String> emails = new ArrayList<>();
     emails.add("test1@gmail.com");
     emails.add("test2@outlook.com");
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
             .email("marianrd97@outlook.com")
             .phone("123-4567890")
             .emails(emails)
-            .confidence(Confidence.HIGH)
-            .infer(false)
-            .dataFilter("individual")
-            .dataFilter("social")
             .location(
                 Location.builder()
                     .addressLine1("123/23")
@@ -47,32 +42,31 @@ public class ResolveRequestBuildTest {
             .profile(Profile.builder().url("https://twitter.com/mcreedytest").build())
             .maid("abcd-123-abcd-1234-abcdlkjhasdfgh")
             .maid("1234-snbk-lkldiemvmruixp-2kdp-vdm")
-            .webhookUrl("http://www.fullcontact.com/hook")
             .recordId("customer123")
             .personId("VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345")
             .build();
     try (BufferedReader br =
-        new BufferedReader(new FileReader("src/test/resources/personRequestBuildTest.txt"))) {
+        new BufferedReader(new FileReader("src/test/resources/resolveRequestBuildTest.txt"))) {
       String line;
       StringBuilder sb = new StringBuilder();
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(personRequest));
+      Assert.assertEquals(sb.toString(), gson.toJson(resolveRequest));
     }
   }
 
   @Test
   public void requestWithoutNameAndLocation() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest().email("marianrd97@outlook.com").build();
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("marianrd97@outlook.com").build();
   }
 
   @Test
   public void nameWithLocationAsNullTest() {
     try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
               .name(PersonName.builder().full("Marian C Reed").build())
               .build();
     } catch (FullContactException fce) {
@@ -85,8 +79,8 @@ public class ResolveRequestBuildTest {
   @Test
   public void locationWithNameAsNull() {
     try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
               .location(
                   Location.builder()
                       .addressLine1("123/23")
@@ -107,8 +101,8 @@ public class ResolveRequestBuildTest {
   @Test
   public void locationWithNoAddressLine1Test() {
     try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(
                   Location.builder()
@@ -129,8 +123,8 @@ public class ResolveRequestBuildTest {
   @Test
   public void locationWithOnlyAddressLine1Test() {
     try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(Location.builder().addressLine1("123/23").build())
               .build();
@@ -144,8 +138,8 @@ public class ResolveRequestBuildTest {
   @Test
   public void locationWithAddressLine1AndCityTest() {
     try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(Location.builder().addressLine1("123/23").city("Denver").build())
               .build();
@@ -159,8 +153,8 @@ public class ResolveRequestBuildTest {
   @Test
   public void locationWithAddressLine1AndRegionTest() {
     try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(Location.builder().addressLine1("123/23").region("Denver").build())
               .build();
@@ -173,8 +167,8 @@ public class ResolveRequestBuildTest {
 
   @Test
   public void validLocation1Test() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
             .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
             .build();
@@ -182,8 +176,8 @@ public class ResolveRequestBuildTest {
 
   @Test
   public void validLocation2Test() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
             .location(
                 Location.builder()
@@ -197,9 +191,8 @@ public class ResolveRequestBuildTest {
 
   @Test
   public void validLocation3Test() throws FullContactException {
-
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
             .location(
                 Location.builder()
@@ -212,8 +205,8 @@ public class ResolveRequestBuildTest {
 
   @Test
   public void validNameTest() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
             .name(PersonName.builder().given("Marian").family("Reed").build())
             .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
             .build();
@@ -221,8 +214,8 @@ public class ResolveRequestBuildTest {
 
   @Test
   public void validProfileBuilder1Test() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
             .profile(Profile.builder().url("https://twitter.com/mcreedy").build())
             .build();
   }
@@ -278,6 +271,27 @@ public class ResolveRequestBuildTest {
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Specifying userid together with username is not allowed", fce.getMessage());
+    }
+  }
+
+  @Test
+  public void identityMapRequestWithPersonId() {
+    try {
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest().email("test").personId("test").build();
+    } catch (FullContactException fce) {
+      Assert.assertEquals("Invalid map request, person id must be empty", fce.getMessage());
+    }
+  }
+
+  @Test
+  public void identityMapRequestWithOnlyRecordId() {
+    try {
+      ResolveRequest resolveRequest = FullContact.buildResolveRequest().recordId("test").build();
+    } catch (FullContactException fce) {
+      Assert.assertEquals(
+          "Invalid map request, Any of Email, Phone, SocialProfile, Name and Location must be present",
+          fce.getMessage());
     }
   }
 }

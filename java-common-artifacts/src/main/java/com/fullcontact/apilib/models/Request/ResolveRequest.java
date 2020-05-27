@@ -34,6 +34,7 @@ public class ResolveRequest {
         || !this.emails.isEmpty()
         || !this.phones.isEmpty()
         || !this.profiles.isEmpty()) {
+    } else {
       throw new FullContactException(
           "Invalid map request, Any of Email, Phone, SocialProfile, Name and Location must be present");
     }

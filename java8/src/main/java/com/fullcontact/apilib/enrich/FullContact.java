@@ -604,6 +604,11 @@ public class FullContact implements AutoCloseable {
     return CompanyRequest.builder();
   }
 
+  /** @return Resolve Request Builder for Resolve */
+  public static ResolveRequest.ResolveRequestBuilder buildResolveRequest() {
+    return ResolveRequest.builder();
+  }
+
   /**
    * This method is used to call shutdown on the ScheduledThreadPoolExecutor and close the
    * FullContact client.
