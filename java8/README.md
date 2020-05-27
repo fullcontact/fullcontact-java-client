@@ -240,7 +240,55 @@ CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletabl
 - `identity.resolve`
 - `identity.delete`
 #### Resolve Request
-Resolve uses same `PersonRequest` object for its request as explained [above](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11##building-a-person-enrichresolve-request).
+Resolve uses `ResolveRequest` object for its request which supports
+ __Multi Field Request:__ ability to match on __one or many__ input fields
+
+You can build a Resolve Request by getting a builder from the fcClient or FullContact class
+and setting different input parameters that you have.
+
+Note: For `identity.map` any of `email`, `phone`, `profile`, `name & location` 
+must be present.
+ 
+API can lookup and resolve individuals by sending any identifiers you may already have, 
+such as: 
+
+- `email`: _String_
+- `emails`: _List<String>_
+- `phone`: _String_
+- `phones`: _List<String>_
+- `location`: _Location Object_
+    - `addressLine1`: _String_
+    - `addressLine2`: _String_
+    - `city`: _String_
+    - `region`: _String_
+    - `regionCode`: _String_
+    - `postalCode`: _String_
+- `name`: _PersonName Object_
+    - `full`: _String_
+    - `given`: _String_
+    - `family`: _String_
+- `profiles`: _List<Profile>_
+    - `service`: _String_
+    - `username`: _String_
+    - `userid`: _String_
+    - `url`: _String_
+- `maids`: _List<String>_
+- `recordId`: _String_
+- `personId`: _String_
+
+```java
+ResolveRequest personRequest = fcClient
+                            .buildResolveRequest()
+                            .email("bart@fullcontact.com").email("bart.lorang@fullcontact.com")
+                            .phone("+17202227799").phone("+13035551234")
+                            .name(PersonName.builder().full("Bart Lorang").build())
+                            .location(Location.builder().addressLine1("123 Main Street").addressLine2("Unit 2")
+                                    .city("Denver").region("Colorado").build())
+                            .profile(Profile.builder().service("twitter").userName("bartlorang").build())
+                            .profile(Profile.builder().service("linkedin").url("https://www.linkedin.com/in/bartlorang").build())
+                            .recordId("customer123")     
+                            .build();
+```
 
 #### Resolve Response
 All resolve methods returns a `CompletableFuture<ResolveResponse>`
@@ -264,3 +312,9 @@ CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(pers
             System.out.println("identity.delete " + response.toString());
           });
 ```
+
+
+## Changelog
+- If you are updating the version of this client from `1.0.0`, please note that
+ `retryAttmpts` and `retryDelayMillis` fields were removed from FullContact client
+ for a [RetryHandler](https://github.com/fullcontact/fullcontact-java-client/tree/master/java8#retryhandler)

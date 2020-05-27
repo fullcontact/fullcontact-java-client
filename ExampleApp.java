@@ -123,8 +123,8 @@ public class App {
           });
 
       // Identity Map request
-      PersonRequest identityMapRequest =
-          FullContact.buildPersonRequest()
+      ResolveRequest identityMapRequest =
+          FullContact.buildResolveRequest()
               .email("bart@fullcontact.com")
               .recordId("customer123")
               .build();
@@ -135,8 +135,8 @@ public class App {
             System.out.println("identity.map " + response.toString());
           });
       // Identity Resolve Request
-      PersonRequest identityResolveRequest =
-          FullContact.buildPersonRequest().recordId("customer123").build();
+      ResolveRequest identityResolveRequest =
+          FullContact.buildResolveRequest().recordId("customer123").build();
       // Identity Resolve Response
       CompletableFuture<ResolveResponse> resolveResponse =
           fcClient.identityResolve(identityResolveRequest);
