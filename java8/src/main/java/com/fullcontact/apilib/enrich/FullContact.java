@@ -3,17 +3,18 @@ package com.fullcontact.apilib.enrich;
 import com.fullcontact.apilib.FCConstants;
 import com.fullcontact.apilib.FullContactApi;
 import com.fullcontact.apilib.FullContactException;
-import com.fullcontact.apilib.GsonExclude;
 import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.DefaultCredentialProvider;
 import com.fullcontact.apilib.models.Request.CompanyRequest;
 import com.fullcontact.apilib.models.Request.PersonRequest;
+import com.fullcontact.apilib.models.Request.ResolveRequest;
 import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.models.enums.FCApiEndpoint;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
 import com.fullcontact.apilib.test.MockInterceptor;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
 import okhttp3.MediaType;
@@ -54,21 +55,6 @@ public class FullContact implements AutoCloseable {
   private static final Type companySearchResponseType =
       new TypeToken<ArrayList<CompanySearchResponse>>() {}.getType();
   private static final Gson gson = new Gson();
-  private static final Gson gsonExclude =
-      new GsonBuilder()
-          .addSerializationExclusionStrategy(
-              new ExclusionStrategy() {
-                @Override
-                public boolean shouldSkipField(FieldAttributes f) {
-                  return f.getAnnotation(GsonExclude.class) != null;
-                }
-
-                @Override
-                public boolean shouldSkipClass(Class<?> clazz) {
-                  return false;
-                }
-              })
-          .create();
 
   /**
    * FullContact client constructor used to initialise the client
@@ -276,31 +262,31 @@ public class FullContact implements AutoCloseable {
    * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
    * Client level.
    *
-   * @param personRequest original request sent by client
+   * @param resolveRequest original request sent by client
    * @return completed CompletableFuture with ResolveResponse
    * @throws FullContactException exception if client is shutdown or request fails validation
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
-  public CompletableFuture<ResolveResponse> identityMap(PersonRequest personRequest)
+  public CompletableFuture<ResolveResponse> identityMap(ResolveRequest resolveRequest)
       throws FullContactException {
-    return this.identityMap(personRequest, this.retryHandler);
+    return this.identityMap(resolveRequest, this.retryHandler);
   }
 
   /**
    * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retryHandler specified.
    *
-   * @param personRequest original request sent by client
+   * @param resolveRequest original request sent by client
    * @return completed CompletableFuture with ResolveResponse
    * @throws FullContactException exception if client is shutdown or request fails validation
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
   public CompletableFuture<ResolveResponse> identityMap(
-      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
-    personRequest.validateForIdentityMap();
-    return resolveRequest(personRequest, retryHandler, FCApiEndpoint.IDENTITY_MAP);
+      ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    resolveRequest.validateForIdentityMap();
+    return resolveRequest(resolveRequest, retryHandler, FCApiEndpoint.IDENTITY_MAP);
   }
 
   /**
@@ -308,30 +294,30 @@ public class FullContact implements AutoCloseable {
    * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
    * Client level.
    *
-   * @param personRequest original request sent by client
+   * @param resolveRequest original request sent by client
    * @return completed CompletableFuture with ResolveResponse
    * @throws FullContactException exception if client is shutdown
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
-  public CompletableFuture<ResolveResponse> identityResolve(PersonRequest personRequest)
+  public CompletableFuture<ResolveResponse> identityResolve(ResolveRequest resolveRequest)
       throws FullContactException {
-    return this.identityResolve(personRequest, this.retryHandler);
+    return this.identityResolve(resolveRequest, this.retryHandler);
   }
 
   /**
    * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retryHandler specified.
    *
-   * @param personRequest original request sent by client
+   * @param resolveRequest original request sent by client
    * @return completed CompletableFuture with ResolveResponse
    * @throws FullContactException exception if client is shutdown
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
   public CompletableFuture<ResolveResponse> identityResolve(
-      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
-    return resolveRequest(personRequest, retryHandler, FCApiEndpoint.IDENTITY_RESOLVE);
+      ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    return resolveRequest(resolveRequest, retryHandler, FCApiEndpoint.IDENTITY_RESOLVE);
   }
 
   /**
@@ -339,15 +325,15 @@ public class FullContact implements AutoCloseable {
    * the request to json, send the Asynchronous request using HTTP POST method. It also handles
    * retries based on retryHandler specified at FullContact Client level.
    *
-   * @param personRequest original request sent by client
+   * @param resolveRequest original request sent by client
    * @return completed CompletableFuture with ResolveResponse
    * @throws FullContactException exception if client is shutdown
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
-  public CompletableFuture<ResolveResponse> identityDelete(PersonRequest personRequest)
+  public CompletableFuture<ResolveResponse> identityDelete(ResolveRequest resolveRequest)
       throws FullContactException {
-    return this.identityDelete(personRequest, this.retryHandler);
+    return this.identityDelete(resolveRequest, this.retryHandler);
   }
 
   /**
@@ -355,23 +341,23 @@ public class FullContact implements AutoCloseable {
    * the request to json, send the Asynchronous request using HTTP POST method. It also handles
    * retries based on retryHandler specified.
    *
-   * @param personRequest original request sent by client
+   * @param resolveRequest original request sent by client
    * @return completed CompletableFuture with ResolveResponse
    * @throws FullContactException exception if client is shutdown
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
   public CompletableFuture<ResolveResponse> identityDelete(
-      PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
-    return resolveRequest(personRequest, retryHandler, FCApiEndpoint.IDENTITY_DELETE);
+      ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    return resolveRequest(resolveRequest, retryHandler, FCApiEndpoint.IDENTITY_DELETE);
   }
 
   protected CompletableFuture<ResolveResponse> resolveRequest(
-      PersonRequest personRequest, RetryHandler retryHandler, FCApiEndpoint fcApiEndpoint)
+      ResolveRequest resolveRequest, RetryHandler retryHandler, FCApiEndpoint fcApiEndpoint)
       throws FullContactException {
     checkForShutdown();
     CompletableFuture<Response<JsonElement>> responseCF = new CompletableFuture<>();
-    RequestBody httpRequest = buildHttpRequest(gsonExclude.toJson(personRequest));
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(resolveRequest));
     CompletableFuture<Response<JsonElement>> httpResponseCompletableFuture;
     switch (fcApiEndpoint) {
       case IDENTITY_MAP:

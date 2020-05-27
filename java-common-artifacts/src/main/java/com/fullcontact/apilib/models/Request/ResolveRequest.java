@@ -4,7 +4,6 @@ import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
-import com.fullcontact.apilib.models.enums.Confidence;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
@@ -12,31 +11,51 @@ import lombok.With;
 
 import java.util.Collections;
 import java.util.List;
-
-/** Class to create request for Person Enrich */
+/** Class to create request for Resolve */
 @Builder(toBuilder = true)
 @Getter
-public class PersonRequest {
+public class ResolveRequest {
   @With private PersonName name;
   @With private Location location;
-  private String webhookUrl, recordId, personId;
-  private Confidence confidence;
-  private boolean infer;
-  @Singular private List<String> phones, emails, dataFilters, maids;
+  private String recordId, personId;
+  @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
 
-  public static class PersonRequestBuilder {
-    private boolean infer = true;
+  /**
+   * Method to validate request for Identity map. It validates that personId should be null
+   *
+   * @throws FullContactException if domain is null or empty
+   */
+  public void validateForIdentityMap() throws FullContactException {
+    if (this.personId != null) {
+      throw new FullContactException("Invalid map request, person id must be empty");
+    }
+    if ((this.name != null && this.location != null)
+        || !this.emails.isEmpty()
+        || !this.phones.isEmpty()
+        || !this.profiles.isEmpty()) {
+      throw new FullContactException(
+          "Invalid map request, Any of Email, Phone, SocialProfile, Name and Location must be present");
+    }
+  }
 
-    public PersonRequest build() throws FullContactException {
+  /**
+   * Check the String if it is null or empty
+   *
+   * @param value String value to check for non blank values
+   * @return true if String is valid
+   */
+  protected static boolean isPopulated(String value) {
+    return value != null && !value.trim().isEmpty();
+  }
+
+  public static class ResolveRequestBuilder {
+
+    public ResolveRequest build() throws FullContactException {
       List<String> phones =
           this.phones != null ? Collections.unmodifiableList(this.phones) : Collections.emptyList();
       List<String> emails =
           this.emails != null ? Collections.unmodifiableList(this.emails) : Collections.emptyList();
-      List<String> dataFilters =
-          this.dataFilters != null
-              ? Collections.unmodifiableList((this.dataFilters))
-              : Collections.emptyList();
       List<String> maids =
           this.maids != null ? Collections.unmodifiableList((this.maids)) : Collections.emptyList();
       List<Profile> profiles =
@@ -44,29 +63,8 @@ public class PersonRequest {
               ? Collections.unmodifiableList(this.profiles)
               : Collections.emptyList();
       this.validate();
-      return new PersonRequest(
-          name,
-          location,
-          webhookUrl,
-          recordId,
-          personId,
-          confidence,
-          infer,
-          phones,
-          emails,
-          dataFilters,
-          maids,
-          profiles);
-    }
-
-    /**
-     * Check the String if it is null or empty
-     *
-     * @param value String value to check for non blank values
-     * @return true if String is valid
-     */
-    protected static boolean isPopulated(String value) {
-      return value != null && !value.trim().isEmpty();
+      return new ResolveRequest(
+          name, location, recordId, personId, phones, emails, maids, profiles);
     }
 
     /**
