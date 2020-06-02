@@ -36,7 +36,6 @@ import java.util.stream.Stream;
  * All requests are converted to JSON and sent via POST method asynchronously
  */
 public class FullContact implements AutoCloseable {
-  private final String userAgent;
   private final CredentialsProvider credentialsProvider;
   private final RetryHandler retryHandler;
   private final HttpClient httpClient;
@@ -53,20 +52,17 @@ public class FullContact implements AutoCloseable {
    *
    * @param credentialsProvider for auth
    * @param headers custom client headers
-   * @param userAgent client UserAgent
    * @param connectTimeoutMillis connection timout for all requests
    * @param retryHandler RetryHandler specified for client
    */
   @Builder
   public FullContact(
       CredentialsProvider credentialsProvider,
-      String userAgent,
       Map<String, String> headers,
       long connectTimeoutMillis,
       RetryHandler retryHandler) {
     this.credentialsProvider = credentialsProvider;
     this.retryHandler = retryHandler;
-    this.userAgent = userAgent;
     this.headersArray = processHeader(headers);
     this.timeoutDuration =
         Duration.ofMillis(connectTimeoutMillis > 0 ? connectTimeoutMillis : 3000);
@@ -82,9 +78,7 @@ public class FullContact implements AutoCloseable {
     }
     headers.put("Authorization", "Bearer " + this.credentialsProvider.getApiKey());
     headers.put("Content-Type", "application/json");
-    if (this.userAgent != null && !this.userAgent.isBlank()) {
-      headers.put("User-Agent", this.userAgent);
-    }
+    headers.put("User-Agent", FCConstants.USER_AGENT_Java11);
     return headers.entrySet().stream()
         .filter(entry -> entry.getValue() != null)
         .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
@@ -579,8 +573,7 @@ public class FullContact implements AutoCloseable {
      */
     public FullContact build() throws FullContactException {
       this.validate();
-      return new FullContact(
-          credentialsProvider, userAgent, headers, connectTimeoutMillis, retryHandler);
+      return new FullContact(credentialsProvider, headers, connectTimeoutMillis, retryHandler);
     }
 
     /**
@@ -592,17 +585,6 @@ public class FullContact implements AutoCloseable {
      */
     public FullContactBuilder credentialsProvider(CredentialsProvider credentialsProvider) {
       this.credentialsProvider = credentialsProvider;
-      return this;
-    }
-
-    /**
-     * Builder method to provide UserAgent
-     *
-     * @param userAgent the UserAgent of client
-     * @return FullContactBuilder
-     */
-    public FullContactBuilder userAgent(String userAgent) {
-      this.userAgent = userAgent;
       return this;
     }
 

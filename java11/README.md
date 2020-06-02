@@ -58,7 +58,6 @@ Build your fcClient with:
 | Build Parameters | Description | Default value | isOptional |
 | ---------------- | ----------- | ------------- | ---------- |
 | ```CredentialsProvider```| Used for Authentication | API Key through Environment variable```"FC_API_KEY"``` | No | 
-| `UserAgent` | Your User Agent | Not added to request header by default | Yes |
 | `Headers` | Any Custom Headers you want to add with every request, can include `Reporting-Key` as well. | No additional header | Yes |
 | `connectTimeoutMillis` | Connection timeout for request | 3000ms | Yes |
 | `retryHandler` | RetryHandler object | `DefaultRetryHandler` | Yes |

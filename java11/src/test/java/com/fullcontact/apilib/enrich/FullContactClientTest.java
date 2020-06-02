@@ -13,8 +13,7 @@ public class FullContactClientTest {
     HashMap<String, String> customHeader = new HashMap<>();
     customHeader.put("Reporting-Key", "clientXYZ");
     try {
-      FullContact fcTest =
-          FullContact.builder().userAgent("user-Agent").headers(customHeader).build();
+      FullContact fcTest = FullContact.builder().headers(customHeader).build();
       fcTest.close();
     } catch (FullContactException fce) {
       Assert.assertEquals(
@@ -29,7 +28,6 @@ public class FullContactClientTest {
     FullContact fcTest =
         FullContact.builder()
             .credentialsProvider(new StaticApiKeyCredentialProvider("test-api-key"))
-            .userAgent("user-Agent")
             .headers(customHeader)
             .build();
     fcTest.close();

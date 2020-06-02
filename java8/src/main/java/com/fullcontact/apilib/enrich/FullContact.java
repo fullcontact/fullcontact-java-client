@@ -47,7 +47,6 @@ public class FullContact implements AutoCloseable {
   private final CredentialsProvider credentialsProvider;
   private final RetryHandler retryHandler;
   private final Map<String, String> headers;
-  private final String userAgent;
   private final long connectTimeoutMillis;
   private final ScheduledExecutorService executor;
   private boolean isShutdown = false;
@@ -61,7 +60,6 @@ public class FullContact implements AutoCloseable {
    *
    * @param credentialsProvider for auth
    * @param headers custom client headers
-   * @param userAgent client UserAgent
    * @param connectTimeoutMillis connection timout for all requests
    * @param retryHandler RetryHandler specified for client
    */
@@ -69,13 +67,11 @@ public class FullContact implements AutoCloseable {
   public FullContact(
       CredentialsProvider credentialsProvider,
       Map<String, String> headers,
-      String userAgent,
       long connectTimeoutMillis,
       RetryHandler retryHandler) {
     this.credentialsProvider = credentialsProvider;
     this.retryHandler = retryHandler;
     this.headers = headers != null ? Collections.unmodifiableMap(headers) : null;
-    this.userAgent = userAgent;
     this.connectTimeoutMillis = connectTimeoutMillis > 0 ? connectTimeoutMillis : 3000;
     this.httpClient = this.configureHTTPClientBuilder().build();
     this.client = this.configureRetrofit().create(FullContactApi.class);
@@ -93,13 +89,12 @@ public class FullContact implements AutoCloseable {
           Request.Builder requestBuilder = chain.request().newBuilder();
           requestBuilder.addHeader("Authorization", "Bearer " + credentialsProvider.getApiKey());
           requestBuilder.addHeader("Content-Type", "application/json");
-          if (this.userAgent != null && !this.userAgent.trim().isEmpty()) {
-            requestBuilder.addHeader("User-Agent", this.userAgent);
-          }
+          requestBuilder.addHeader("User-Agent", FCConstants.USER_AGENT_Java8);
           if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
               if (!entry.getKey().equalsIgnoreCase("authorization")
                   && !entry.getKey().equalsIgnoreCase("Content-Type")
+                  && !entry.getKey().equalsIgnoreCase("User-Agent")
                   && entry.getValue() != null) {
                 requestBuilder.addHeader(entry.getKey(), entry.getValue());
               }
@@ -636,8 +631,7 @@ public class FullContact implements AutoCloseable {
      */
     public FullContact build() throws FullContactException {
       this.validate();
-      return new FullContact(
-          credentialsProvider, headers, userAgent, connectTimeoutMillis, retryHandler);
+      return new FullContact(credentialsProvider, headers, connectTimeoutMillis, retryHandler);
     }
 
     private void validate() throws FullContactException {
@@ -672,16 +666,6 @@ public class FullContact implements AutoCloseable {
       return this;
     }
 
-    /**
-     * Builder method to provide UserAgent
-     *
-     * @param userAgent the UserAgent of client
-     * @return FullContactBuilder
-     */
-    public FullContactBuilder userAgent(String userAgent) {
-      this.userAgent = userAgent;
-      return this;
-    }
     /**
      * Builder method to provide connection timeout, default value is 3000ms
      *
