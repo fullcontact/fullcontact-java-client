@@ -231,7 +231,7 @@ public class ResolveResponseTest {
             .build();
 
     ResolveRequest resolveRequest =
-        FullContact.buildResolveRequest().email("marte7@gmail.com").build();
+        FullContact.buildResolveRequest().email("marte7@gmail.com").recordId("test").build();
     ResolveResponse response = fcTest.identityDelete(resolveRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());

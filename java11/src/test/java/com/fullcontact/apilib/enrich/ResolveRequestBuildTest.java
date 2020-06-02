@@ -279,6 +279,7 @@ public class ResolveRequestBuildTest {
     try {
       ResolveRequest resolveRequest =
           FullContact.buildResolveRequest().email("test").personId("test").build();
+      resolveRequest.validateForIdentityMap();
     } catch (FullContactException fce) {
       Assert.assertEquals("Invalid map request, person id must be empty", fce.getMessage());
     }
@@ -288,10 +289,33 @@ public class ResolveRequestBuildTest {
   public void identityMapRequestWithOnlyRecordId() {
     try {
       ResolveRequest resolveRequest = FullContact.buildResolveRequest().recordId("test").build();
+      resolveRequest.validateForIdentityMap();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Invalid map request, Any of Email, Phone, SocialProfile, Name and Location must be present",
           fce.getMessage());
+    }
+  }
+
+  @Test
+  public void identityResolveRequestWithRecordIdAndPersonId() {
+    try {
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest().recordId("test").personId("test").build();
+      resolveRequest.validateForIdentityResolve();
+    } catch (FullContactException fce) {
+      Assert.assertEquals(
+          "Both record id and person id are populated, please select one", fce.getMessage());
+    }
+  }
+
+  @Test
+  public void identityDeleteRequestWithNoRecordId() {
+    try {
+      ResolveRequest resolveRequest = FullContact.buildResolveRequest().personId("test").build();
+      resolveRequest.validateForIdentityDelete();
+    } catch (FullContactException fce) {
+      Assert.assertEquals("recordId param must be specified", fce.getMessage());
     }
   }
 }

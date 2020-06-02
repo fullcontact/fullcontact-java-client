@@ -22,9 +22,10 @@ public class ResolveRequest {
   @Singular private List<Profile> profiles;
 
   /**
-   * Method to validate request for Identity map. It validates that personId should be null
+   * Method to validate request for Identity map. It validates that personId should be null and must
+   * contain any one of person identifier
    *
-   * @throws FullContactException if domain is null or empty
+   * @throws FullContactException if validation fails
    */
   public void validateForIdentityMap() throws FullContactException {
     if (this.personId != null) {
@@ -37,6 +38,30 @@ public class ResolveRequest {
     } else {
       throw new FullContactException(
           "Invalid map request, Any of Email, Phone, SocialProfile, Name and Location must be present");
+    }
+  }
+
+  /**
+   * Method to validate request for Identity resolve. It validates that both personId and recordId
+   * should not be populated
+   *
+   * @throws FullContactException if validation fails
+   */
+  public void validateForIdentityResolve() throws FullContactException {
+    if (isPopulated(this.recordId) && isPopulated(this.personId)) {
+      throw new FullContactException(
+          "Both record id and person id are populated, please select one");
+    }
+  }
+
+  /**
+   * Method to validate request for Identity delete. It validates that recordId must be populated
+   *
+   * @throws FullContactException if validation fails
+   */
+  public void validateForIdentityDelete() throws FullContactException {
+    if (!isPopulated(this.recordId)) {
+      throw new FullContactException("recordId param must be specified");
     }
   }
 

@@ -284,6 +284,7 @@ public class FullContact implements AutoCloseable {
    */
   public CompletableFuture<ResolveResponse> identityResolve(
       ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    resolveRequest.validateForIdentityResolve();
     return resolveRequest(resolveRequest, retryHandler, FCConstants.identityResolveUri);
   }
 
@@ -316,6 +317,7 @@ public class FullContact implements AutoCloseable {
    */
   public CompletableFuture<ResolveResponse> identityDelete(
       ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    resolveRequest.validateForIdentityDelete();
     return resolveRequest(resolveRequest, retryHandler, FCConstants.identityDeleteUri);
   }
 
