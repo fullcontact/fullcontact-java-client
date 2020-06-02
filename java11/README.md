@@ -69,9 +69,13 @@ Custom headers provided will remain same and will be sent with every request mad
 If you wish to change the headers, build a new client and provide new custom headers while building.
 
 #### RetryHandler
+In case of failure, FullContact Client will auto-retry for same request based on certain conditions set in RetryHandler
 - Although optional, a custom Retry handler can be created by implementing `RetryHandler` interface and then used to build FC client. 
 By default, client will use `DefaultRetryHandler` to schedule a retry for same request, with `retryAttempts = 1`, 
-`retryDelayMillis = 1000`, in case of `429`(rate limit error) or `503`(capacity limit error).
+`retryDelayMillis = 1000`, and in case of `429`(rate limit error) or `503`(capacity limit error).
+
+- This Client will auto-retry for a maximum of 5 times, even if higher value 
+is set in the custom Retry Handler.
 
 - Different `retryHandler` can be specified at each request level, 
 By Default it will just use the `retryHandler` from client level.

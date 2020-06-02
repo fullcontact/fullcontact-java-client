@@ -493,7 +493,7 @@ public class FullContact implements AutoCloseable {
       Throwable throwable,
       int retryAttemptsDone,
       RetryHandler retryHandler) {
-    if (retryAttemptsDone < retryHandler.getRetryAttempts()) {
+    if (retryAttemptsDone < (Math.min(retryHandler.getRetryAttempts(), 5))) {
       retryAttemptsDone++;
       int finalRetryAttemptsDone = retryAttemptsDone;
       this.executor.schedule(
@@ -525,9 +525,11 @@ public class FullContact implements AutoCloseable {
                   return null;
                 });
           },
-          retryHandler.getRetryDelayMillis() * (long) Math.pow(2, retryAttemptsDone - 1),
+          Math.max(retryHandler.getRetryDelayMillis(), 500)
+              * (long) Math.pow(2, retryAttemptsDone - 1),
           TimeUnit.MILLISECONDS);
-    } else if (throwable != null && retryAttemptsDone == retryHandler.getRetryAttempts()) {
+    } else if (throwable != null
+        && retryAttemptsDone == (Math.min(retryHandler.getRetryAttempts(), 5))) {
       responseCF.completeExceptionally(throwable);
     } else {
       responseCF.complete(httpResponse);
