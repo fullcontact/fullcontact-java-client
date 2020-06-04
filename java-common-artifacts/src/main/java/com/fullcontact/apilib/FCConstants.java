@@ -9,8 +9,8 @@ public class FCConstants {
   public static final String VERSION = "2.0.0";
 
   // User Agent
-  public static final String USER_AGENT_Java8 = "FullContact_Java8_Client:" + VERSION;
-  public static final String USER_AGENT_Java11 = "FullContact_Java11_Client:" + VERSION;
+  public static final String USER_AGENT_Java8 = "FullContact_Java8_Client_V" + VERSION;
+  public static final String USER_AGENT_Java11 = "FullContact_Java11_Client_V" + VERSION;
 
   public static final String API_ENDPOINT_PERSON_ENRICH = "person.enrich";
   public static final String API_ENDPOINT_COMPANY_ENRICH = "company.enrich";
