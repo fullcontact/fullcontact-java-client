@@ -58,3 +58,5 @@ Temporary Items
 /java-common-artifacts/build/
 /Javadocs/
 /gradle.properties
+/java11/src/main/java/com/fullcontact/apilib/enrich/Example.java
+/java8/src/main/java/com/fullcontact/apilib/enrich/Example.java

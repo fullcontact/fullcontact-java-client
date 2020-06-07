@@ -170,6 +170,26 @@ public class PersonResponseTest {
   }
 
   @Test
+  public void personResponseWithCustomRetryHandlerTest()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_001");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest().email("marquitaross006@gmail.com").build();
+    PersonResponse response = fcTest.enrich(personRequest, new CustomRetryHandler()).get();
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(200, response.getStatusCode());
+    Assert.assertEquals("OK", response.getMessage());
+    Assert.assertEquals("Marquita H Ross", response.getFullName());
+  }
+
+  @Test
   public void responseStatus400Test()
       throws FullContactException, InterruptedException, ExecutionException {
     CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");

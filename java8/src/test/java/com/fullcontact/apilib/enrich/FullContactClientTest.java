@@ -13,13 +13,7 @@ public class FullContactClientTest {
     HashMap<String, String> customHeader = new HashMap<>();
     customHeader.put("Reporting-Key", "clientXYZ");
     try {
-      FullContact fcTest =
-          FullContact.builder()
-              .retryDelayMillis(2000)
-              .retryAttempts(7)
-              .userAgent("user-Agent")
-              .headers(customHeader)
-              .build();
+      FullContact fcTest = FullContact.builder().headers(customHeader).build();
       fcTest.close();
     } catch (FullContactException fce) {
       Assert.assertEquals(
@@ -34,9 +28,6 @@ public class FullContactClientTest {
     FullContact fcTest =
         FullContact.builder()
             .credentialsProvider(new StaticApiKeyCredentialProvider("test-api-key"))
-            .retryDelayMillis(2000)
-            .retryAttempts(7)
-            .userAgent("user-Agent")
             .headers(customHeader)
             .build();
     fcTest.close();
@@ -67,5 +58,15 @@ public class FullContactClientTest {
     } catch (FullContactException e) {
       Assert.assertEquals("API Key can't be Empty", e.getMessage());
     }
+  }
+
+  @Test
+  public void customRetryHandlerClientTest() throws FullContactException {
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(new StaticApiKeyCredentialProvider("api-key"))
+            .connectTimeoutMillis(2000)
+            .retryHandler(new CustomRetryHandler())
+            .build();
   }
 }

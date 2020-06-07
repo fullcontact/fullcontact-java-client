@@ -53,6 +53,18 @@ public class HttpResponseTestObjects {
         statusCode = 200;
         fileName = "src/test/resources/companySearchResponse.json";
         break;
+      case "tc_101":
+        statusCode = 200;
+        fileName = "src/test/resources/identityMapResponse.json";
+        break;
+      case "tc_102":
+        statusCode = 200;
+        fileName = "src/test/resources/identityResolveResponse.json";
+        break;
+      case "tc_103":
+        statusCode = 204;
+        fileName = "src/test/resources/empty.json";
+        break;
       default:
         statusCode = 500;
         fileName = "";
