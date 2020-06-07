@@ -13,11 +13,11 @@ Add this dependency to your project's build file:
 
 - Java11+
 ```groovy
-implementation 'com.fullcontact.client:java11:1.0.0'
+implementation 'com.fullcontact.client:java11:2.0.0'
 ```
 - Java8+
 ```groovy
-implementation 'com.fullcontact.client:java8:1.0.0'
+implementation 'com.fullcontact.client:java8:2.0.0'
 ```
 
 ### Maven users
@@ -29,7 +29,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 - Java8+
@@ -37,7 +37,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
