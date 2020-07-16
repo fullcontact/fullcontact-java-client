@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class DataAddOns {
   private String id, name, description, docLink;
-  private Boolean enabled, applied;
+  private boolean enabled, applied;
 }

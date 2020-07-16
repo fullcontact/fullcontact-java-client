@@ -3,8 +3,7 @@ package com.fullcontact.apilib;
 import com.google.gson.JsonElement;
 import okhttp3.RequestBody;
 import retrofit2.Response;
-import retrofit2.http.Body;
-import retrofit2.http.POST;
+import retrofit2.http.*;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -31,4 +30,7 @@ public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_IDENTITY_DELETE)
   CompletableFuture<Response<JsonElement>> identityDelete(@Body RequestBody body);
+
+  @GET(FCConstants.API_ENDPOINT_VERIFICATION_EMAIL)
+  CompletableFuture<Response<JsonElement>> emailVerification(@Query("email") String email);
 }

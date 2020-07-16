@@ -11,6 +11,7 @@ import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
 
@@ -325,6 +326,47 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getResolveResponse);
   }
 
+  /**
+   * Method for Email Verification without any custom RetryHandler, It sends Asynchronous request
+   * using HTTP GET method. It also handles retries based on retryHandler specified at FullContact
+   * Client level.
+   *
+   * @param email original request sent by client
+   * @return completed CompletableFuture with EmailVerificationResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<EmailVerificationResponse> emailVerification(String email)
+      throws FullContactException {
+    return this.emailVerification(email, this.retryHandler);
+  }
+
+  /**
+   * Method for Email Verification. It sends Asynchronous request using HTTP GET method. It also
+   * handles retries based on retry condition.
+   *
+   * @param email original request sent by client
+   * @return completed CompletableFuture with EmailVerificationResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<EmailVerificationResponse> emailVerification(
+      String email, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpGetRequest(
+            URI.create(
+                FCConstants.API_BASE_V2
+                    + FCConstants.API_ENDPOINT_VERIFICATION_EMAIL
+                    + "?email="
+                    + email));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getEmailVerificationResponse);
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -336,6 +378,14 @@ public class FullContact implements AutoCloseable {
         .headers(this.headersArray)
         .timeout(this.timeoutDuration)
         .POST(HttpRequest.BodyPublishers.ofString(request))
+        .build();
+  }
+
+  protected HttpRequest buildHttpGetRequest(URI uri) {
+    return HttpRequest.newBuilder(uri)
+        .headers(this.headersArray)
+        .timeout(this.timeoutDuration)
+        .GET()
         .build();
   }
 
@@ -469,6 +519,29 @@ public class FullContact implements AutoCloseable {
             || (httpResponse.statusCode() == 204)
             || (httpResponse.statusCode() == 404);
     return resolveResponse;
+  }
+
+  protected static EmailVerificationResponse getEmailVerificationResponse(
+      HttpResponse<String> httpResponse) {
+    EmailVerificationResponse emailVerificationResponse;
+    if (httpResponse.body() != null && !httpResponse.body().trim().isEmpty()) {
+      emailVerificationResponse =
+          gson.fromJson(httpResponse.body(), EmailVerificationResponse.class);
+      if (httpResponse.statusCode() == 200) {
+        emailVerificationResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      emailVerificationResponse = new EmailVerificationResponse();
+      if (httpResponse.statusCode() >= 500) {
+        emailVerificationResponse.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    emailVerificationResponse.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 202)
+            || (httpResponse.statusCode() == 404);
+    emailVerificationResponse.statusCode = httpResponse.statusCode();
+    return emailVerificationResponse;
   }
 
   /**

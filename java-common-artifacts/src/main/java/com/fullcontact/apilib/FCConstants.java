@@ -5,6 +5,7 @@ import java.net.URI;
 /** Defines the constants used in FullContact client */
 public class FCConstants {
   public static final String API_BASE_DEFAULT = "https://api.fullcontact.com/v3/";
+  public static final String API_BASE_V2 = "https://api.fullcontact.com/v2/";
 
   public static final String VERSION = "2.0.0";
 
@@ -24,6 +25,9 @@ public class FCConstants {
   public static final String API_ENDPOINT_IDENTITY_MAP = "identity.map";
   public static final String API_ENDPOINT_IDENTITY_RESOLVE = "identity.resolve";
   public static final String API_ENDPOINT_IDENTITY_DELETE = "identity.delete";
+
+  // Email Verification
+  public static final String API_ENDPOINT_VERIFICATION_EMAIL = "verification/email";
 
   // URIs
   public static final URI personEnrichUri =

@@ -22,10 +22,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,6 +111,7 @@ public class FullContact implements AutoCloseable {
       httpClientBuilder.addInterceptor(new MockInterceptor());
     }
     httpClientBuilder.addInterceptor(logging);
+    httpClientBuilder.addNetworkInterceptor(new FCOkHttpInterceptor());
     httpClientBuilder.connectTimeout(this.connectTimeoutMillis, TimeUnit.MILLISECONDS);
 
     return httpClientBuilder;
@@ -378,6 +381,31 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getResolveResponse);
   }
 
+  public CompletableFuture<EmailVerificationResponse> emailVerification(String email)
+      throws FullContactException {
+    return this.emailVerification(email, this.retryHandler);
+  }
+
+  public CompletableFuture<EmailVerificationResponse> emailVerification(
+      String email, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    if (email != null && !email.trim().isEmpty()) {
+      CompletableFuture<Response<JsonElement>> responseCF = new CompletableFuture<>();
+      RequestBody httpRequest = buildHttpRequest(email);
+      CompletableFuture<Response<JsonElement>> httpResponseCompletableFuture =
+          this.client.emailVerification(email);
+      handleHttpResponse(
+          httpRequest,
+          retryHandler,
+          httpResponseCompletableFuture,
+          responseCF,
+          FCApiEndpoint.EMAIL_VERIFICATION);
+      return responseCF.thenApply(FullContact::getEmailVerificationResponse);
+    } else {
+      throw new FullContactException("Email can't be empty");
+    }
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -415,7 +443,7 @@ public class FullContact implements AutoCloseable {
    * @param response raw response from person enrich API
    * @return PersonResponse
    */
-  protected static PersonResponse getPersonResponse(retrofit2.Response<JsonElement> response) {
+  protected static PersonResponse getPersonResponse(Response<JsonElement> response) {
     PersonResponse personResponse;
     if (response.isSuccessful() && response.body() != null) {
       personResponse = gson.fromJson(response.body(), PersonResponse.class);
@@ -438,7 +466,7 @@ public class FullContact implements AutoCloseable {
    * @param response raw response from company enrich API
    * @return CompanyResponse
    */
-  protected static CompanyResponse getCompanyResponse(retrofit2.Response<JsonElement> response) {
+  protected static CompanyResponse getCompanyResponse(Response<JsonElement> response) {
     CompanyResponse companyResponse;
     if (response.isSuccessful() && response.body() != null) {
       companyResponse = gson.fromJson(response.body(), CompanyResponse.class);
@@ -462,7 +490,7 @@ public class FullContact implements AutoCloseable {
    * @return CompanySearchResponseList
    */
   protected static CompanySearchResponseList getCompanySearchResponse(
-      retrofit2.Response<JsonElement> response) {
+      Response<JsonElement> response) {
     CompanySearchResponseList companySearchResponseList = new CompanySearchResponseList();
     if (response.body() != null && !response.body().isJsonNull()) {
       if (response.code() == 200) {
@@ -488,7 +516,7 @@ public class FullContact implements AutoCloseable {
    * @param response raw response from Resolve APIs
    * @return ResolveResponse
    */
-  protected static ResolveResponse getResolveResponse(retrofit2.Response<JsonElement> response) {
+  protected static ResolveResponse getResolveResponse(Response<JsonElement> response) {
     ResolveResponse resolveResponse;
     if (response.isSuccessful() && response.body() != null) {
       resolveResponse = gson.fromJson(response.body(), ResolveResponse.class);
@@ -503,6 +531,24 @@ public class FullContact implements AutoCloseable {
     resolveResponse.isSuccessful =
         (response.code() == 200) || (response.code() == 204) || (response.code() == 404);
     return resolveResponse;
+  }
+
+  protected static EmailVerificationResponse getEmailVerificationResponse(
+      Response<JsonElement> response) {
+    EmailVerificationResponse emailVerificationResponse = new EmailVerificationResponse();
+    if (response.isSuccessful() && response.body() != null) {
+      emailVerificationResponse = gson.fromJson(response.body(), EmailVerificationResponse.class);
+      if (response.code() == 200) {
+        emailVerificationResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      emailVerificationResponse = new EmailVerificationResponse();
+      emailVerificationResponse.message = response.message();
+    }
+    emailVerificationResponse.statusCode = response.code();
+    emailVerificationResponse.isSuccessful =
+        (response.code() == 200) || (response.code() == 202) || (response.code() == 404);
+    return emailVerificationResponse;
   }
 
   /**
@@ -553,6 +599,14 @@ public class FullContact implements AutoCloseable {
                 break;
               case IDENTITY_DELETE:
                 retryCF = this.client.identityDelete(httpRequest);
+                break;
+              case EMAIL_VERIFICATION:
+                try {
+                  final Buffer buffer = new Buffer();
+                  httpRequest.writeTo(buffer);
+                  retryCF = this.client.emailVerification(buffer.readUtf8());
+                } catch (IOException ignored) {
+                }
                 break;
             }
             retryCF.handle(
