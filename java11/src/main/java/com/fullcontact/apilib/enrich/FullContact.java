@@ -11,7 +11,6 @@ import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
 
