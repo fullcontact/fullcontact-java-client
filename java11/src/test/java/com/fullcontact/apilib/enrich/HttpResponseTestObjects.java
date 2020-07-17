@@ -65,6 +65,10 @@ public class HttpResponseTestObjects {
         statusCode = 204;
         fileName = "src/test/resources/empty.json";
         break;
+      case "tc_201":
+        statusCode = 200;
+        fileName = "src/test/resources/emailVerificationResponse.json";
+        break;
       default:
         statusCode = 500;
         fileName = "";
