@@ -381,11 +381,31 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getResolveResponse);
   }
 
+  /**
+   * Method for Email Verification. It sends a Asynchronous request using HTTP GET method. It also
+   * handles retries based RetryHandler specified on FullContact client level.
+   *
+   * @param email original email sent by client for verification
+   * @return completed CompletableFuture with EmailVerificationResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
   public CompletableFuture<EmailVerificationResponse> emailVerification(String email)
       throws FullContactException {
     return this.emailVerification(email, this.retryHandler);
   }
 
+  /**
+   * Method for Email Verification. It sends a Asynchronous request using HTTP GET method. It also
+   * handles retries based on retry condition specified in RetryHandler.
+   *
+   * @param email original email sent by client for verification
+   * @return completed CompletableFuture with EmailVerificationResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
   public CompletableFuture<EmailVerificationResponse> emailVerification(
       String email, RetryHandler retryHandler) throws FullContactException {
     checkForShutdown();

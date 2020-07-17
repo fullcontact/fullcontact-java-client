@@ -314,6 +314,15 @@ CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(pers
           });
 ```
 
+## Verification
+[EmailVerification API Reference](https://dashboard.fullcontact.com/api-ref#verification)
+- `v2/verification/email`
+
+FullContact Email Verification API accepts single `email` request, as a `String`. Requests are sent 
+using HTTP GET and request email is set as a query parameter. It returns a `CompletableFuture<EmailVerificationResponse>`
+```java
+CompletableFuture<EmailVerificationResponse> emailVerificationResponse = fcClient.emailVerification("bart@fullcontact.com");
+```
 
 ## Changelog
 - If you are updating the version of this client from `1.0.0`, please note that

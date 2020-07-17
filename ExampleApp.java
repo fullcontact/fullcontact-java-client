@@ -152,6 +152,14 @@ public class App {
           response -> {
             System.out.println("identity.delete " + response.toString());
           });
+
+      //Email Verification
+      CompletableFuture<EmailVerificationResponse> emailVerificationResponse =
+          fcClient.emailVerification("bart@fullcontact.com");
+      emailVerificationResponse.thenAccept(
+          response -> {
+            System.out.println("send Safely " + response.getEmails().get("bart@fullcontact.com").isSendSafely())
+          });
       Thread.sleep(5000);
       fcClient.close();
 
