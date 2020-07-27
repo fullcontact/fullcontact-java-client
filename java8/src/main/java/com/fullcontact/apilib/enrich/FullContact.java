@@ -472,7 +472,11 @@ public class FullContact implements AutoCloseable {
       }
     } else {
       personResponse = new PersonResponse();
-      personResponse.message = response.message();
+      if (response.errorBody() != null) {
+        personResponse = gson.fromJson(response.errorBody().charStream(), PersonResponse.class);
+      } else {
+        personResponse.message = response.message();
+      }
     }
     personResponse.isSuccessful =
         response.code() == 200 || response.code() == 202 || response.code() == 404;
@@ -495,7 +499,11 @@ public class FullContact implements AutoCloseable {
       }
     } else {
       companyResponse = new CompanyResponse();
-      companyResponse.message = response.message();
+      if (response.errorBody() != null) {
+        companyResponse = gson.fromJson(response.errorBody().charStream(), CompanyResponse.class);
+      } else {
+        companyResponse.message = response.message();
+      }
     }
     companyResponse.isSuccessful =
         response.code() == 200 || response.code() == 202 || response.code() == 404;
@@ -522,7 +530,12 @@ public class FullContact implements AutoCloseable {
         companySearchResponseList = gson.fromJson(response.body(), CompanySearchResponseList.class);
       }
     } else {
-      companySearchResponseList.message = response.message();
+      if (response.errorBody() != null) {
+        companySearchResponseList =
+            gson.fromJson(response.errorBody().charStream(), CompanySearchResponseList.class);
+      } else {
+        companySearchResponseList.message = response.message();
+      }
     }
     companySearchResponseList.isSuccessful =
         (response.code() == 200) || (response.code() == 202) || (response.code() == 404);
@@ -545,7 +558,11 @@ public class FullContact implements AutoCloseable {
       }
     } else {
       resolveResponse = new ResolveResponse();
-      resolveResponse.message = response.message();
+      if (response.errorBody() != null) {
+        resolveResponse = gson.fromJson(response.errorBody().charStream(), ResolveResponse.class);
+      } else {
+        resolveResponse.message = response.message();
+      }
     }
     resolveResponse.statusCode = response.code();
     resolveResponse.isSuccessful =
@@ -563,7 +580,12 @@ public class FullContact implements AutoCloseable {
       }
     } else {
       emailVerificationResponse = new EmailVerificationResponse();
-      emailVerificationResponse.message = response.message();
+      if (response.errorBody() != null) {
+        emailVerificationResponse =
+            gson.fromJson(response.errorBody().charStream(), EmailVerificationResponse.class);
+      } else {
+        emailVerificationResponse.message = response.message();
+      }
     }
     emailVerificationResponse.statusCode = response.code();
     emailVerificationResponse.isSuccessful =
