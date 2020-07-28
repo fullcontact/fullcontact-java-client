@@ -31,10 +31,10 @@ Add this dependency to your project's POM:
 
 ## Dependencies
 
-__[Retrofit2](https://github.com/square/retrofit/)__ v2.7.0 : HTTP Client used for Java 8
+__[Retrofit2](https://github.com/square/retrofit/)__ v2.9.0 : HTTP Client used for Java 8
 
-__[Retrofit2 Gson Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson)__ v2.7.0: 
-Converter which uses [Gson](https://github.com/google/gson) for serialization to and from JSON
+__[Gson](https://github.com/google/gson)__ v2.8.6: Java library to convert Java Objects to JSON
+and vice-versa.
 
 ## Providing Authentication to FullContact Client
 FullContact client uses ```CredentialsProvider``` interface for Authentication. Different ways 
