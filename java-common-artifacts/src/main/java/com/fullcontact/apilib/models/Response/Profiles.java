@@ -14,5 +14,13 @@ public class Profiles {
       youtube,
       angellist,
       owler,
-      pinterest;
+      pinterest,
+      github,
+      lastfm,
+      flickr,
+      hackernews,
+      foursquare,
+      medium,
+      keybase,
+      aboutme;
 }
