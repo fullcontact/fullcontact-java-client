@@ -76,7 +76,7 @@ public class PersonResponseTest {
     Assert.assertEquals(
         "41860 - San Francisco-Oakland-Hayward, CA Metropolitan Statistical Area",
         response.getLocationInfo().get().getCoreBasedStatisticalArea());
-    Assert.assertEquals(14, response.getLocationInfo().get().getCongressionalDistrict());
+    Assert.assertEquals("AT_LARGE", response.getLocationInfo().get().getCongressionalDistrict());
     Assert.assertEquals(222, response.getLocationInfo().get().getNumericCountyCode());
     Assert.assertEquals(
         "PRESENT", response.getHouseHoldPresence().get().getMultigenerationalResident());
