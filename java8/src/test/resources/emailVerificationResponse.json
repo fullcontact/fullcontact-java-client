@@ -1,0 +1,23 @@
+{
+  "status": 200,
+  "requestId": "10887309-1e58-461a-89ad-09d8e80a8f35",
+  "emails": {
+    "bart@fullcontact.com": {
+      "message": "High Risk (Complainer, Fraudulent)",
+      "address": "bart@fullcontact.com",
+      "username": "bart",
+      "domain": "fullcontact.com",
+      "corrected": false,
+      "attributes": {
+        "validSyntax": true,
+        "deliverable": false,
+        "catchall": false,
+        "risky": true,
+        "disposable": false
+      },
+      "person": "https://api.fullcontact.com/v2/person.json?email=bart@fullcontact.com&apiKey=",
+      "company": "https://api.fullcontact.com/v2/company/lookup.json?domain=fullcontact.com&apiKey=",
+      "sendSafely": false
+    }
+  }
+}

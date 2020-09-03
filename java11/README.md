@@ -14,7 +14,7 @@ API Clients for FullContact on V3 APIs supports Java11+
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:2.0.0'
+implementation 'com.fullcontact.client:java11:2.1.0'
 ```
 
 ### Maven users
@@ -25,7 +25,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
@@ -314,6 +314,15 @@ CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(pers
           });
 ```
 
+## Verification
+[EmailVerification API Reference](https://dashboard.fullcontact.com/api-ref#verification)
+- `v2/verification/email`
+
+FullContact Email Verification API accepts single `email` request, as a `String`. Requests are sent 
+using HTTP GET and request email is set as a query parameter. It returns a `CompletableFuture<EmailVerificationResponse>`
+```java
+CompletableFuture<EmailVerificationResponse> emailVerificationResponse = fcClient.emailVerification("bart@fullcontact.com");
+```
 
 ## Changelog
 - If you are updating the version of this client from `1.0.0`, please note that

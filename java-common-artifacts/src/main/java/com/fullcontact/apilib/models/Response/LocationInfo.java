@@ -7,7 +7,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class LocationInfo {
-  private String carrierRoute, designatedMarketArea, coreBasedStatisticalArea, nielsenCountySize;
-  private int congressionalDistrict, numericCountyCode;
+  private String carrierRoute,
+      designatedMarketArea,
+      coreBasedStatisticalArea,
+      nielsenCountySize,
+      congressionalDistrict;
+  private int numericCountyCode;
   private boolean seasonalAddress;
 }

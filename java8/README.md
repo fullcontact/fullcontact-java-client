@@ -14,7 +14,7 @@ API Clients for FullContact on V3 APIs supports Java8+
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java8:2.0.0'
+implementation 'com.fullcontact.client:java8:2.1.0'
 ```
 
 ### Maven users
@@ -25,16 +25,16 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
 ## Dependencies
 
-__[Retrofit2](https://github.com/square/retrofit/)__ v2.7.0 : HTTP Client used for Java 8
+__[Retrofit2](https://github.com/square/retrofit/)__ v2.9.0 : HTTP Client used for Java 8
 
-__[Retrofit2 Gson Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson)__ v2.7.0: 
-Converter which uses [Gson](https://github.com/google/gson) for serialization to and from JSON
+__[Gson](https://github.com/google/gson)__ v2.8.6: Java library to convert Java Objects to JSON
+and vice-versa.
 
 ## Providing Authentication to FullContact Client
 FullContact client uses ```CredentialsProvider``` interface for Authentication. Different ways 
@@ -313,6 +313,15 @@ CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(pers
           });
 ```
 
+## Verification
+[EmailVerification API Reference](https://dashboard.fullcontact.com/api-ref#verification)
+- `v2/verification/email`
+
+FullContact Email Verification API accepts single `email` request, as a `String`. Requests are sent 
+using HTTP GET and request email is set as a query parameter. It returns a `CompletableFuture<EmailVerificationResponse>`
+```java
+CompletableFuture<EmailVerificationResponse> emailVerificationResponse = fcClient.emailVerification("bart@fullcontact.com");
+```
 
 ## Changelog
 - If you are updating the version of this client from `1.0.0`, please note that

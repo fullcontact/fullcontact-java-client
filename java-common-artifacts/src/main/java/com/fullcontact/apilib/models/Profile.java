@@ -35,6 +35,9 @@ public class Profile {
           throw new FullContactException("Specifying userid together with username is not allowed");
         } else if (isPopulated(this.userid) || isPopulated(this.username)) {
           return;
+        } else {
+          throw new FullContactException(
+              "Either url or service plus username or userid must be set on every profiles entry.");
         }
       } else {
         throw new FullContactException(

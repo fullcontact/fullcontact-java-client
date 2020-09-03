@@ -274,7 +274,7 @@ public class PersonRequestTest {
   public void profileWithServiceAndUseridAndUsername() {
     try {
       Profile profile =
-          Profile.builder().service("twitter").userid("mcreedy").userid("mcreedy").build();
+          Profile.builder().service("twitter").userid("mcreedy").username("mcreedy").build();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Specifying userid together with username is not allowed", fce.getMessage());

@@ -78,6 +78,11 @@ public class MockInterceptor implements Interceptor {
           statusCode = 204;
           message = "OK";
           break;
+        case "tc_201":
+          fileName = "src/test/resources/emailVerificationResponse.json";
+          statusCode = 200;
+          message = "OK";
+          break;
         default:
           fileName = "";
           statusCode = 500;

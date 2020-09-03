@@ -1,10 +1,12 @@
 package com.fullcontact.apilib;
 
-import com.google.gson.JsonElement;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -15,20 +17,23 @@ import java.util.concurrent.CompletableFuture;
 public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_PERSON_ENRICH)
-  CompletableFuture<Response<JsonElement>> personEnrich(@Body RequestBody body);
+  CompletableFuture<Response<ResponseBody>> personEnrich(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_COMPANY_ENRICH)
-  CompletableFuture<Response<JsonElement>> companyEnrich(@Body RequestBody body);
+  CompletableFuture<Response<ResponseBody>> companyEnrich(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_COMPANY_SEARCH)
-  CompletableFuture<Response<JsonElement>> companySearch(@Body RequestBody body);
+  CompletableFuture<Response<ResponseBody>> companySearch(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_IDENTITY_MAP)
-  CompletableFuture<Response<JsonElement>> identityMap(@Body RequestBody body);
+  CompletableFuture<Response<ResponseBody>> identityMap(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_IDENTITY_RESOLVE)
-  CompletableFuture<Response<JsonElement>> identityResolve(@Body RequestBody body);
+  CompletableFuture<Response<ResponseBody>> identityResolve(@Body RequestBody body);
 
   @POST(FCConstants.API_ENDPOINT_IDENTITY_DELETE)
-  CompletableFuture<Response<JsonElement>> identityDelete(@Body RequestBody body);
+  CompletableFuture<Response<ResponseBody>> identityDelete(@Body RequestBody body);
+
+  @GET(FCConstants.API_ENDPOINT_VERIFICATION_EMAIL)
+  CompletableFuture<Response<ResponseBody>> emailVerification(@Query("email") String email);
 }

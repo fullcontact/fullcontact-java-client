@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Age {
   private String range;
-  private Integer value;
+  private int value;
   private Date birthday;
 }

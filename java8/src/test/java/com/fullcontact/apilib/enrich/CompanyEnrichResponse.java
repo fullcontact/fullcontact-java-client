@@ -114,7 +114,7 @@ public class CompanyEnrichResponse {
     CompanyResponse response = fcTest.enrich(companyRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(400, response.getStatusCode());
-    Assert.assertEquals("BadRequest", response.getMessage());
+    Assert.assertEquals("Unable to process JSON", response.getMessage());
   }
 
   @Test
@@ -158,7 +158,8 @@ public class CompanyEnrichResponse {
     CompanyResponse response = fcTest.enrich(companyRequest).get();
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
-    Assert.assertTrue(response.getMessage().contains("Unauthorized"));
+    Assert.assertTrue(
+        response.getMessage().contains("401: Invalid access token: 0kj39la0c309cnw90"));
   }
 
   @Test
@@ -176,7 +177,7 @@ public class CompanyEnrichResponse {
     CompanyResponse response = fcTest.enrich(companyRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
-    Assert.assertTrue(response.getMessage().contains("Not Found"));
+    Assert.assertTrue(response.getMessage().contains("Profile not found"));
   }
 
   @Test
