@@ -39,7 +39,7 @@
         "designatedMarketArea": "807",
         "coreBasedStatisticalArea": "41860 - San Francisco-Oakland-Hayward, CA Metropolitan Statistical Area",
         "nielsenCountySize": "B - All counties in the next largest set of metropolitan areas which together account for 30% of U.S. households according to the 2000 Census. No non-metropolitan counties qualify as A or B counties.",
-        "congressionalDistrict": 14,
+        "congressionalDistrict": "AT_LARGE",
         "numericCountyCode": 222
       },
       "presence": {
