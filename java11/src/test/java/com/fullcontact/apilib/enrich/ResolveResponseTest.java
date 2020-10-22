@@ -1,6 +1,7 @@
 package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.models.Response.ResolveResponse;
+import com.fullcontact.apilib.models.Response.ResolveResponseWithTags;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,6 +31,7 @@ public class ResolveResponseTest {
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
     Assert.assertEquals("21c300bcf16b079ae52025cc1c06765c", response.getRecordIds().get(0));
+    Assert.assertEquals("key", response.getTags().get(0).getKey());
   }
 
   @Test
@@ -108,5 +110,19 @@ public class ResolveResponseTest {
         response
             .getMessage()
             .contains("Input domain parameter (\"fullcontact\") does not contain a valid domain."));
+  }
+
+  @Test
+  public void resolveResponseWithTagsModelDeserializationTest() {
+    ResolveResponseWithTags response =
+        FullContact.getResolveResponseWithTags(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_104"));
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(200, response.getStatusCode());
+    Assert.assertEquals("OK", response.getMessage());
+    Assert.assertEquals("customer123", response.getRecordIds().get(0));
+    Assert.assertEquals(
+        "VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345", response.getPersonIds().get(0));
+    Assert.assertEquals("gender", response.getTags().get("customer123").get(0).getKey());
   }
 }

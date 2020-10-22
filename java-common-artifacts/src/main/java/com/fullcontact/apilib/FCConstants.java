@@ -24,6 +24,7 @@ public class FCConstants {
   // Resolve endpoints
   public static final String API_ENDPOINT_IDENTITY_MAP = "identity.map";
   public static final String API_ENDPOINT_IDENTITY_RESOLVE = "identity.resolve";
+  public static final String API_ENDPOINT_IDENTITY_RESOLVE_With_TAGS = "identity.resolve?tags=true";
   public static final String API_ENDPOINT_IDENTITY_DELETE = "identity.delete";
 
   // Email Verification
@@ -39,6 +40,8 @@ public class FCConstants {
   public static final URI identityMapUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_MAP);
   public static final URI identityResolveUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_RESOLVE);
+  public static final URI identityResolveUriWithTags =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_RESOLVE_With_TAGS);
   public static final URI identityDeleteUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_DELETE);
 }

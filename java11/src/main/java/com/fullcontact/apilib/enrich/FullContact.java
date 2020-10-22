@@ -283,6 +283,43 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
+   * Method for Identity Resolve with Tags. It converts the request to json, send the Asynchronous
+   * request using HTTP POST method. It also handles retries based on retryHandler specified at
+   * FullContact Client level.
+   *
+   * @param resolveRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponseWithTags
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponseWithTags> identityResolveWithTags(
+      ResolveRequest resolveRequest) throws FullContactException {
+    return this.identityResolveWithTags(resolveRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Identity Resolve with Tags. It converts the request to json, send the Asynchronous
+   * request using HTTP POST method. It also handles retries based on retryHandler specified.
+   *
+   * @param resolveRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponseWithTags
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponseWithTags> identityResolveWithTags(
+      ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    resolveRequest.validateForIdentityResolve();
+    checkForShutdown();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.identityResolveUriWithTags, gson.toJson(resolveRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getResolveResponseWithTags);
+  }
+
+  /**
    * Method for Deleting mapped Record. It calls 'identity.delete' endpoint in Resolve. It converts
    * the request to json, send the Asynchronous request using HTTP POST method. It also handles
    * retries based on retryHandler specified at FullContact Client level.
@@ -518,6 +555,34 @@ public class FullContact implements AutoCloseable {
             || (httpResponse.statusCode() == 204)
             || (httpResponse.statusCode() == 404);
     return resolveResponse;
+  }
+
+  /**
+   * This method create Resolve response with tags and handle for different response codes
+   *
+   * @param httpResponse raw response from Resolve APIs
+   * @return ResolveResponseWithTags
+   */
+  protected static ResolveResponseWithTags getResolveResponseWithTags(
+      HttpResponse<String> httpResponse) {
+    ResolveResponseWithTags resolveResponseWithTags;
+    if (httpResponse.body() != null && !httpResponse.body().isBlank()) {
+      resolveResponseWithTags = gson.fromJson(httpResponse.body(), ResolveResponseWithTags.class);
+      if (httpResponse.statusCode() == 200 || httpResponse.statusCode() == 204) {
+        resolveResponseWithTags.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      resolveResponseWithTags = new ResolveResponseWithTags();
+      if (httpResponse.statusCode() >= 500) {
+        resolveResponseWithTags.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    resolveResponseWithTags.statusCode = httpResponse.statusCode();
+    resolveResponseWithTags.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 204)
+            || (httpResponse.statusCode() == 404);
+    return resolveResponseWithTags;
   }
 
   protected static EmailVerificationResponse getEmailVerificationResponse(
