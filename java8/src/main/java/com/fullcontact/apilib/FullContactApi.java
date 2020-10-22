@@ -31,6 +31,10 @@ public interface FullContactApi {
   @POST(FCConstants.API_ENDPOINT_IDENTITY_RESOLVE)
   CompletableFuture<Response<ResponseBody>> identityResolve(@Body RequestBody body);
 
+  @POST(FCConstants.API_ENDPOINT_IDENTITY_RESOLVE)
+  CompletableFuture<Response<ResponseBody>> identityResolveWithTags(
+      @Query("tags") boolean includeTags, @Body RequestBody body);
+
   @POST(FCConstants.API_ENDPOINT_IDENTITY_DELETE)
   CompletableFuture<Response<ResponseBody>> identityDelete(@Body RequestBody body);
 

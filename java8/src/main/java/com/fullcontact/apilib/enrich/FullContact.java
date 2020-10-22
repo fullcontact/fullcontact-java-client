@@ -295,7 +295,7 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
+   * Method for Identity Resolve. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retryHandler specified.
    *
    * @param resolveRequest original request sent by client
@@ -308,6 +308,49 @@ public class FullContact implements AutoCloseable {
       ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
     resolveRequest.validateForIdentityResolve();
     return resolveRequest(resolveRequest, retryHandler, FCApiEndpoint.IDENTITY_RESOLVE);
+  }
+
+  /**
+   * Method for Identity Resolve with Tags. It converts the request to json, send the Asynchronous
+   * request using HTTP POST method. It also handles retries based on retryHandler specified at
+   * FullContact Client level.
+   *
+   * @param resolveRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponseWithTags
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponseWithTags> identityResolveWithTags(
+      ResolveRequest resolveRequest) throws FullContactException {
+    return this.identityResolveWithTags(resolveRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Identity Resolve with Tags. It converts the request to json, send the Asynchronous
+   * request using HTTP POST method. It also handles retries based on retryHandler specified.
+   *
+   * @param resolveRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponseWithTags
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponseWithTags> identityResolveWithTags(
+      ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    resolveRequest.validateForIdentityResolve();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(resolveRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.identityResolveWithTags(true, httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.IDENTITY_RESOLVE_WITH_TAGS);
+    return responseCF.thenApply(FullContact::getResolveResponseWithTags);
   }
 
   /**
@@ -364,11 +407,7 @@ public class FullContact implements AutoCloseable {
         throw new FullContactException("Wrong API Endpoint provided for Resolve");
     }
     handleHttpResponse(
-        httpRequest,
-        retryHandler,
-        httpResponseCompletableFuture,
-        responseCF,
-        FCApiEndpoint.PERSON_ENRICH);
+        httpRequest, retryHandler, httpResponseCompletableFuture, responseCF, fcApiEndpoint);
     return responseCF.thenApply(FullContact::getResolveResponse);
   }
 
@@ -562,6 +601,36 @@ public class FullContact implements AutoCloseable {
     return resolveResponse;
   }
 
+  /**
+   * This method create Resolve response with Tags and handle for different response codes
+   *
+   * @param response raw response from Resolve APIs
+   * @return ResolveResponse
+   */
+  protected static ResolveResponseWithTags getResolveResponseWithTags(
+      Response<ResponseBody> response) {
+    ResolveResponseWithTags resolveResponseWithTags;
+    if (response.isSuccessful() && response.body() != null) {
+      resolveResponseWithTags =
+          gson.fromJson(response.body().charStream(), ResolveResponseWithTags.class);
+      if (response.code() == 200 || response.code() == 204) {
+        resolveResponseWithTags.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      resolveResponseWithTags = new ResolveResponseWithTags();
+      if (response.errorBody() != null) {
+        resolveResponseWithTags =
+            gson.fromJson(response.errorBody().charStream(), ResolveResponseWithTags.class);
+      } else {
+        resolveResponseWithTags.message = response.message();
+      }
+    }
+    resolveResponseWithTags.statusCode = response.code();
+    resolveResponseWithTags.isSuccessful =
+        (response.code() == 200) || (response.code() == 204) || (response.code() == 404);
+    return resolveResponseWithTags;
+  }
+
   protected static EmailVerificationResponse getEmailVerificationResponse(
       Response<ResponseBody> response) {
     EmailVerificationResponse emailVerificationResponse = new EmailVerificationResponse();
@@ -631,6 +700,9 @@ public class FullContact implements AutoCloseable {
                 break;
               case IDENTITY_RESOLVE:
                 retryCF = this.client.identityResolve(httpRequest);
+                break;
+              case IDENTITY_RESOLVE_WITH_TAGS:
+                retryCF = this.client.identityResolveWithTags(true, httpRequest);
                 break;
               case IDENTITY_DELETE:
                 retryCF = this.client.identityDelete(httpRequest);

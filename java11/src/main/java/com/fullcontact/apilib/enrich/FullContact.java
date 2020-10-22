@@ -267,7 +267,7 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * Method for Resolve Identity Map. It converts the request to json, send the Asynchronous request
+   * Method for Identity Resolve. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retryHandler specified.
    *
    * @param resolveRequest original request sent by client
