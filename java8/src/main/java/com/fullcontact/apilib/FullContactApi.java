@@ -40,4 +40,13 @@ public interface FullContactApi {
 
   @GET(FCConstants.API_ENDPOINT_VERIFICATION_EMAIL)
   CompletableFuture<Response<ResponseBody>> emailVerification(@Query("email") String email);
+
+  @POST(FCConstants.API_ENDPOINT_TAGS_CREATE)
+  CompletableFuture<Response<ResponseBody>> tagsCreate(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_TAGS_GET)
+  CompletableFuture<Response<ResponseBody>> tagsGet(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_TAGS_DELETE)
+  CompletableFuture<Response<ResponseBody>> tagsDelete(@Body RequestBody body);
 }

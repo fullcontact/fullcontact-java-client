@@ -8,6 +8,7 @@ import com.fullcontact.apilib.auth.DefaultCredentialProvider;
 import com.fullcontact.apilib.models.Request.CompanyRequest;
 import com.fullcontact.apilib.models.Request.PersonRequest;
 import com.fullcontact.apilib.models.Request.ResolveRequest;
+import com.fullcontact.apilib.models.Request.TagsRequest;
 import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.models.enums.FCApiEndpoint;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
@@ -456,6 +457,134 @@ public class FullContact implements AutoCloseable {
     }
   }
 
+  /**
+   * Method for adding/creating tags for any recordID in your PIC without any custom RetryHandler,
+   * It converts the request to json, send the Asynchronous request using HTTP POST method. It also
+   * handles retries based on retryHandler specified at FullContact Client level.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsCreate(TagsRequest tagsRequest)
+      throws FullContactException {
+    return this.tagsCreate(tagsRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for adding/creating tags for any recordID in your PIC. It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on retry
+   * condition.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsCreate(
+      TagsRequest tagsRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(tagsRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.tagsCreate(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.TAGS_CREATE);
+    return responseCF.thenApply(FullContact::getTagsResponse);
+  }
+
+  /**
+   * Method for getting all tags for any recordID in your PIC without any custom RetryHandler, It
+   * converts the request to json, send the Asynchronous request using HTTP POST method. It also
+   * handles retries based on retryHandler specified at FullContact Client level.
+   *
+   * @param recordId sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsGet(String recordId) throws FullContactException {
+    return this.tagsGet(recordId, this.retryHandler);
+  }
+
+  /**
+   * Method for getting all tags for any recordID in your PIC. It converts the request to json, send
+   * the Asynchronous request using HTTP POST method. It also handles retries based on retry
+   * condition.
+   *
+   * @param recordId sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsGet(String recordId, RetryHandler retryHandler)
+      throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest("{\"recordId\":\"" + recordId + "\"}");
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.tagsGet(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.TAGS_GET);
+    return responseCF.thenApply(FullContact::getTagsResponse);
+  }
+
+  /**
+   * Method for deleting tags for any recordID in your PIC without any custom RetryHandler, It
+   * converts the request to json, send the Asynchronous request using HTTP POST method. It also
+   * handles retries based on retryHandler specified at FullContact Client level.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsDelete(TagsRequest tagsRequest)
+      throws FullContactException {
+    return this.tagsDelete(tagsRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for deleting tags for any recordID in your PIC. It converts the request to json, send
+   * the Asynchronous request using HTTP POST method. It also handles retries based on retry
+   * condition.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with PersonResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsDelete(
+      TagsRequest tagsRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(tagsRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.tagsDelete(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.TAGS_DELETE);
+    return responseCF.thenApply(FullContact::getTagsResponse);
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -656,6 +785,33 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
+   * This method creates Tags response and handle for different response codes
+   *
+   * @param response raw response from various tags API
+   * @return TagsResponse
+   */
+  protected static TagsResponse getTagsResponse(Response<ResponseBody> response) {
+    TagsResponse tagsResponse;
+    if (response.isSuccessful() && response.body() != null) {
+      tagsResponse = gson.fromJson(response.body().charStream(), TagsResponse.class);
+      if (response.code() == 200) {
+        tagsResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      tagsResponse = new TagsResponse();
+      if (response.errorBody() != null) {
+        tagsResponse = gson.fromJson(response.errorBody().charStream(), TagsResponse.class);
+      } else {
+        tagsResponse.message = response.message();
+      }
+    }
+    tagsResponse.isSuccessful =
+        response.code() == 200 || response.code() == 204 || response.code() == 404;
+    tagsResponse.statusCode = response.code();
+    return tagsResponse;
+  }
+
+  /**
    * This method handles Auto Retry in case retry condition is true. It keeps retrying till the
    * retryAttempts exhaust or the response is successful and completes the responseCF based on
    * result. For retrying, it schedules the request using ScheduledThreadPoolExecutor with
@@ -706,6 +862,15 @@ public class FullContact implements AutoCloseable {
                 break;
               case IDENTITY_DELETE:
                 retryCF = this.client.identityDelete(httpRequest);
+                break;
+              case TAGS_CREATE:
+                retryCF = this.client.tagsCreate(httpRequest);
+                break;
+              case TAGS_GET:
+                retryCF = this.client.tagsGet(httpRequest);
+                break;
+              case TAGS_DELETE:
+                retryCF = this.client.tagsDelete(httpRequest);
                 break;
               case EMAIL_VERIFICATION:
                 try {
@@ -767,6 +932,11 @@ public class FullContact implements AutoCloseable {
   /** @return Resolve Request Builder for Resolve */
   public static ResolveRequest.ResolveRequestBuilder buildResolveRequest() {
     return ResolveRequest.builder();
+  }
+
+  /** @return TagsRequest Builder for various tags endpoints */
+  public static TagsRequest.TagsRequestBuilder buildTagsRequest() {
+    return TagsRequest.builder();
   }
 
   /**

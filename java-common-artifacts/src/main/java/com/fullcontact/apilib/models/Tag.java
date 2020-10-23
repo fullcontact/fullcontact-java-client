@@ -14,6 +14,6 @@ public class Tag {
 
   @Override
   public String toString() {
-    return "Tag{" + "key='" + key + ", value='" + value + '}';
+    return "Tag{" + "key='" + key + "', value='" + value + "'}";
   }
 }
