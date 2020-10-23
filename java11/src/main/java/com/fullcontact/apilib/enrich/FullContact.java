@@ -7,6 +7,7 @@ import com.fullcontact.apilib.auth.DefaultCredentialProvider;
 import com.fullcontact.apilib.models.Request.CompanyRequest;
 import com.fullcontact.apilib.models.Request.PersonRequest;
 import com.fullcontact.apilib.models.Request.ResolveRequest;
+import com.fullcontact.apilib.models.Request.TagsRequest;
 import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
@@ -104,6 +105,11 @@ public class FullContact implements AutoCloseable {
   /** @return Resolve Request Builder for Resolve */
   public static ResolveRequest.ResolveRequestBuilder buildResolveRequest() {
     return ResolveRequest.builder();
+  }
+
+  /** @return Tags Request Builder for various Tags APIs */
+  public static TagsRequest.TagsRequestBuilder buildTagsRequest() {
+    return TagsRequest.builder();
   }
 
   /**
@@ -403,6 +409,116 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getEmailVerificationResponse);
   }
 
+  /**
+   * Method for adding/creating tags for any recordID in your PIC. It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsCreate(TagsRequest tagsRequest)
+      throws FullContactException {
+    return this.tagsCreate(tagsRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for adding/creating tags for any recordID in your PIC. It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsCreate(
+      TagsRequest tagsRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.tagsCreateUri, gson.toJson(tagsRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getTagsResponse);
+  }
+
+  /**
+   * Method for getting all tags for any recordID in your PIC. It converts the request to json, send
+   * the Asynchronous request using HTTP POST method. It also handles retries based on retryHandler
+   * specified at FullContact Client level.
+   *
+   * @param recordId sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsGet(String recordId) throws FullContactException {
+    return this.tagsGet(recordId, this.retryHandler);
+  }
+
+  /**
+   * Method for getting tags for any recordID in your PIC. It converts the request to json, send the
+   * Asynchronous request using HTTP POST method. It also handles retries based on retryHandler
+   * specified.
+   *
+   * @param recordId sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsGet(String recordId, RetryHandler retryHandler)
+      throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.tagsGetUri, "{\"recordId\":\"" + recordId + "\"}");
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getTagsResponse);
+  }
+
+  /**
+   * Method for deleting any tags for any recordID in your PIC. It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsDelete(TagsRequest tagsRequest)
+      throws FullContactException {
+    return this.tagsDelete(tagsRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for deleting any tags for any recordID in your PIC. It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified.
+   *
+   * @param tagsRequest original request sent by client
+   * @return completed CompletableFuture with TagsResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<TagsResponse> tagsDelete(
+      TagsRequest tagsRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.tagsDeleteUri, gson.toJson(tagsRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getTagsResponse);
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -606,6 +722,33 @@ public class FullContact implements AutoCloseable {
             || (httpResponse.statusCode() == 404);
     emailVerificationResponse.statusCode = httpResponse.statusCode();
     return emailVerificationResponse;
+  }
+
+  /**
+   * This method create Tags response and handle for different response codes
+   *
+   * @param httpResponse raw response from Tags APIs
+   * @return TagsResponse
+   */
+  protected static TagsResponse getTagsResponse(HttpResponse<String> httpResponse) {
+    TagsResponse tagsResponse;
+    if (httpResponse.body() != null && !httpResponse.body().isBlank()) {
+      tagsResponse = gson.fromJson(httpResponse.body(), TagsResponse.class);
+      if (httpResponse.statusCode() == 200 || httpResponse.statusCode() == 204) {
+        tagsResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      tagsResponse = new TagsResponse();
+      if (httpResponse.statusCode() >= 500) {
+        tagsResponse.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    tagsResponse.statusCode = httpResponse.statusCode();
+    tagsResponse.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 204)
+            || (httpResponse.statusCode() == 404);
+    return tagsResponse;
   }
 
   /**
