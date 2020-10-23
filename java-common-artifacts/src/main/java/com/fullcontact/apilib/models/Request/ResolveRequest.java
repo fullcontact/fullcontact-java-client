@@ -43,7 +43,7 @@ public class ResolveRequest {
     }
     if (this.tags != null && !this.tags.isEmpty()) {
       for (Tag tag : this.tags) {
-        if (!isPopulated(tag.getKey()) || !isPopulated(tag.getValue())) {
+        if (!tag.isValid()) {
           throw new FullContactException("Both Key and Value must be populated for adding a Tag");
         }
       }

@@ -12,6 +12,13 @@ public class Tag {
   String key;
   String value;
 
+  public boolean isValid() {
+    if (this.key != null && !this.key.isEmpty() && this.value != null && !this.value.isEmpty()) {
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public String toString() {
     return "Tag{" + "key='" + key + "', value='" + value + "'}";

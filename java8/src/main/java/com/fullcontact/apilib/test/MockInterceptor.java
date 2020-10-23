@@ -74,6 +74,7 @@ public class MockInterceptor implements Interceptor {
           message = "OK";
           break;
         case "tc_103":
+        case "tc_303":
           fileName = "src/test/resources/empty.json";
           statusCode = 204;
           message = "OK";
@@ -85,6 +86,16 @@ public class MockInterceptor implements Interceptor {
           break;
         case "tc_201":
           fileName = "src/test/resources/emailVerificationResponse.json";
+          statusCode = 200;
+          message = "OK";
+          break;
+        case "tc_301":
+          fileName = "src/test/resources/tagsCreateResponse.json";
+          statusCode = 200;
+          message = "OK";
+          break;
+        case "tc_302":
+          fileName = "src/test/resources/tagsGetResponse.json";
           statusCode = 200;
           message = "OK";
           break;

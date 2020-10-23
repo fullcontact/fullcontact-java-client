@@ -20,7 +20,7 @@ public class ResolveRequestBuildTest {
   private static final Gson gson = new Gson();
 
   @Test
-  public void personRequestBuildAndSerializeTest() throws FullContactException, IOException {
+  public void resolveRequestBuildAndSerializeTest() throws FullContactException, IOException {
     List<String> emails = new ArrayList<>();
     emails.add("test1@gmail.com");
     emails.add("test2@outlook.com");

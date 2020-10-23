@@ -1,0 +1,1 @@
+{"recordId":"customer123","tags":[{"key":"key","value":"value"},{"key":"gender","value":"male"},{"key":"gender","value":"M"}]}
