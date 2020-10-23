@@ -1,0 +1,14 @@
+{
+  "recordId": "k2",
+  "partnerId": null,
+  "tags": [
+    {
+      "key": "gender",
+      "value": "male"
+    },
+    {
+      "key": "gender",
+      "value": "female"
+    }
+  ]
+}
