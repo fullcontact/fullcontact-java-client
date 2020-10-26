@@ -32,6 +32,10 @@ public class FCConstants {
   public static final String API_ENDPOINT_TAGS_GET = "tags.get";
   public static final String API_ENDPOINT_TAGS_DELETE = "tags.delete";
 
+  // Audience endpoints
+  public static final String API_ENDPOINT_AUDIENCE_CREATE = "audience.create";
+  public static final String API_ENDPOINT_AUDIENCE_DOWNLOAD = "audience.download";
+
   // Email Verification
   public static final String API_ENDPOINT_VERIFICATION_EMAIL = "verification/email";
 
@@ -52,4 +56,6 @@ public class FCConstants {
   public static final URI tagsCreateUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_CREATE);
   public static final URI tagsGetUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_GET);
   public static final URI tagsDeleteUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_DELETE);
+  public static final URI audienceCreateUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_AUDIENCE_CREATE);
 }

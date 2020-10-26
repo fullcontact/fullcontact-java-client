@@ -4,10 +4,7 @@ import com.fullcontact.apilib.FCConstants;
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.DefaultCredentialProvider;
-import com.fullcontact.apilib.models.Request.CompanyRequest;
-import com.fullcontact.apilib.models.Request.PersonRequest;
-import com.fullcontact.apilib.models.Request.ResolveRequest;
-import com.fullcontact.apilib.models.Request.TagsRequest;
+import com.fullcontact.apilib.models.Request.*;
 import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
@@ -110,6 +107,11 @@ public class FullContact implements AutoCloseable {
   /** @return Tags Request Builder for various Tags APIs */
   public static TagsRequest.TagsRequestBuilder buildTagsRequest() {
     return TagsRequest.builder();
+  }
+
+  /** @return Audience Request Builder for creating audience from your PIC */
+  public static AudienceRequest.AudienceRequestBuilder buildAudienceRequest() {
+    return AudienceRequest.builder();
   }
 
   /**
@@ -519,6 +521,78 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getTagsResponse);
   }
 
+  /**
+   * Method for creating Audience from your PIC based on tags. WebhookUrl and atleast one tag is
+   * mandatory for this request. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
+   * Client level.
+   *
+   * @param audienceRequest original request sent by client
+   * @return completed CompletableFuture with with AudienceResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<AudienceResponse> audienceCreate(AudienceRequest audienceRequest)
+      throws FullContactException {
+    return this.audienceCreate(audienceRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for creating Audience from your PIC based on tags. WebhookUrl and atleast one tag is
+   * mandatory for this request. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified.
+   *
+   * @param audienceRequest original request sent by client
+   * @return completed CompletableFuture with AudienceResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<AudienceResponse> audienceCreate(
+      AudienceRequest audienceRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.audienceCreateUri, gson.toJson(audienceRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getAudienceResponse);
+  }
+
+  /**
+   * Method for downloading Audience file using requestId from 'audience.create'.
+   *
+   * @param requestId original request sent by client
+   * @return completed CompletableFuture with AudienceResponse
+   * @throws FullContactException exception if client is shutdown or request fails validation
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<AudienceResponse> audienceDownload(String requestId)
+      throws FullContactException {
+    checkForShutdown();
+    HttpRequest httpRequest =
+        this.buildHttpGetRequest(
+            URI.create(
+                FCConstants.API_BASE_DEFAULT
+                    + FCConstants.API_ENDPOINT_AUDIENCE_DOWNLOAD
+                    + "?requestId="
+                    + requestId));
+    CompletableFuture<HttpResponse<byte[]>> responseCF = new CompletableFuture<>();
+    this.httpClient
+        .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofByteArray())
+        .handle(
+            (httpResponse, throwable) -> {
+              if (httpResponse != null) {
+                responseCF.complete(httpResponse);
+              } else {
+                responseCF.completeExceptionally(throwable);
+              }
+              return null;
+            });
+    return responseCF.thenApply(FullContact::getAudienceDownloadResponse);
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -749,6 +823,60 @@ public class FullContact implements AutoCloseable {
             || (httpResponse.statusCode() == 204)
             || (httpResponse.statusCode() == 404);
     return tagsResponse;
+  }
+
+  /**
+   * This method creates Audience response and handle for different response codes
+   *
+   * @param httpResponse raw response from Audience create API
+   * @return AudienceResponse
+   */
+  protected static AudienceResponse getAudienceResponse(HttpResponse<String> httpResponse) {
+    AudienceResponse audienceResponse;
+    if (httpResponse.body() != null && !httpResponse.body().isBlank()) {
+      audienceResponse = gson.fromJson(httpResponse.body(), AudienceResponse.class);
+      if (httpResponse.statusCode() == 200 || httpResponse.statusCode() == 202) {
+        audienceResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      audienceResponse = new AudienceResponse();
+      if (httpResponse.statusCode() >= 500) {
+        audienceResponse.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    audienceResponse.statusCode = httpResponse.statusCode();
+    audienceResponse.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 202)
+            || (httpResponse.statusCode() == 404);
+    return audienceResponse;
+  }
+
+  /**
+   * This method creates Audience response and handle for different response codes
+   *
+   * @param httpResponse raw response from Audience Download API
+   * @return AudienceResponse
+   */
+  protected static AudienceResponse getAudienceDownloadResponse(HttpResponse<byte[]> httpResponse) {
+    AudienceResponse audienceResponse;
+    if (httpResponse.body() != null) {
+      audienceResponse = new AudienceResponse(httpResponse.body());
+      if (httpResponse.statusCode() == 200 || httpResponse.statusCode() == 202) {
+        audienceResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      audienceResponse = new AudienceResponse();
+      if (httpResponse.statusCode() >= 500) {
+        audienceResponse.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    audienceResponse.statusCode = httpResponse.statusCode();
+    audienceResponse.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 202)
+            || (httpResponse.statusCode() == 404);
+    return audienceResponse;
   }
 
   /**
