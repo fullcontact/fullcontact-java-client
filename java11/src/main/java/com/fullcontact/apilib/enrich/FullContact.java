@@ -571,26 +571,30 @@ public class FullContact implements AutoCloseable {
   public CompletableFuture<AudienceResponse> audienceDownload(String requestId)
       throws FullContactException {
     checkForShutdown();
-    HttpRequest httpRequest =
-        this.buildHttpGetRequest(
-            URI.create(
-                FCConstants.API_BASE_DEFAULT
-                    + FCConstants.API_ENDPOINT_AUDIENCE_DOWNLOAD
-                    + "?requestId="
-                    + requestId));
-    CompletableFuture<HttpResponse<byte[]>> responseCF = new CompletableFuture<>();
-    this.httpClient
-        .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofByteArray())
-        .handle(
-            (httpResponse, throwable) -> {
-              if (httpResponse != null) {
-                responseCF.complete(httpResponse);
-              } else {
-                responseCF.completeExceptionally(throwable);
-              }
-              return null;
-            });
-    return responseCF.thenApply(FullContact::getAudienceDownloadResponse);
+    if (requestId != null && !requestId.isBlank()) {
+      HttpRequest httpRequest =
+          this.buildHttpGetRequest(
+              URI.create(
+                  FCConstants.API_BASE_DEFAULT
+                      + FCConstants.API_ENDPOINT_AUDIENCE_DOWNLOAD
+                      + "?requestId="
+                      + requestId));
+      CompletableFuture<HttpResponse<byte[]>> responseCF = new CompletableFuture<>();
+      this.httpClient
+          .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofByteArray())
+          .handle(
+              (httpResponse, throwable) -> {
+                if (httpResponse != null) {
+                  responseCF.complete(httpResponse);
+                } else {
+                  responseCF.completeExceptionally(throwable);
+                }
+                return null;
+              });
+      return responseCF.thenApply(FullContact::getAudienceDownloadResponse);
+    } else {
+      throw new FullContactException("'requestId' can't be empty");
+    }
   }
 
   protected void checkForShutdown() throws FullContactException {

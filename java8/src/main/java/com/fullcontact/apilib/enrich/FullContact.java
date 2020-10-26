@@ -14,6 +14,7 @@ import com.fullcontact.apilib.test.MockInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
+import lombok.SneakyThrows;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
@@ -626,6 +627,26 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getAudienceResponse);
   }
 
+  public CompletableFuture<AudienceResponse> audienceDownload(String requestId)
+      throws FullContactException {
+    checkForShutdown();
+    if (requestId != null && !requestId.trim().isEmpty()) {
+      CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+      RequestBody httpRequest = buildHttpRequest(requestId);
+      CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+          this.client.audienceDownload(requestId);
+      handleHttpResponse(
+          httpRequest,
+          retryHandler,
+          httpResponseCompletableFuture,
+          responseCF,
+          FCApiEndpoint.AUDIENCE_DOWNLOAD);
+      return responseCF.thenApply(FullContact::getAudienceResponse);
+    } else {
+      throw new FullContactException("Email can't be empty");
+    }
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -858,10 +879,16 @@ public class FullContact implements AutoCloseable {
    * @param response raw response from various tags API
    * @return AudienceResponse
    */
+  @SneakyThrows
   protected static AudienceResponse getAudienceResponse(Response<ResponseBody> response) {
     AudienceResponse audienceResponse;
     if (response.isSuccessful() && response.body() != null) {
-      audienceResponse = gson.fromJson(response.body().charStream(), AudienceResponse.class);
+      String contentType = response.headers().get("Content-Type");
+      if (contentType != null && contentType.equals("application/octet-stream")) {
+        audienceResponse = new AudienceResponse(response.body().bytes());
+      } else {
+        audienceResponse = gson.fromJson(response.body().charStream(), AudienceResponse.class);
+      }
       if (response.code() == 200) {
         audienceResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
       }

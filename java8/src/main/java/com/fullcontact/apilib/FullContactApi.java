@@ -52,4 +52,7 @@ public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_AUDIENCE_CREATE)
   CompletableFuture<Response<ResponseBody>> audienceCreate(@Body RequestBody body);
+
+  @GET(FCConstants.API_ENDPOINT_AUDIENCE_DOWNLOAD)
+  CompletableFuture<Response<ResponseBody>> audienceDownload(@Query("requestId") String requestId);
 }
