@@ -5,10 +5,7 @@ import com.fullcontact.apilib.FullContactApi;
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.DefaultCredentialProvider;
-import com.fullcontact.apilib.models.Request.CompanyRequest;
-import com.fullcontact.apilib.models.Request.PersonRequest;
-import com.fullcontact.apilib.models.Request.ResolveRequest;
-import com.fullcontact.apilib.models.Request.TagsRequest;
+import com.fullcontact.apilib.models.Request.*;
 import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.models.enums.FCApiEndpoint;
 import com.fullcontact.apilib.retry.DefaultRetryHandler;
@@ -585,6 +582,50 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(FullContact::getTagsResponse);
   }
 
+  /**
+   * Method for creating Audience from your PIC based on tags. WebhookUrl and atleast one tag is
+   * mandatory for this request. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
+   * Client level.
+   *
+   * @param audienceRequest original request sent by client
+   * @return completed CompletableFuture with AudienceResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<AudienceResponse> audienceCreate(AudienceRequest audienceRequest)
+      throws FullContactException {
+    return this.audienceCreate(audienceRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for creating Audience from your PIC based on tags. WebhookUrl and atleast one tag is
+   * mandatory for this request. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param audienceRequest original request sent by client
+   * @return completed CompletableFuture with AudienceResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<AudienceResponse> audienceCreate(
+      AudienceRequest audienceRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(audienceRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.audienceCreate(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.AUDIENCE_CREATE);
+    return responseCF.thenApply(FullContact::getAudienceResponse);
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -812,6 +853,33 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
+   * This method creates Audience response and handle for different response codes
+   *
+   * @param response raw response from various tags API
+   * @return AudienceResponse
+   */
+  protected static AudienceResponse getAudienceResponse(Response<ResponseBody> response) {
+    AudienceResponse audienceResponse;
+    if (response.isSuccessful() && response.body() != null) {
+      audienceResponse = gson.fromJson(response.body().charStream(), AudienceResponse.class);
+      if (response.code() == 200) {
+        audienceResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      }
+    } else {
+      audienceResponse = new AudienceResponse();
+      if (response.errorBody() != null) {
+        audienceResponse = gson.fromJson(response.errorBody().charStream(), AudienceResponse.class);
+      } else {
+        audienceResponse.message = response.message();
+      }
+    }
+    audienceResponse.isSuccessful =
+        response.code() == 200 || response.code() == 202 || response.code() == 404;
+    audienceResponse.statusCode = response.code();
+    return audienceResponse;
+  }
+
+  /**
    * This method handles Auto Retry in case retry condition is true. It keeps retrying till the
    * retryAttempts exhaust or the response is successful and completes the responseCF based on
    * result. For retrying, it schedules the request using ScheduledThreadPoolExecutor with
@@ -937,6 +1005,11 @@ public class FullContact implements AutoCloseable {
   /** @return TagsRequest Builder for various tags endpoints */
   public static TagsRequest.TagsRequestBuilder buildTagsRequest() {
     return TagsRequest.builder();
+  }
+
+  /** @return AudienceRequest Builder for various tags endpoints */
+  public static AudienceRequest.AudienceRequestBuilder buildAudienceRequest() {
+    return AudienceRequest.builder();
   }
 
   /**

@@ -49,4 +49,7 @@ public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_TAGS_DELETE)
   CompletableFuture<Response<ResponseBody>> tagsDelete(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_AUDIENCE_CREATE)
+  CompletableFuture<Response<ResponseBody>> audienceCreate(@Body RequestBody body);
 }
