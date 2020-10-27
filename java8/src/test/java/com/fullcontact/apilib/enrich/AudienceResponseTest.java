@@ -68,7 +68,8 @@ public class AudienceResponseTest {
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    response.getFileFromBytes(requestId);
+    // Uncomment below to test audience file generation
+    // response.getFileFromBytes(requestId);
   }
 
   @Test

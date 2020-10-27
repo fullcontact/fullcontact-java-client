@@ -1,13 +1,14 @@
 package com.fullcontact.apilib.enrich;
 
-import com.fullcontact.apilib.models.Response.TagsResponse;
+import com.fullcontact.apilib.models.Response.AudienceResponse;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TagsResponseTest {
+import java.io.IOException;
 
+public class AudienceResponseBuildTest {
   @Before
   public void init() {
     System.setProperty("FC_TEST_ENV", "FC_TEST");
@@ -19,43 +20,32 @@ public class TagsResponseTest {
   }
 
   @Test
-  public void tagsResponseModelDeserializationTest1() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_301"));
+  public void AudienceResponseModelDeserializationTest1() {
+    AudienceResponse response =
+        FullContact.getAudienceResponse(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_401"));
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    Assert.assertEquals("k3", response.getRecordId());
-    Assert.assertEquals("gender", response.getTags().get(0).getKey());
+    Assert.assertEquals("72e53890-17b5-o49d-a651-58we0c7980d3", response.getRequestId());
   }
 
   @Test
-  public void tagsResponseModelDeserializationTest2() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_302"));
+  public void AudienceResponseModelDeserializationTest2() throws IOException {
+    AudienceResponse response =
+        FullContact.getAudienceDownloadResponse(
+            HttpResponseTestObjects.httpByteResponseTestObjectProvider("tc_402"));
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    Assert.assertEquals("k2", response.getRecordId());
-    Assert.assertEquals("gender", response.getTags().get(0).getKey());
-  }
-
-  @Test
-  public void tagsDeleteTest() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_303"));
-    Assert.assertTrue(response.isSuccessful());
-    Assert.assertEquals(204, response.getStatusCode());
-    Assert.assertEquals("OK", response.getMessage());
+    // Uncomment below to test audience file generation
+    // response.getFileFromBytes("testAudienceDownload.json.gz");
   }
 
   @Test
   public void responseStatus400Test() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
+    AudienceResponse response =
+        FullContact.getAudienceResponse(
             HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"));
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(400, response.getStatusCode());
@@ -64,8 +54,8 @@ public class TagsResponseTest {
 
   @Test
   public void responseStatus401Test() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
+    AudienceResponse response =
+        FullContact.getAudienceResponse(
             HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"));
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
@@ -75,8 +65,8 @@ public class TagsResponseTest {
 
   @Test
   public void responseStatus404Test() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
+    AudienceResponse response =
+        FullContact.getAudienceResponse(
             HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"));
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
@@ -85,8 +75,8 @@ public class TagsResponseTest {
 
   @Test
   public void responseStatus403Test() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
+    AudienceResponse response =
+        FullContact.getAudienceResponse(
             HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"));
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
@@ -95,8 +85,8 @@ public class TagsResponseTest {
 
   @Test
   public void responseStatus422Test() {
-    TagsResponse response =
-        FullContact.getTagsResponse(
+    AudienceResponse response =
+        FullContact.getAudienceResponse(
             HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"));
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
