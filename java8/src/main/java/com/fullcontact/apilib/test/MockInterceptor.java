@@ -3,8 +3,10 @@ package com.fullcontact.apilib.test;
 import okhttp3.*;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
 
 public class MockInterceptor implements Interceptor {
 
@@ -99,6 +101,16 @@ public class MockInterceptor implements Interceptor {
           statusCode = 200;
           message = "OK";
           break;
+        case "tc_401":
+          fileName = "src/test/resources/audienceCreateResponse.json";
+          statusCode = 200;
+          message = "OK";
+          break;
+        case "tc_402":
+          fileName = "src/test/resources/audienceDownloadResponse.json";
+          statusCode = 200;
+          message = "OK";
+          break;
         default:
           fileName = "";
           statusCode = 500;
@@ -111,16 +123,40 @@ public class MockInterceptor implements Interceptor {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      response =
-          new Response.Builder()
-              .code(statusCode)
-              .message(message)
-              .request(chain.request())
-              .protocol(Protocol.HTTP_1_0)
-              .body(ResponseBody.create(MediaType.parse(mContentType), sb.toString().getBytes()))
-              .addHeader("content-type", mContentType)
-              .build();
+      if (testCode.equals("tc_402")) {
+        response =
+            new Response.Builder()
+                .code(statusCode)
+                .message(message)
+                .request(chain.request())
+                .protocol(Protocol.HTTP_1_0)
+                .body(
+                    ResponseBody.create(
+                        MediaType.parse("application/octet-stream"), compress(sb.toString())))
+                .addHeader("content-type", "application/octet-stream")
+                .build();
+      } else {
+        response =
+            new Response.Builder()
+                .code(statusCode)
+                .message(message)
+                .request(chain.request())
+                .protocol(Protocol.HTTP_1_0)
+                .body(ResponseBody.create(MediaType.parse(mContentType), sb.toString().getBytes()))
+                .addHeader("content-type", mContentType)
+                .build();
+      }
     }
     return response;
+  }
+
+  public static byte[] compress(String data) throws IOException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
+    GZIPOutputStream gzip = new GZIPOutputStream(bos);
+    gzip.write(data.getBytes());
+    gzip.close();
+    byte[] compressed = bos.toByteArray();
+    bos.close();
+    return compressed;
   }
 }
