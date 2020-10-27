@@ -9,8 +9,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
-  String key;
-  String value;
+  private String key;
+  private String value;
 
   public boolean isValid() {
     if (this.key != null && !this.key.isEmpty() && this.value != null && !this.value.isEmpty()) {
