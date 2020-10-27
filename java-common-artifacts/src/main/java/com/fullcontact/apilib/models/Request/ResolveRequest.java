@@ -18,7 +18,7 @@ import java.util.List;
 public class ResolveRequest {
   @With private PersonName name;
   @With private Location location;
-  private String recordId, personId, partnerId;
+  private String recordId, personId, partnerId, li_nonid;
   @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
   @Singular private List<Tag> tags;
@@ -101,7 +101,8 @@ public class ResolveRequest {
           this.tags != null ? Collections.unmodifiableList((this.tags)) : Collections.emptyList();
       this.validate();
       return new ResolveRequest(
-          name, location, recordId, personId, partnerId, phones, emails, maids, profiles, tags);
+          name, location, recordId, personId, partnerId, li_nonid, phones, emails, maids, profiles,
+          tags);
     }
 
     /**
