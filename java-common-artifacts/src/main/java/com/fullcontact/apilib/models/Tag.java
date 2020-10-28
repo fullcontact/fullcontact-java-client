@@ -13,10 +13,11 @@ public class Tag {
   private String value;
 
   public boolean isValid() {
-    if (this.key != null && !this.key.isEmpty() && this.value != null && !this.value.isEmpty()) {
-      return true;
-    }
-    return false;
+    return this.key != null
+        && !this.key.isEmpty()
+        && this.value != null
+        && !this.value.isEmpty()
+        && !this.key.contains("'");
   }
 
   @Override

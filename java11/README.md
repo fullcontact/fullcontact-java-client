@@ -408,7 +408,7 @@ tag inputs (both are required as input) in order to suppress or take action upon
 for data onboarding or audience analysis.
 
 #### Audience Create
-The Audience Creation endpoint requires a atleast one `Tag` and valid `webhookURL` to be present in order to 
+The Audience Creation endpoint requires a at least one `Tag` and valid `webhookURL` to be present in order to 
 send a message when the audience creation is complete and ready to be downloaded.
 
 ```java
@@ -430,7 +430,7 @@ AudienceRequest audienceRequest =
 
 #### Audience Download
 When `audience.create` result is ready, `requestId` from its response can be used to download the audience data.
-A utility method is provided `getFileFromBytes(String fileName)` which generates a file
+A utility method is provided `getFileFromBytes(String fileName)` which generates a file in `json.gz` format
 with audience data bytes.
 ```java
 CompletableFuture<AudienceResponse> audienceResponseCompletableFuture =
