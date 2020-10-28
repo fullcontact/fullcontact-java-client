@@ -14,7 +14,7 @@ API Clients for FullContact on V3 APIs supports Java11+
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:2.1.1'
+implementation 'com.fullcontact.client:java11:2.2.0'
 ```
 
 ### Maven users
@@ -25,7 +25,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>2.1.1</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 
