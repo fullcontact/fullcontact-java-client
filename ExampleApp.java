@@ -7,11 +7,9 @@ import com.fullcontact.apilib.enrich.FullContact;
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
-import com.fullcontact.apilib.models.Request.CompanyRequest;
-import com.fullcontact.apilib.models.Request.PersonRequest;
-import com.fullcontact.apilib.models.Response.CompanyResponse;
-import com.fullcontact.apilib.models.Response.CompanySearchResponseList;
-import com.fullcontact.apilib.models.Response.PersonResponse;
+import com.fullcontact.apilib.models.Tag;
+import com.fullcontact.apilib.models.Request.*
+import com.fullcontact.apilib.models.Response.*;
 import com.fullcontact.apilib.models.enums.Confidence;
 
 import java.io.IOException;
@@ -40,7 +38,7 @@ public class App {
 
       // Person Enrich: Request Build
       PersonRequest personRequest =
-          fcClient
+              FullContact
               .buildPersonRequest()
               .email("bart@fullcontact.com")
               .phone("+17202227799")
@@ -114,7 +112,7 @@ public class App {
                     + " "
                     + companySearchResponseList.getMessage()
                     + " "
-                    + companySearchResponseList.getStatus()
+                    + companySearchResponseList.getStatusCode()
                     + " "
                     + companySearchResponseList
                         .getCompanySearchResponses()
@@ -134,6 +132,24 @@ public class App {
           response -> {
             System.out.println("identity.map " + response.toString());
           });
+
+      // Identity Map Request with Tags
+        ResolveRequest mapRequestWithTags =
+                FullContact.buildResolveRequest()
+                        .email("bart@fullcontact.com")
+                        .recordId("customer123")
+                        .tag(Tag.builder().key("client").value("test").build())
+                        .build();
+      // Identity Map Response with Tags
+        CompletableFuture<ResolveResponse> mapResponseWithTags =
+                fcClient.identityMap(mapRequestWithTags);
+        mapResponseWithTags.thenAccept(
+                response -> {
+                    System.out.println(response.getRecordIds());
+                    System.out.println(response.getPersonIds());
+                    System.out.println(response.getTags());
+                });
+
       // Identity Resolve Request
       ResolveRequest identityResolveRequest =
           FullContact.buildResolveRequest().recordId("customer123").build();
@@ -145,6 +161,16 @@ public class App {
             System.out.println("identity.resolve " + response.toString());
           });
 
+       // Identity Resolve Response with Tags
+        CompletableFuture<ResolveResponseWithTags> resolveResponseWithTags =
+                fcClient.identityResolveWithTags(identityResolveRequest);
+        resolveResponseWithTags.thenAccept(
+                response -> {
+                    System.out.println(response.getRecordIds());
+                    System.out.println(response.getPersonIds());
+                    System.out.println(response.getTags());
+                });
+
       // Identity Delete Response
       CompletableFuture<ResolveResponse> deleteResponse =
           fcClient.identityDelete(identityResolveRequest);
@@ -152,7 +178,63 @@ public class App {
           response -> {
             System.out.println("identity.delete " + response.toString());
           });
+      // Tags Create Request
+        TagsRequest tagsCreateRequest =
+                FullContact.buildTagsRequest()
+                        .recordId("customer123")
+                        .tag(Tag.builder().key("gender").value("male").build())
+                        .build();
+      // Tags Create Response
+        CompletableFuture<TagsResponse> tagsCreateResponseCF = fcClient.tagsCreate(tagsCreateRequest);
+        tagsCreateResponseCF.thenAccept(
+                tagsResponse -> {
+                    System.out.println(tagsResponse.getRecordId());
+                    System.out.println(tagsResponse.getPartnerId());
+                    System.out.println(tagsResponse.getTags());
+                });
 
+      // Tags Get Request
+        CompletableFuture<TagsResponse> tagsGetResponseCF = fcClient.tagsGet("customer123");
+        tagsGetResponseCF.thenAccept(
+                tagsResponse -> {
+                    System.out.println(tagsResponse.getRecordId());
+                    System.out.println(tagsResponse.getPartnerId());
+                    System.out.println(tagsResponse.getTags());
+                });
+      // Tags Delete Request
+        TagsRequest tagsDeleteRequest =
+                FullContact.buildTagsRequest()
+                        .recordId("customer123")
+                        .tag(Tag.builder().key("gender").value("male").build())
+                        .build();
+      // Tags Create Response
+        CompletableFuture<TagsResponse> tagsDeleteResponseCF = fcClient.tagsDelete(tagsDeleteRequest);
+        tagsDeleteResponseCF.thenAccept(
+                tagsResponse -> {
+                    System.out.println(tagsResponse.statusCode);
+                });
+      // Audience Create Request
+        AudienceRequest audienceRequest =
+                FullContact.buildAudienceRequest()
+                        .tag(Tag.builder().key("gender").value("male").build())
+                        .webhookUrl("your-webhook-url")
+                        .build();
+      // Audience Create Response
+        CompletableFuture<AudienceResponse> audienceCreateResponseCF = fcClient.audienceCreate(audienceRequest);
+        audienceCreateResponseCF.thenAccept(
+                audienceResponse -> {
+                    System.out.println(audienceResponse.getRequestId());
+                });
+      // Audience Download
+        CompletableFuture<AudienceResponse> audienceDownloadResponseCF = fcClient.audienceDownload(requestId);
+        audienceDownloadResponseCF.thenAccept(
+                audienceResponse -> {
+                    try {
+                        audienceResponse.getFileFromBytes(requestId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
       //Email Verification
       CompletableFuture<EmailVerificationResponse> emailVerificationResponse =
           fcClient.emailVerification("bart@fullcontact.com");
