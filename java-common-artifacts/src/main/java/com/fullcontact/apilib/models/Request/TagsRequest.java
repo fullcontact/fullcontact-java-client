@@ -29,6 +29,9 @@ public class TagsRequest {
      * @throws FullContactException if any tag is invalid
      */
     public void validate() throws FullContactException {
+      if (this.recordId == null) {
+        throw new FullContactException("RecordId must be present for creating Tags");
+      }
       for (Tag tag : this.tags) {
         if (!tag.isValid()) {
           throw new FullContactException("Both Key and Value must be populated for adding a Tag");

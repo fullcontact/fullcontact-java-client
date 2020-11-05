@@ -63,4 +63,14 @@ public class TagsRequestBuildTest {
       Assert.assertEquals("Both Key and Value must be populated for adding a Tag", e.getMessage());
     }
   }
+
+  @Test
+  public void invalidTagsRequestTest3() {
+    try {
+      TagsRequest tagsRequest =
+          FullContact.buildTagsRequest().tag(Tag.builder().key("G").value("M").build()).build();
+    } catch (FullContactException e) {
+      Assert.assertEquals("RecordId must be present for creating Tags", e.getMessage());
+    }
+  }
 }
