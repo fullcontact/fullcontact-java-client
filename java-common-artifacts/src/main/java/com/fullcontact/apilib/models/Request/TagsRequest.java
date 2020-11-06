@@ -32,6 +32,11 @@ public class TagsRequest {
       if (this.recordId == null) {
         throw new FullContactException("RecordId must be present for creating Tags");
       }
+      if (this.tags != null && this.tags.size() > 0) {
+
+      } else {
+        throw new FullContactException("Tags must be populated in Tags Create request");
+      }
       for (Tag tag : this.tags) {
         if (!tag.isValid()) {
           throw new FullContactException("Both Key and Value must be populated for adding a Tag");

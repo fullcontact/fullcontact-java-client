@@ -522,7 +522,7 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * Method for creating Audience from your PIC based on tags. WebhookUrl and atleast one tag is
+   * Method for creating Audience from your PIC based on tags. WebhookUrl and at least one tag is
    * mandatory for this request. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retryHandler specified at FullContact
    * Client level.
@@ -539,7 +539,7 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * Method for creating Audience from your PIC based on tags. WebhookUrl and atleast one tag is
+   * Method for creating Audience from your PIC based on tags. WebhookUrl and at least one tag is
    * mandatory for this request. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retryHandler specified.
    *

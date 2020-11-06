@@ -63,7 +63,7 @@ public class AudienceRequestBuildTest {
       AudienceRequest audienceRequest =
           FullContact.buildAudienceRequest().webhookUrl("webhookUrl").build();
     } catch (FullContactException e) {
-      Assert.assertEquals("Atleast 1 Tag is mandatory for creating Audience", e.getMessage());
+      Assert.assertEquals("At least 1 Tag is mandatory for creating Audience", e.getMessage());
     }
   }
 

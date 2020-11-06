@@ -33,7 +33,7 @@ public class AudienceRequest {
       if (this.tags != null && this.tags.size() > 0) {
 
       } else {
-        throw new FullContactException("Atleast 1 Tag is mandatory for creating Audience");
+        throw new FullContactException("At least 1 Tag is mandatory for creating Audience");
       }
       for (Tag tag : this.tags) {
         if (!tag.isValid()) {
