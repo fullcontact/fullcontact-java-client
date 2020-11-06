@@ -967,6 +967,17 @@ public class FullContact implements AutoCloseable {
               case TAGS_DELETE:
                 retryCF = this.client.tagsDelete(httpRequest);
                 break;
+              case AUDIENCE_CREATE:
+                retryCF = this.client.audienceCreate(httpRequest);
+                break;
+              case AUDIENCE_DOWNLOAD:
+                try {
+                  final Buffer buffer = new Buffer();
+                  httpRequest.writeTo(buffer);
+                  retryCF = this.client.audienceDownload(buffer.readUtf8());
+                } catch (IOException ignored) {
+                }
+                break;
               case EMAIL_VERIFICATION:
                 try {
                   final Buffer buffer = new Buffer();
