@@ -130,6 +130,7 @@ such as:
 - `webhookUrl`: _String_
 - `recordId`: _String_
 - `personId`: _String_
+- `partnerId`: _String_
 - `li_nonid`: _String_
 
 ```java
