@@ -1,5 +1,11 @@
 {
   "recordIds": [
     "21c300bcf16b079ae52025cc1c06765c"
+  ],
+  "tags": [
+    {
+      "key": "key",
+      "value": "value"
+    }
   ]
 }

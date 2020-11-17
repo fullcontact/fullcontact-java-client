@@ -19,7 +19,7 @@ import java.util.List;
 public class PersonRequest {
   @With private PersonName name;
   @With private Location location;
-  private String webhookUrl, recordId, personId;
+  private String webhookUrl, recordId, personId, partnerId, li_nonid;
   private Confidence confidence;
   private boolean infer;
   @Singular private List<String> phones, emails, dataFilters, maids;
@@ -50,6 +50,8 @@ public class PersonRequest {
           webhookUrl,
           recordId,
           personId,
+          partnerId,
+          li_nonid,
           confidence,
           infer,
           phones,

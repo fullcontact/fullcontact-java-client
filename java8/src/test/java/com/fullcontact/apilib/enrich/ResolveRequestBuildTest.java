@@ -5,6 +5,7 @@ import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
 import com.fullcontact.apilib.models.Request.ResolveRequest;
+import com.fullcontact.apilib.models.Tag;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class ResolveRequestBuildTest {
   private static final Gson gson = new Gson();
 
   @Test
-  public void personRequestBuildAndSerializeTest() throws FullContactException, IOException {
+  public void resolveRequestBuildAndSerializeTest() throws FullContactException, IOException {
     List<String> emails = new ArrayList<>();
     emails.add("test1@gmail.com");
     emails.add("test2@outlook.com");
@@ -316,6 +317,33 @@ public class ResolveRequestBuildTest {
       resolveRequest.validateForIdentityDelete();
     } catch (FullContactException fce) {
       Assert.assertEquals("recordId param must be specified", fce.getMessage());
+    }
+  }
+
+  @Test
+  public void identityMapWithTags() throws FullContactException {
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
+            .recordId("test")
+            .email("test")
+            .tag(Tag.builder().key("key").value("value").build())
+            .build();
+    resolveRequest.validateForIdentityMap();
+  }
+
+  @Test
+  public void identityMapWithInvalidTags() {
+    try {
+      ResolveRequest resolveRequest =
+          FullContact.buildResolveRequest()
+              .recordId("test")
+              .email("test")
+              .tag(Tag.builder().key("key").build())
+              .build();
+      resolveRequest.validateForIdentityMap();
+    } catch (FullContactException fce) {
+      Assert.assertEquals(
+          "Both Key and Value must be populated for adding a Tag", fce.getMessage());
     }
   }
 }

@@ -31,9 +31,28 @@ public interface FullContactApi {
   @POST(FCConstants.API_ENDPOINT_IDENTITY_RESOLVE)
   CompletableFuture<Response<ResponseBody>> identityResolve(@Body RequestBody body);
 
+  @POST(FCConstants.API_ENDPOINT_IDENTITY_RESOLVE)
+  CompletableFuture<Response<ResponseBody>> identityResolveWithTags(
+      @Query("tags") boolean includeTags, @Body RequestBody body);
+
   @POST(FCConstants.API_ENDPOINT_IDENTITY_DELETE)
   CompletableFuture<Response<ResponseBody>> identityDelete(@Body RequestBody body);
 
   @GET(FCConstants.API_ENDPOINT_VERIFICATION_EMAIL)
   CompletableFuture<Response<ResponseBody>> emailVerification(@Query("email") String email);
+
+  @POST(FCConstants.API_ENDPOINT_TAGS_CREATE)
+  CompletableFuture<Response<ResponseBody>> tagsCreate(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_TAGS_GET)
+  CompletableFuture<Response<ResponseBody>> tagsGet(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_TAGS_DELETE)
+  CompletableFuture<Response<ResponseBody>> tagsDelete(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_AUDIENCE_CREATE)
+  CompletableFuture<Response<ResponseBody>> audienceCreate(@Body RequestBody body);
+
+  @GET(FCConstants.API_ENDPOINT_AUDIENCE_DOWNLOAD)
+  CompletableFuture<Response<ResponseBody>> audienceDownload(@Query("requestId") String requestId);
 }

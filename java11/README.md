@@ -14,7 +14,7 @@ API Clients for FullContact on V3 APIs supports Java11+
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:2.1.1'
+implementation 'com.fullcontact.client:java11:2.2.0'
 ```
 
 ### Maven users
@@ -25,7 +25,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>2.1.1</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 
@@ -131,6 +131,8 @@ such as:
 - `webhookUrl`: _String_
 - `recordId`: _String_
 - `personId`: _String_
+- `partnerId`: _String_
+- `li_nonid`: _String_
 
 
 ```java
@@ -146,7 +148,8 @@ PersonRequest personRequest = fcClient
                             .profile(Profile.builder().service("linkedin").url("https://www.linkedin.com/in/bartlorang").build())
                             .webhookUrl("")
                             .recordId("customer123")
-                            .personId("eYxWc0B-dKRxerTw_uQpxCssM_GyPaLErj0Eu3y2FrU6py1J")       
+                            .personId("eYxWc0B-dKRxerTw_uQpxCssM_GyPaLErj0Eu3y2FrU6py1J")
+                            .li_nonid("CmQui5eT6tqBVqQ874WGCv4DNO_taXJOAxVlQ")       
                             .build();
 ```
 #### Person Enrich Request and Response
@@ -159,7 +162,8 @@ and message to determine the cause.
 ```java
 CompletableFuture<PersonResponse> personResponseCompletableFuture = fcClient.enrich(personRequest);
 personResponseCompletableFuture.thenAccept(
-  personResponse -> {
+
+personResponse -> {
     System.out.println(
             "Person Response "
             + personResponse.isSuccessful()
@@ -218,7 +222,8 @@ get a ```List``` for CompanySearch responses.
 ```java
 CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletableFuture =
           fcClient.search(companySearch);
-      companySearchResponseListCompletableFuture.thenAccept(
+
+companySearchResponseListCompletableFuture.thenAccept(
           companySearchResponseList -> {
             System.out.println(
                 "Company search "
@@ -254,9 +259,9 @@ API can lookup and resolve individuals by sending any identifiers you may alread
 such as: 
 
 - `email`: _String_
-- `emails`: _List<String>_
+- `emails`: _List&lt;String&gt;_
 - `phone`: _String_
-- `phones`: _List<String>_
+- `phones`: _List&lt;String&gt;_
 - `location`: _Location Object_
     - `addressLine1`: _String_
     - `addressLine2`: _String_
@@ -268,17 +273,20 @@ such as:
     - `full`: _String_
     - `given`: _String_
     - `family`: _String_
-- `profiles`: _List<Profile>_
+- `profiles`: _List&lt;Profile&gt;_
     - `service`: _String_
     - `username`: _String_
     - `userid`: _String_
     - `url`: _String_
-- `maids`: _List<String>_
+- `maids`: _List&lt;String&gt;_
+- `tags`: _List&lt;Tag&gt;_
+- `li_nonid`: _String_
 - `recordId`: _String_
 - `personId`: _String_
+- `partnerId`: _String_
 
 ```java
-ResolveRequest personRequest = fcClient
+ResolveRequest resolveRequest = fcClient
                             .buildResolveRequest()
                             .email("bart@fullcontact.com").email("bart.lorang@fullcontact.com")
                             .phone("+17202227799").phone("+13035551234")
@@ -287,7 +295,8 @@ ResolveRequest personRequest = fcClient
                                     .city("Denver").region("Colorado").build())
                             .profile(Profile.builder().service("twitter").userName("bartlorang").build())
                             .profile(Profile.builder().service("linkedin").url("https://www.linkedin.com/in/bartlorang").build())
-                            .recordId("customer123")     
+                            .recordId("customer123")
+                            .li_nonid("CmQui5eT6tqBVqQ874WGCv4DNO_taXJOAxVlQ")      
                             .build();
 ```
 
@@ -295,22 +304,146 @@ ResolveRequest personRequest = fcClient
 All resolve methods returns a `CompletableFuture<ResolveResponse>`
 
 ```java
-CompletableFuture<ResolveResponse> mapResponse = fcClient.identityMap(personRequest);
-      mapResponse.thenAccept(
+CompletableFuture<ResolveResponse> mapResponse = fcClient.identityMap(resolveRequest);
+
+mapResponse.thenAccept(
           response -> {
             System.out.println("identity.map " + response.toString());
           });
 
-CompletableFuture<ResolveResponse> resolveResponse = fcClient.identityResolve(personRequest);
+CompletableFuture<ResolveResponse> resolveResponse = fcClient.identityResolve(resolveRequest);
+
 resolveResponse.thenAccept(
           response -> {
             System.out.println("identity.resolve " + response.toString());
           });
 
-CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(personRequest);
-      deleteResponse.thenAccept(
+CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(resolveRequest);
+
+deleteResponse.thenAccept(
           response -> {
             System.out.println("identity.delete " + response.toString());
+          });
+```
+
+### Tags/Metadata
+
+[Tags API Reference](https://dashboard.fullcontact.com/api-ref#customer-tags)
+- `tags.create`
+- `tags.get`
+- `tags.delete`
+
+FullContact provides the ability to store customer tags/metadata to each record within a customer's Private Identity 
+Cloud for continuous updates, retrievals and deletes across both 1st party as well as 2nd party data partnerships.
+
+#### Creating Tags
+Tags can be added while mapping records using `identity.map` API or later using `tags.create` API. 
+Once a Customer Record ID has been mapped, customer tags can continue to be added to the originally provided Record ID
+
+##### Tags Request
+- Request Parameters:
+    - `recordId`: _String_
+    - `tags`: _List<Tag>_
+        - `key`: _String_
+        - `value`: _String_
+       
+```java
+// Building Request
+TagsRequest tagsRequest =
+          FullContact.buildTagsRequest()
+              .recordId("k2")
+              .tag(Tag.builder().key("gender").value("something").build())
+              .build();
+// Sending Request
+CompletableFuture<TagsResponse> tagsResponseCompletableFuture =
+          fcClient.tagsCreate(tagsRequest);
+
+tagsResponseCompletableFuture.thenAccept(
+          tagsResponse -> {
+            System.out.println(tagsResponse.getRecordId());
+            System.out.println(tagsResponse.getPartnerId());
+            System.out.println(tagsResponse.getTags());
+          });
+```
+
+#### Get Tags
+This will return all customer tags that are associated to a mapped record using `recordId`.
+
+```java
+CompletableFuture<TagsResponse> tagsResponseCompletableFuture = fcClient.tagsGet("recordId");
+
+tagsResponseCompletableFuture.thenAccept(
+          tagsResponse -> {
+            System.out.println(tagsResponse.getRecordId());
+            System.out.println(tagsResponse.getPartnerId());
+            System.out.println(tagsResponse.getTags());
+          });
+```
+
+#### Delete Tags
+This will remove specific or all customer tags that are attached to a mapped record.
+
+```java
+// Building Request
+TagsRequest tagsRequest =
+          FullContact.buildTagsRequest()
+              .recordId("k2")
+              .tag(Tag.builder().key("gender").value("something").build())
+              .build();
+// Sending Request
+CompletableFuture<TagsResponse> tagsResponseCompletableFuture =
+          fcClient.tagsDelete(tagsRequest);
+
+tagsResponseCompletableFuture.thenAccept(
+          tagsResponse -> {
+            System.out.println(tagsResponse.statusCode);
+          });
+```
+
+### Audience
+- `audience.create`
+- `audience.download`
+
+This endpoint can be used in order to obtain multiple individuals based upon the key, value 
+tag inputs (both are required as input) in order to suppress or take action upon certain audiences 
+for data onboarding or audience analysis.
+
+#### Audience Create
+The Audience Creation endpoint requires a at least one `Tag` and valid `webhookURL` to be present in order to 
+send a message when the audience creation is complete and ready to be downloaded.
+
+```java
+AudienceRequest audienceRequest =
+          FullContact.buildAudienceRequest()
+              .tag(Tag.builder().key("gender").value("male").build())
+              .webhookUrl("your-webhook-url")
+              .build();
+
+ CompletableFuture<AudienceResponse> audienceResponseCompletableFuture =
+          fcClient.audienceCreate(audienceRequest);
+
+ audienceResponseCompletableFuture.thenAccept(
+          audienceResponse -> {
+            System.out.println(audienceResponse.isSuccessful);
+            System.out.println(audienceResponse.getRequestId());
+            });
+```
+
+#### Audience Download
+When `audience.create` result is ready, `requestId` from its response can be used to download the audience data.
+A utility method is provided `getFileFromBytes(String fileName)` which generates a file in `json.gz` format
+with audience data bytes.
+```java
+CompletableFuture<AudienceResponse> audienceResponseCompletableFuture =
+          fcClient.audienceDownload(requestId);
+
+audienceResponseCompletableFuture.thenAccept(
+          audienceResponse -> {
+            try {
+              audienceResponse.getFileFromBytes(requestId);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
           });
 ```
 

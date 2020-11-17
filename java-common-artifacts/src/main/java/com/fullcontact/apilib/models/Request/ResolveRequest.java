@@ -4,6 +4,7 @@ import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
+import com.fullcontact.apilib.models.Tag;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
@@ -17,9 +18,10 @@ import java.util.List;
 public class ResolveRequest {
   @With private PersonName name;
   @With private Location location;
-  private String recordId, personId;
+  private String recordId, personId, partnerId, li_nonid;
   @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
+  @Singular private List<Tag> tags;
 
   /**
    * Method to validate request for Identity map. It validates that personId should be null and must
@@ -38,6 +40,13 @@ public class ResolveRequest {
     } else {
       throw new FullContactException(
           "Invalid map request, Any of Email, Phone, SocialProfile, Name and Location must be present");
+    }
+    if (this.tags != null && !this.tags.isEmpty()) {
+      for (Tag tag : this.tags) {
+        if (!tag.isValid()) {
+          throw new FullContactException("Both Key and Value must be populated for adding a Tag");
+        }
+      }
     }
   }
 
@@ -88,9 +97,12 @@ public class ResolveRequest {
           this.profiles != null
               ? Collections.unmodifiableList(this.profiles)
               : Collections.emptyList();
+      List<Tag> tags =
+          this.tags != null ? Collections.unmodifiableList((this.tags)) : Collections.emptyList();
       this.validate();
       return new ResolveRequest(
-          name, location, recordId, personId, phones, emails, maids, profiles);
+          name, location, recordId, personId, partnerId, li_nonid, phones, emails, maids, profiles,
+          tags);
     }
 
     /**

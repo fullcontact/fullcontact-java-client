@@ -13,11 +13,11 @@ Add this dependency to your project's build file:
 
 - Java11+
 ```groovy
-implementation 'com.fullcontact.client:java11:2.1.1'
+implementation 'com.fullcontact.client:java11:2.2.0'
 ```
 - Java8+
 ```groovy
-implementation 'com.fullcontact.client:java8:2.1.1'
+implementation 'com.fullcontact.client:java8:2.2.0'
 ```
 
 ### Maven users
@@ -29,7 +29,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>2.1.1</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 - Java8+
@@ -37,7 +37,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>2.1.1</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 
@@ -67,9 +67,17 @@ your integration.
     - `person.enrich`
     - `company.enrich`
     - `company.search`
-- _[Resolve](https://dashboard.fullcontact.com/api-ref#resolve-2)_
-    - `identity.map`
-    - `identity.resolve`
-    - `identity.delete`
+- Private Identity Cloud
+    - _[Resolve](https://dashboard.fullcontact.com/api-ref#resolve-2)_
+        - `identity.map`
+        - `identity.resolve`
+        - `identity.delete`
+    - [Tags](https://dashboard.fullcontact.com/api-ref#customer-tags)
+        - `tags.create`
+        - `tags.get`
+        - `tags.delete`
+    - [Audience](https://dashboard.fullcontact.com/api-ref#customer-tags)
+        - `audience.create`
+        - `audience.download`
 - _[Verification](https://dashboard.fullcontact.com/api-ref#verification)_
     - `v2/verification/email`

@@ -6,6 +6,7 @@ import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
 import com.fullcontact.apilib.models.Profile;
 import com.fullcontact.apilib.models.Request.ResolveRequest;
 import com.fullcontact.apilib.models.Response.ResolveResponse;
+import com.fullcontact.apilib.models.Response.ResolveResponseWithTags;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +47,7 @@ public class ResolveResponseTest {
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
     Assert.assertEquals("21c300bcf16b079ae52025cc1c06765c", response.getRecordIds().get(0));
+    Assert.assertEquals("key", response.getTags().get(0).getKey());
   }
 
   @Test
@@ -62,7 +64,7 @@ public class ResolveResponseTest {
     ResolveRequest resolveRequest =
         FullContact.buildResolveRequest().email("test").recordId("customer123").build();
 
-    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
+    ResolveResponse response = fcTest.identityResolve(resolveRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -258,5 +260,29 @@ public class ResolveResponseTest {
         response
             .getMessage()
             .contains("Input domain parameter (\"fullcontact\") does not contain a valid domain."));
+  }
+
+  @Test
+  public void resolveResponseWithTagsTest()
+      throws FullContactException, ExecutionException, InterruptedException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_104");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("test").recordId("customer123").build();
+
+    ResolveResponseWithTags response = fcTest.identityResolveWithTags(resolveRequest).get();
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(200, response.getStatusCode());
+    Assert.assertEquals("OK", response.getMessage());
+    Assert.assertEquals("customer123", response.getRecordIds().get(0));
+    Assert.assertEquals(
+        "VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345", response.getPersonIds().get(0));
+    Assert.assertEquals("gender", response.getTags().get("customer123").get(0).getKey());
   }
 }

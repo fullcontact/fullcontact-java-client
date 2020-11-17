@@ -9,8 +9,8 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResolveResponse {
-  private List<String> recordIds, personIds, partnerIds;
+public class TagsResponse {
+  private String recordId, partnerId;
   private List<Tag> tags;
   public boolean isSuccessful;
   public int statusCode;
