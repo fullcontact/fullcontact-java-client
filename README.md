@@ -72,7 +72,7 @@ your integration.
         - `identity.map`
         - `identity.resolve`
         - `identity.delete`
-    - [Tags](hhttps://platform.fullcontact.com/docs/apis/resolve/customer-tags)
+    - [Tags](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
         - `tags.create`
         - `tags.get`
         - `tags.delete`
