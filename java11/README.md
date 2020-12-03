@@ -91,7 +91,7 @@ FullContact fcClient = FullContact.builder()
                 .build();
 ```
 ## Enrich
-[Enrich API Reference](https://dashboard.fullcontact.com/api-ref#enrich)
+[Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
 - `person.enrich`
 - `company.enrich`
 - `company.search`
@@ -241,7 +241,7 @@ companySearchResponseListCompletableFuture.thenAccept(
 ```
 
 ## Resolve
-[Resolve API Reference](https://dashboard.fullcontact.com/api-ref#resolve-2)
+[Resolve API Reference](https://platform.fullcontact.com/docs/apis/resolve/introduction)
 - `identity.map`
 - `identity.resolve`
 - `identity.delete`
@@ -328,7 +328,7 @@ deleteResponse.thenAccept(
 
 ### Tags/Metadata
 
-[Tags API Reference](https://dashboard.fullcontact.com/api-ref#customer-tags)
+[Tags API Reference](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
 - `tags.create`
 - `tags.get`
 - `tags.delete`
@@ -448,7 +448,7 @@ audienceResponseCompletableFuture.thenAccept(
 ```
 
 ## Verification
-[EmailVerification API Reference](https://dashboard.fullcontact.com/api-ref#verification)
+[EmailVerification API Reference](https://platform.fullcontact.com/docs/apis/verification/introduction)
 - `v2/verification/email`
 
 FullContact Email Verification API accepts single `email` request, as a `String`. Requests are sent 
