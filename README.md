@@ -52,7 +52,7 @@ Client with your API Key, make a enrich request and get a response object back.
 
 ### Quick Overview
 If you are not familiar with the FullContact APIs, complete details can be found 
-@[API documentation](https://www.fullcontact.com/developer/docs/) 
+@[API documentation](https://platform.fullcontact.com/docs/apis/enrich/introduction) 
 
 
 FullContact Client provides an object layer to FullContact API communication, 
@@ -63,21 +63,21 @@ Once you’re on board with the API behavior, FullContact Client library should 
 your integration.
 
 ### Supported APIs
-- _[Enrich](https://dashboard.fullcontact.com/api-ref#enrich)_
+- _[Enrich](https://platform.fullcontact.com/docs/apis/enrich/introduction)_
     - `person.enrich`
     - `company.enrich`
     - `company.search`
 - Private Identity Cloud
-    - _[Resolve](https://dashboard.fullcontact.com/api-ref#resolve-2)_
+    - _[Resolve](https://platform.fullcontact.com/docs/apis/resolve/introduction)_
         - `identity.map`
         - `identity.resolve`
         - `identity.delete`
-    - [Tags](https://dashboard.fullcontact.com/api-ref#customer-tags)
+    - [Tags](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
         - `tags.create`
         - `tags.get`
         - `tags.delete`
-    - [Audience](https://dashboard.fullcontact.com/api-ref#customer-tags)
+    - [Audience](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
         - `audience.create`
         - `audience.download`
-- _[Verification](https://dashboard.fullcontact.com/api-ref#verification)_
+- _[Verification](https://platform.fullcontact.com/docs/apis/verification/introduction)_
     - `v2/verification/email`
