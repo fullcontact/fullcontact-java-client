@@ -22,8 +22,9 @@ public class PersonRequest {
   private String webhookUrl, recordId, personId, partnerId, li_nonid;
   private Confidence confidence;
   private boolean infer;
-  @Singular private List<String> phones, emails, dataFilters, maids;
+  @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
+  private List<String> dataFilter;
 
   public static class PersonRequestBuilder {
     private boolean infer = true;
@@ -33,9 +34,9 @@ public class PersonRequest {
           this.phones != null ? Collections.unmodifiableList(this.phones) : Collections.emptyList();
       List<String> emails =
           this.emails != null ? Collections.unmodifiableList(this.emails) : Collections.emptyList();
-      List<String> dataFilters =
-          this.dataFilters != null
-              ? Collections.unmodifiableList((this.dataFilters))
+      List<String> dataFilter =
+          this.dataFilter != null
+              ? Collections.unmodifiableList((this.dataFilter))
               : Collections.emptyList();
       List<String> maids =
           this.maids != null ? Collections.unmodifiableList((this.maids)) : Collections.emptyList();
@@ -56,9 +57,9 @@ public class PersonRequest {
           infer,
           phones,
           emails,
-          dataFilters,
           maids,
-          profiles);
+          profiles,
+          dataFilter);
     }
 
     /**

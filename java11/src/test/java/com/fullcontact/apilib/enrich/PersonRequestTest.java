@@ -24,6 +24,9 @@ public class PersonRequestTest {
     List<String> emails = new ArrayList<>();
     emails.add("test1@gmail.com");
     emails.add("test2@outlook.com");
+    List<String> dataFilters = new ArrayList<>();
+    dataFilters.add("social");
+    dataFilters.add("individual");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -32,8 +35,7 @@ public class PersonRequestTest {
             .emails(emails)
             .confidence(Confidence.HIGH)
             .infer(false)
-            .dataFilter("individual")
-            .dataFilter("social")
+            .dataFilter(dataFilters)
             .location(
                 Location.builder()
                     .addressLine1("123/23")
