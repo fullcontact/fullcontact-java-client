@@ -5,11 +5,13 @@ import com.fullcontact.apilib.models.PersonName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Details {
   private PersonName name;
   private Age age;

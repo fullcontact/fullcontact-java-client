@@ -1,14 +1,12 @@
 package com.fullcontact.apilib.models;
 
 import com.fullcontact.apilib.FullContactException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Profile {
   private String service, userid, username, url;
 
