@@ -48,33 +48,46 @@ public class MultifieldRequest {
     return value != null && !value.trim().isEmpty();
   }
 
+  public boolean isQueryable() {
+    return (!this.emails.isEmpty()
+        || !this.phones.isEmpty()
+        || !this.profiles.isEmpty()
+        || !this.maids.isEmpty()
+        || isPopulated(this.recordId)
+        || isPopulated(this.personId)
+        || isPopulated(this.partnerId)
+        || isPopulated(this.li_nonid));
+  }
+
   /**
-   * Check for minimum combinations of 'name' and 'location', if present
+   * Check for minimum combinations of 'name' and 'location', if no other queryable field is present
    *
    * @throws FullContactException if 'name' and 'location' combination is not valid
    */
   public void validate() throws FullContactException {
-    if (location == null && name == null) {
-      return;
-    } else if (location != null && name != null) {
-      // Validating Location fields
-      if (isPopulated(location.getAddressLine1())
-          && ((isPopulated(location.getCity())
-                  && (isPopulated(location.getRegion()) || isPopulated(location.getRegionCode())))
-              || (isPopulated(location.getPostalCode())))) {
-        // Validating Name fields
-        if ((isPopulated(name.getFull()))
-            || (isPopulated(name.getGiven()) && isPopulated(name.getFamily()))) {
-          return;
+    if (!this.isQueryable()) {
+      if (location == null && name == null) {
+        return;
+      } else if (location != null && name != null) {
+        // Validating Location fields
+        if (isPopulated(location.getAddressLine1())
+            && ((isPopulated(location.getCity())
+                    && (isPopulated(location.getRegion()) || isPopulated(location.getRegionCode())))
+                || (isPopulated(location.getPostalCode())))) {
+          // Validating Name fields
+          if ((isPopulated(name.getFull()))
+              || (isPopulated(name.getGiven()) && isPopulated(name.getFamily()))) {
+            return;
+          } else {
+            throw new FullContactException("Name data requires full name or given and family name");
+          }
         } else {
-          throw new FullContactException("Name data requires full name or given and family name");
+          throw new FullContactException(
+              "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
         }
-      } else {
-        throw new FullContactException(
-            "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
       }
+      throw new FullContactException(
+          "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
     }
-    throw new FullContactException(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
   }
 }
