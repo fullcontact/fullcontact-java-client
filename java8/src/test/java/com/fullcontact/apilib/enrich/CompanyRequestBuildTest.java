@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ComapanyRequestBuildTest {
+public class CompanyRequestBuildTest {
   private static final Gson gson = new Gson();
 
   @Test
@@ -25,7 +25,8 @@ public class ComapanyRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(companyRequest));
+      CompanyRequest expectedRequest = gson.fromJson(sb.toString(), CompanyRequest.class);
+      Assert.assertEquals(expectedRequest, companyRequest);
     }
   }
 
@@ -49,7 +50,8 @@ public class ComapanyRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(companyRequest));
+      CompanyRequest expectedRequest = gson.fromJson(sb.toString(), CompanyRequest.class);
+      Assert.assertEquals(expectedRequest, companyRequest);
     }
   }
 }

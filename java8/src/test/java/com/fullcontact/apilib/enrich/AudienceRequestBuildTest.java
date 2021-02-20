@@ -34,7 +34,8 @@ public class AudienceRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(audienceRequest));
+      AudienceRequest expectedRequest = gson.fromJson(sb.toString(), AudienceRequest.class);
+      Assert.assertEquals(expectedRequest, audienceRequest);
     }
   }
 

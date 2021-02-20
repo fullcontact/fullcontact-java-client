@@ -34,7 +34,8 @@ public class TagsRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(tagsRequest));
+      TagsRequest expectedRequest = gson.fromJson(sb.toString(), TagsRequest.class);
+      Assert.assertEquals(expectedRequest, tagsRequest);
     }
   }
 
