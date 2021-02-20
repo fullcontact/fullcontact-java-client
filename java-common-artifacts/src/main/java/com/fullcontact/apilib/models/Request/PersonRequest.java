@@ -1,7 +1,7 @@
 package com.fullcontact.apilib.models.Request;
 
-import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.enums.Confidence;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -9,6 +9,7 @@ import java.util.List;
 
 /** Class to create request for Person Enrich */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(builderMethodName = "personRequestBuilder")
 public class PersonRequest extends MultifieldRequest {
   private String webhookUrl;

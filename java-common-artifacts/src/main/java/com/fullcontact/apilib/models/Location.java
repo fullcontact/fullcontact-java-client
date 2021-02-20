@@ -4,6 +4,7 @@ import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
+@EqualsAndHashCode
 @Builder
 @Getter
 public class Location {
