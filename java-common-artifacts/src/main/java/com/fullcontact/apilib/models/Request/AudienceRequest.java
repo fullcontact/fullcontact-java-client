@@ -3,6 +3,7 @@ package com.fullcontact.apilib.models.Request;
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Tag;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Singular;
 
@@ -10,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Builder(toBuilder = true)
+@EqualsAndHashCode
 @Getter
 public class AudienceRequest {
   private String webhookUrl;

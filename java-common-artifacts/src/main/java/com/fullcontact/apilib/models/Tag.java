@@ -6,6 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Tag {
   private String key;
   private String value;

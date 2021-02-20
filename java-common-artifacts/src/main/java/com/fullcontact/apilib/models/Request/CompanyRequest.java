@@ -3,11 +3,13 @@ package com.fullcontact.apilib.models.Request;
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.enums.Sort;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.With;
 
 /** Class to create requests for Company Enrich and Company Search */
 @Builder(toBuilder = true)
+@EqualsAndHashCode
 @Getter
 public class CompanyRequest {
   @With private String domain, companyName, webhookUrl, location, locality, region, country;
