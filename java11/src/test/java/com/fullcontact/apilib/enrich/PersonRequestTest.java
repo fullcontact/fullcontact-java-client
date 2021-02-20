@@ -242,7 +242,7 @@ public class PersonRequestTest {
   @Test
   public void profileWithUrlAndUsername() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
-    exceptionRule.expectMessage("Specifying username or userid ftogether with url is not allowed");
+    exceptionRule.expectMessage("Specifying username or userid together with url is not allowed");
     Profile.builder().url("https://twitter.com/mcreedy").username("mcreedy").build();
   }
 
