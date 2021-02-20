@@ -22,6 +22,7 @@ public class ResolveRequest extends MultifieldRequest {
    * @throws FullContactException if validation fails
    */
   public void validateForIdentityMap() throws FullContactException {
+    this.validate();
     if (this.getPersonId() != null) {
       throw new FullContactException("Invalid map request, person id must be empty");
     }
@@ -49,6 +50,7 @@ public class ResolveRequest extends MultifieldRequest {
    * @throws FullContactException if validation fails
    */
   public void validateForIdentityResolve() throws FullContactException {
+    this.validate();
     if (isPopulated(this.getRecordId()) && isPopulated(this.getPersonId())) {
       throw new FullContactException(
           "Both record id and person id are populated, please select one");
@@ -61,6 +63,7 @@ public class ResolveRequest extends MultifieldRequest {
    * @throws FullContactException if validation fails
    */
   public void validateForIdentityDelete() throws FullContactException {
+    this.validate();
     if (!isPopulated(this.getRecordId())) {
       throw new FullContactException("recordId param must be specified");
     }

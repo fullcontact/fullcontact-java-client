@@ -148,6 +148,7 @@ public class FullContact implements AutoCloseable {
   public CompletableFuture<PersonResponse> enrich(
       PersonRequest personRequest, RetryHandler retryHandler) throws FullContactException {
     checkForShutdown();
+    personRequest.validate();
     CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
     RequestBody httpRequest = buildHttpRequest(gson.toJson(personRequest));
     CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
