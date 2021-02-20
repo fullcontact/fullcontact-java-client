@@ -90,8 +90,8 @@ public class FullContact implements AutoCloseable {
   }
 
   /** @return Person Request Builder for Person Enrich request */
-  public static PersonRequest.PersonRequestBuilder buildPersonRequest() {
-    return PersonRequest.builder();
+  public static PersonRequest.PersonRequestBuilder<?, ?> buildPersonRequest() {
+    return PersonRequest.personRequestBuilder();
   }
 
   /** @return Company Request Builder for Company Enrich and Company Search requests */
