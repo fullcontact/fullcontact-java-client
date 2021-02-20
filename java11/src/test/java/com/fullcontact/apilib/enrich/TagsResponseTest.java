@@ -21,8 +21,10 @@ public class TagsResponseTest {
   @Test
   public void tagsResponseModelDeserializationTest1() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_301"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_301"),
+                TagsResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -33,8 +35,10 @@ public class TagsResponseTest {
   @Test
   public void tagsResponseModelDeserializationTest2() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_302"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_302"),
+                TagsResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -45,8 +49,10 @@ public class TagsResponseTest {
   @Test
   public void tagsDeleteTest() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_303"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_303"),
+                TagsResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(204, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -55,8 +61,10 @@ public class TagsResponseTest {
   @Test
   public void responseStatus400Test() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"),
+                TagsResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(400, response.getStatusCode());
     Assert.assertEquals("Unable to process JSON", response.getMessage());
@@ -65,8 +73,10 @@ public class TagsResponseTest {
   @Test
   public void responseStatus401Test() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"),
+                TagsResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(
@@ -76,8 +86,10 @@ public class TagsResponseTest {
   @Test
   public void responseStatus404Test() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"),
+                TagsResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Profile not found"));
@@ -86,8 +98,10 @@ public class TagsResponseTest {
   @Test
   public void responseStatus403Test() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"),
+                TagsResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -96,8 +110,10 @@ public class TagsResponseTest {
   @Test
   public void responseStatus422Test() {
     TagsResponse response =
-        FullContact.getTagsResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"));
+        (TagsResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"),
+                TagsResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(

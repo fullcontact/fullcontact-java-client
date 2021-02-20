@@ -9,8 +9,10 @@ public class PersonResponseTest {
   @Test
   public void personResponseModelDeserializationTest() {
     PersonResponse response =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_001"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_001"),
+                PersonResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -143,8 +145,10 @@ public class PersonResponseTest {
   @Test
   public void responseStatus400Test() {
     PersonResponse personResponse =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"),
+                PersonResponse.class);
     Assert.assertFalse(personResponse.isSuccessful());
     Assert.assertEquals(400, personResponse.getStatusCode());
     Assert.assertEquals("Unable to process JSON", personResponse.getMessage());
@@ -153,8 +157,10 @@ public class PersonResponseTest {
   @Test
   public void responseStatus202Test() {
     PersonResponse response =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_003"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_003"),
+                PersonResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(202, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Queued for search"));
@@ -163,8 +169,10 @@ public class PersonResponseTest {
   @Test
   public void responseStatus401Test() {
     PersonResponse response =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"),
+                PersonResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("401: Invalid access token"));
@@ -173,8 +181,10 @@ public class PersonResponseTest {
   @Test
   public void responseStatus404Test() {
     PersonResponse response =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"),
+                PersonResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Profile not found"));
@@ -183,8 +193,10 @@ public class PersonResponseTest {
   @Test
   public void responseStatus403Test() {
     PersonResponse response =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"),
+                PersonResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -193,8 +205,10 @@ public class PersonResponseTest {
   @Test
   public void responseStatus422Test() {
     PersonResponse response =
-        FullContact.getPersonResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"));
+        (PersonResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"),
+                PersonResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(

@@ -22,8 +22,10 @@ public class AudienceResponseBuildTest {
   @Test
   public void AudienceResponseModelDeserializationTest1() {
     AudienceResponse response =
-        FullContact.getAudienceResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_401"));
+        (AudienceResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_401"),
+                AudienceResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -45,8 +47,10 @@ public class AudienceResponseBuildTest {
   @Test
   public void responseStatus400Test() {
     AudienceResponse response =
-        FullContact.getAudienceResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"));
+        (AudienceResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"),
+                AudienceResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(400, response.getStatusCode());
     Assert.assertEquals("Unable to process JSON", response.getMessage());
@@ -55,8 +59,10 @@ public class AudienceResponseBuildTest {
   @Test
   public void responseStatus401Test() {
     AudienceResponse response =
-        FullContact.getAudienceResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"));
+        (AudienceResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"),
+                AudienceResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(
@@ -66,8 +72,10 @@ public class AudienceResponseBuildTest {
   @Test
   public void responseStatus404Test() {
     AudienceResponse response =
-        FullContact.getAudienceResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"));
+        (AudienceResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"),
+                AudienceResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Profile not found"));
@@ -76,8 +84,10 @@ public class AudienceResponseBuildTest {
   @Test
   public void responseStatus403Test() {
     AudienceResponse response =
-        FullContact.getAudienceResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"));
+        (AudienceResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"),
+                AudienceResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -86,8 +96,10 @@ public class AudienceResponseBuildTest {
   @Test
   public void responseStatus422Test() {
     AudienceResponse response =
-        FullContact.getAudienceResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"));
+        (AudienceResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"),
+                AudienceResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(

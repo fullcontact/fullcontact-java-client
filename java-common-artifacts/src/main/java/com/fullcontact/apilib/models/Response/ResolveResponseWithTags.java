@@ -10,10 +10,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResolveResponseWithTags {
+public class ResolveResponseWithTags extends FCResponse {
   private List<String> recordIds, personIds, partnerIds;
   private Map<String, List<Tag>> tags;
-  public boolean isSuccessful;
-  public int statusCode;
-  public String message;
 }

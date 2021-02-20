@@ -87,7 +87,7 @@ public class ResolveResponseTest {
     ResolveRequest resolveRequest =
         FullContact.buildResolveRequest().phone("test").recordId("customer123").build();
 
-    ResolveResponse response = fcTest.identityMap(resolveRequest).get();
+    ResolveResponse response = fcTest.identityDelete(resolveRequest).get();
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(204, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());

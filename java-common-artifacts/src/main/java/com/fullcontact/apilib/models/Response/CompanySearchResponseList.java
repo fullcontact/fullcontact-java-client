@@ -10,9 +10,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class CompanySearchResponseList {
+public class CompanySearchResponseList extends FCResponse {
   public List<CompanySearchResponse> companySearchResponses;
-  public String message;
-  public int statusCode;
-  public boolean isSuccessful;
 }

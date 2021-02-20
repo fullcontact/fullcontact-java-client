@@ -8,12 +8,9 @@ import java.util.Map;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class EmailVerificationResponse {
+public class EmailVerificationResponse extends FCResponse {
   private int status;
   private String requestId;
   private String[] unknownEmails, failedEmails;
   private Map<String, EmailProperties> emails;
-  public String message;
-  public int statusCode;
-  public boolean isSuccessful;
 }

@@ -159,7 +159,9 @@ public class FullContact implements AutoCloseable {
         httpResponseCompletableFuture,
         responseCF,
         FCApiEndpoint.PERSON_ENRICH);
-    return responseCF.thenApply(FullContact::getPersonResponse);
+    return responseCF.thenApply(
+        httpResponse ->
+            (PersonResponse) FullContact.getFCResponse(httpResponse, PersonResponse.class));
   }
 
   /**
@@ -201,7 +203,9 @@ public class FullContact implements AutoCloseable {
         httpResponseCompletableFuture,
         responseCF,
         FCApiEndpoint.COMPANY_ENRICH);
-    return responseCF.thenApply(FullContact::getCompanyResponse);
+    return responseCF.thenApply(
+        httpResponse ->
+            (CompanyResponse) FullContact.getFCResponse(httpResponse, CompanyResponse.class));
   }
 
   /**
@@ -350,7 +354,10 @@ public class FullContact implements AutoCloseable {
         httpResponseCompletableFuture,
         responseCF,
         FCApiEndpoint.IDENTITY_RESOLVE_WITH_TAGS);
-    return responseCF.thenApply(FullContact::getResolveResponseWithTags);
+    return responseCF.thenApply(
+        httpResponse ->
+            (ResolveResponseWithTags)
+                FullContact.getFCResponse(httpResponse, ResolveResponseWithTags.class));
   }
 
   /**
@@ -408,7 +415,9 @@ public class FullContact implements AutoCloseable {
     }
     handleHttpResponse(
         httpRequest, retryHandler, httpResponseCompletableFuture, responseCF, fcApiEndpoint);
-    return responseCF.thenApply(FullContact::getResolveResponse);
+    return responseCF.thenApply(
+        httpResponse ->
+            (ResolveResponse) FullContact.getFCResponse(httpResponse, ResolveResponse.class));
   }
 
   /**
@@ -450,7 +459,10 @@ public class FullContact implements AutoCloseable {
           httpResponseCompletableFuture,
           responseCF,
           FCApiEndpoint.EMAIL_VERIFICATION);
-      return responseCF.thenApply(FullContact::getEmailVerificationResponse);
+      return responseCF.thenApply(
+          httpResponse ->
+              (EmailVerificationResponse)
+                  FullContact.getFCResponse(httpResponse, EmailVerificationResponse.class));
     } else {
       throw new FullContactException("Email can't be empty");
     }
@@ -496,7 +508,8 @@ public class FullContact implements AutoCloseable {
         httpResponseCompletableFuture,
         responseCF,
         FCApiEndpoint.TAGS_CREATE);
-    return responseCF.thenApply(FullContact::getTagsResponse);
+    return responseCF.thenApply(
+        httpResponse -> (TagsResponse) FullContact.getFCResponse(httpResponse, TagsResponse.class));
   }
 
   /**
@@ -538,7 +551,8 @@ public class FullContact implements AutoCloseable {
         httpResponseCompletableFuture,
         responseCF,
         FCApiEndpoint.TAGS_GET);
-    return responseCF.thenApply(FullContact::getTagsResponse);
+    return responseCF.thenApply(
+        httpResponse -> (TagsResponse) FullContact.getFCResponse(httpResponse, TagsResponse.class));
   }
 
   /**
@@ -581,7 +595,8 @@ public class FullContact implements AutoCloseable {
         httpResponseCompletableFuture,
         responseCF,
         FCApiEndpoint.TAGS_DELETE);
-    return responseCF.thenApply(FullContact::getTagsResponse);
+    return responseCF.thenApply(
+        httpResponse -> (TagsResponse) FullContact.getFCResponse(httpResponse, TagsResponse.class));
   }
 
   /**
@@ -683,54 +698,36 @@ public class FullContact implements AutoCloseable {
    * This method creates person enrich response and handle for different response codes
    *
    * @param response raw response from person enrich API
-   * @return PersonResponse
+   * @param fcResponseClass response class to deserialize
+   * @return FCResponse
    */
-  protected static PersonResponse getPersonResponse(Response<ResponseBody> response) {
-    PersonResponse personResponse;
+  protected static FCResponse getFCResponse(
+      Response<ResponseBody> response, Class<? extends FCResponse> fcResponseClass) {
+    FCResponse fcResponse;
     if (response.isSuccessful() && response.body() != null) {
-      personResponse = gson.fromJson(response.body().charStream(), PersonResponse.class);
-      if (response.code() == 200) {
-        personResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      fcResponse = gson.fromJson(response.body().charStream(), fcResponseClass);
+      if (response.code() == 200 || response.code() == 204) {
+        fcResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
       }
     } else {
-      personResponse = new PersonResponse();
+      try {
+        fcResponse = fcResponseClass.newInstance();
+      } catch (InstantiationException | IllegalAccessException e) {
+        fcResponse = new FCResponse();
+      }
       if (response.errorBody() != null) {
-        personResponse = gson.fromJson(response.errorBody().charStream(), PersonResponse.class);
+        fcResponse = gson.fromJson(response.errorBody().charStream(), fcResponseClass);
       } else {
-        personResponse.message = response.message();
+        fcResponse.message = response.message();
       }
     }
-    personResponse.isSuccessful =
-        response.code() == 200 || response.code() == 202 || response.code() == 404;
-    personResponse.statusCode = response.code();
-    return personResponse;
-  }
-
-  /**
-   * This method creates company enrich response and handle for different response codes
-   *
-   * @param response raw response from company enrich API
-   * @return CompanyResponse
-   */
-  protected static CompanyResponse getCompanyResponse(Response<ResponseBody> response) {
-    CompanyResponse companyResponse;
-    if (response.isSuccessful() && response.body() != null) {
-      companyResponse = gson.fromJson(response.body().charStream(), CompanyResponse.class);
-      if (response.code() == 200) {
-        companyResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
-      }
-    } else {
-      companyResponse = new CompanyResponse();
-      if (response.errorBody() != null) {
-        companyResponse = gson.fromJson(response.errorBody().charStream(), CompanyResponse.class);
-      } else {
-        companyResponse.message = response.message();
-      }
-    }
-    companyResponse.isSuccessful =
-        response.code() == 200 || response.code() == 202 || response.code() == 404;
-    companyResponse.statusCode = response.code();
-    return companyResponse;
+    fcResponse.isSuccessful =
+        response.code() == 200
+            || response.code() == 202
+            || response.code() == 204
+            || response.code() == 404;
+    fcResponse.statusCode = response.code();
+    return fcResponse;
   }
 
   /**
@@ -764,114 +761,6 @@ public class FullContact implements AutoCloseable {
         (response.code() == 200) || (response.code() == 202) || (response.code() == 404);
     companySearchResponseList.statusCode = response.code();
     return companySearchResponseList;
-  }
-
-  /**
-   * This method create Resolve response and handle for different response codes
-   *
-   * @param response raw response from Resolve APIs
-   * @return ResolveResponse
-   */
-  protected static ResolveResponse getResolveResponse(Response<ResponseBody> response) {
-    ResolveResponse resolveResponse;
-    if (response.isSuccessful() && response.body() != null) {
-      resolveResponse = gson.fromJson(response.body().charStream(), ResolveResponse.class);
-      if (response.code() == 200 || response.code() == 204) {
-        resolveResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
-      }
-    } else {
-      resolveResponse = new ResolveResponse();
-      if (response.errorBody() != null) {
-        resolveResponse = gson.fromJson(response.errorBody().charStream(), ResolveResponse.class);
-      } else {
-        resolveResponse.message = response.message();
-      }
-    }
-    resolveResponse.statusCode = response.code();
-    resolveResponse.isSuccessful =
-        (response.code() == 200) || (response.code() == 204) || (response.code() == 404);
-    return resolveResponse;
-  }
-
-  /**
-   * This method create Resolve response with Tags and handle for different response codes
-   *
-   * @param response raw response from Resolve APIs
-   * @return ResolveResponse
-   */
-  protected static ResolveResponseWithTags getResolveResponseWithTags(
-      Response<ResponseBody> response) {
-    ResolveResponseWithTags resolveResponseWithTags;
-    if (response.isSuccessful() && response.body() != null) {
-      resolveResponseWithTags =
-          gson.fromJson(response.body().charStream(), ResolveResponseWithTags.class);
-      if (response.code() == 200 || response.code() == 204) {
-        resolveResponseWithTags.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
-      }
-    } else {
-      resolveResponseWithTags = new ResolveResponseWithTags();
-      if (response.errorBody() != null) {
-        resolveResponseWithTags =
-            gson.fromJson(response.errorBody().charStream(), ResolveResponseWithTags.class);
-      } else {
-        resolveResponseWithTags.message = response.message();
-      }
-    }
-    resolveResponseWithTags.statusCode = response.code();
-    resolveResponseWithTags.isSuccessful =
-        (response.code() == 200) || (response.code() == 204) || (response.code() == 404);
-    return resolveResponseWithTags;
-  }
-
-  protected static EmailVerificationResponse getEmailVerificationResponse(
-      Response<ResponseBody> response) {
-    EmailVerificationResponse emailVerificationResponse = new EmailVerificationResponse();
-    if (response.isSuccessful() && response.body() != null) {
-      emailVerificationResponse =
-          gson.fromJson(response.body().charStream(), EmailVerificationResponse.class);
-      if (response.code() == 200) {
-        emailVerificationResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
-      }
-    } else {
-      emailVerificationResponse = new EmailVerificationResponse();
-      if (response.errorBody() != null) {
-        emailVerificationResponse =
-            gson.fromJson(response.errorBody().charStream(), EmailVerificationResponse.class);
-      } else {
-        emailVerificationResponse.message = response.message();
-      }
-    }
-    emailVerificationResponse.statusCode = response.code();
-    emailVerificationResponse.isSuccessful =
-        (response.code() == 200) || (response.code() == 202) || (response.code() == 404);
-    return emailVerificationResponse;
-  }
-
-  /**
-   * This method creates Tags response and handle for different response codes
-   *
-   * @param response raw response from various tags API
-   * @return TagsResponse
-   */
-  protected static TagsResponse getTagsResponse(Response<ResponseBody> response) {
-    TagsResponse tagsResponse;
-    if (response.isSuccessful() && response.body() != null) {
-      tagsResponse = gson.fromJson(response.body().charStream(), TagsResponse.class);
-      if (response.code() == 200) {
-        tagsResponse.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
-      }
-    } else {
-      tagsResponse = new TagsResponse();
-      if (response.errorBody() != null) {
-        tagsResponse = gson.fromJson(response.errorBody().charStream(), TagsResponse.class);
-      } else {
-        tagsResponse.message = response.message();
-      }
-    }
-    tagsResponse.isSuccessful =
-        response.code() == 200 || response.code() == 204 || response.code() == 404;
-    tagsResponse.statusCode = response.code();
-    return tagsResponse;
   }
 
   /**

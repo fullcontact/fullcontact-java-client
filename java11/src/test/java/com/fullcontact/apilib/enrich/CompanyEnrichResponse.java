@@ -9,8 +9,10 @@ public class CompanyEnrichResponse {
   @Test
   public void companyResponseModelDeserializationTest() {
     CompanyResponse response =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_051"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_051"),
+                CompanyResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -52,8 +54,10 @@ public class CompanyEnrichResponse {
   @Test
   public void responseStatus400Test() {
     CompanyResponse personResponse =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"),
+                CompanyResponse.class);
     Assert.assertFalse(personResponse.isSuccessful());
     Assert.assertEquals(400, personResponse.getStatusCode());
     Assert.assertEquals("Unable to process JSON", personResponse.getMessage());
@@ -62,8 +66,10 @@ public class CompanyEnrichResponse {
   @Test
   public void responseStatus202Test() {
     CompanyResponse response =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_003"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_003"),
+                CompanyResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(202, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Queued for search"));
@@ -72,8 +78,10 @@ public class CompanyEnrichResponse {
   @Test
   public void responseStatus401Test() {
     CompanyResponse response =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"),
+                CompanyResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("401: Invalid access token"));
@@ -82,8 +90,10 @@ public class CompanyEnrichResponse {
   @Test
   public void responseStatus404Test() {
     CompanyResponse response =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"),
+                CompanyResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Profile not found"));
@@ -92,8 +102,10 @@ public class CompanyEnrichResponse {
   @Test
   public void responseStatus403Test() {
     CompanyResponse response =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"),
+                CompanyResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -102,8 +114,10 @@ public class CompanyEnrichResponse {
   @Test
   public void responseStatus422Test() {
     CompanyResponse response =
-        FullContact.getCompanyResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"));
+        (CompanyResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"),
+                CompanyResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(
