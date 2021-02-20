@@ -1026,8 +1026,8 @@ public class FullContact implements AutoCloseable {
   }
 
   /** @return Person Request Builder for Person Enrich request */
-  public static PersonRequest.PersonRequestBuilder buildPersonRequest() {
-    return PersonRequest.builder();
+  public static PersonRequest.PersonRequestBuilder<?, ?> buildPersonRequest() {
+    return PersonRequest.personRequestBuilder();
   }
 
   /** @return Company Request Builder for Company Enrich and Company Search requests */
@@ -1036,8 +1036,8 @@ public class FullContact implements AutoCloseable {
   }
 
   /** @return Resolve Request Builder for Resolve */
-  public static ResolveRequest.ResolveRequestBuilder buildResolveRequest() {
-    return ResolveRequest.builder();
+  public static ResolveRequest.ResolveRequestBuilder<?, ?> buildResolveRequest() {
+    return ResolveRequest.resolveRequestBuilder();
   }
 
   /** @return TagsRequest Builder for various tags endpoints */

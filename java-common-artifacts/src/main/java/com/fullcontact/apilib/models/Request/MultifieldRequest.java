@@ -4,10 +4,7 @@ import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
 import com.fullcontact.apilib.models.Profile;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Singular;
-import lombok.With;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Collections;
@@ -16,6 +13,7 @@ import java.util.List;
 @Getter
 @SuperBuilder
 @AllArgsConstructor
+@EqualsAndHashCode
 public class MultifieldRequest {
   @With private PersonName name;
   @With private Location location;
@@ -38,8 +36,6 @@ public class MultifieldRequest {
         b.maids != null ? Collections.unmodifiableList((b.maids)) : Collections.emptyList();
     this.profiles =
         b.profiles != null ? Collections.unmodifiableList(b.profiles) : Collections.emptyList();
-    System.out.println(this.emails);
-    //    this.validate();
   }
 
   /**

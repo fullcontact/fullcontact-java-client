@@ -100,8 +100,8 @@ public class FullContact implements AutoCloseable {
   }
 
   /** @return Resolve Request Builder for Resolve */
-  public static ResolveRequest.ResolveRequestBuilder buildResolveRequest() {
-    return ResolveRequest.builder();
+  public static ResolveRequest.ResolveRequestBuilder<?, ?> buildResolveRequest() {
+    return ResolveRequest.resolveRequestBuilder();
   }
 
   /** @return Tags Request Builder for various Tags APIs */
