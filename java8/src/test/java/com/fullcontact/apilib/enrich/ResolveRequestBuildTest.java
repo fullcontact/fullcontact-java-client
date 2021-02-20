@@ -53,7 +53,8 @@ public class ResolveRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(resolveRequest));
+      ResolveRequest expectedRequest = gson.fromJson(sb.toString(), ResolveRequest.class);
+      Assert.assertEquals(expectedRequest, resolveRequest);
     }
   }
 
@@ -61,6 +62,7 @@ public class ResolveRequestBuildTest {
   public void requestWithoutNameAndLocation() throws FullContactException {
     ResolveRequest resolveRequest =
         FullContact.buildResolveRequest().email("marianrd97@outlook.com").build();
+    resolveRequest.validate();
   }
 
   @Test
@@ -70,6 +72,7 @@ public class ResolveRequestBuildTest {
           FullContact.buildResolveRequest()
               .name(PersonName.builder().full("Marian C Reed").build())
               .build();
+      resolveRequest.validate();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values",
@@ -92,6 +95,7 @@ public class ResolveRequestBuildTest {
                       .postalCode("23124")
                       .build())
               .build();
+      resolveRequest.validate();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values",
@@ -114,6 +118,7 @@ public class ResolveRequestBuildTest {
                       .postalCode("23124")
                       .build())
               .build();
+      resolveRequest.validate();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
@@ -129,6 +134,7 @@ public class ResolveRequestBuildTest {
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(Location.builder().addressLine1("123/23").build())
               .build();
+      resolveRequest.validate();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
@@ -144,6 +150,7 @@ public class ResolveRequestBuildTest {
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(Location.builder().addressLine1("123/23").city("Denver").build())
               .build();
+      resolveRequest.validate();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
@@ -159,6 +166,7 @@ public class ResolveRequestBuildTest {
               .name(PersonName.builder().full("Marian C Reed").build())
               .location(Location.builder().addressLine1("123/23").region("Denver").build())
               .build();
+      resolveRequest.validate();
     } catch (FullContactException fce) {
       Assert.assertEquals(
           "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
