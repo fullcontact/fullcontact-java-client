@@ -5,7 +5,9 @@ import com.fullcontact.apilib.models.Request.AudienceRequest;
 import com.fullcontact.apilib.models.Tag;
 import com.google.gson.Gson;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class AudienceRequestBuildTest {
   private static final Gson gson = new Gson();
+  @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
   @Test
   public void AudienceRequestBuildAndSerializeTest() throws FullContactException, IOException {
@@ -34,49 +37,39 @@ public class AudienceRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(audienceRequest));
+      AudienceRequest expectedRequest = gson.fromJson(sb.toString(), AudienceRequest.class);
+      Assert.assertEquals(expectedRequest, audienceRequest);
     }
   }
 
   @Test
-  public void invalidAudienceRequestTest1() {
-    try {
-      AudienceRequest audienceRequest = FullContact.buildAudienceRequest().build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("WebhookUrl is mandatory for creating Audience", e.getMessage());
-    }
+  public void invalidAudienceRequestTest1() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("WebhookUrl is mandatory for creating Audience");
+    FullContact.buildAudienceRequest().build();
   }
 
   @Test
-  public void invalidAudienceRequestTest2() {
-    try {
-      AudienceRequest audienceRequest =
-          FullContact.buildAudienceRequest().tag(Tag.builder().value("M").build()).build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("WebhookUrl is mandatory for creating Audience", e.getMessage());
-    }
+  public void invalidAudienceRequestTest2() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("WebhookUrl is mandatory for creating Audience");
+    FullContact.buildAudienceRequest().tag(Tag.builder().value("M").build()).build();
   }
 
   @Test
-  public void invalidAudienceRequestTest3() {
-    try {
-      AudienceRequest audienceRequest =
-          FullContact.buildAudienceRequest().webhookUrl("webhookUrl").build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("At least 1 Tag is mandatory for creating Audience", e.getMessage());
-    }
+  public void invalidAudienceRequestTest3() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("At least 1 Tag is mandatory for creating Audience");
+    FullContact.buildAudienceRequest().webhookUrl("webhookUrl").build();
   }
 
   @Test
-  public void invalidAudienceRequestTest4() {
-    try {
-      AudienceRequest audienceRequest =
-          FullContact.buildAudienceRequest()
-              .webhookUrl("webhookUrl")
-              .tag(Tag.builder().key("key").build())
-              .build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("Both Key and Value must be populated for a Tag", e.getMessage());
-    }
+  public void invalidAudienceRequestTest4() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Both Key and Value must be populated for a Tag");
+    FullContact.buildAudienceRequest()
+        .webhookUrl("webhookUrl")
+        .tag(Tag.builder().key("key").build())
+        .build();
   }
 }

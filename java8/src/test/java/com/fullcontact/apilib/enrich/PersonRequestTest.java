@@ -8,7 +8,9 @@ import com.fullcontact.apilib.models.Request.PersonRequest;
 import com.fullcontact.apilib.models.enums.Confidence;
 import com.google.gson.Gson;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class PersonRequestTest {
   private static final Gson gson = new Gson();
+  @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
   @Test
   public void personRequestBuildAndSerializeTest() throws FullContactException, IOException {
@@ -60,7 +63,8 @@ public class PersonRequestTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(personRequest));
+      PersonRequest expectedRequest = gson.fromJson(sb.toString(), PersonRequest.class);
+      Assert.assertEquals(expectedRequest, personRequest);
     }
   }
 
@@ -68,218 +72,267 @@ public class PersonRequestTest {
   public void requestWithoutNameAndLocation() throws FullContactException {
     PersonRequest personRequest =
         FullContact.buildPersonRequest().email("marianrd97@outlook.com").build();
+    personRequest.validate();
   }
 
   @Test
-  public void nameWithLocationAsNullTest() {
-    try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
-              .name(PersonName.builder().full("Marian C Reed").build())
-              .build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values",
-          fce.getMessage());
-    }
-  }
-
-  @Test
-  public void locationWithNameAsNull() {
-    try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
-              .location(
-                  Location.builder()
-                      .addressLine1("123/23")
-                      .addressLine2("Some Street")
-                      .city("Denver")
-                      .region("Denver")
-                      .regionCode("123123")
-                      .postalCode("23124")
-                      .build())
-              .build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values",
-          fce.getMessage());
-    }
-  }
-
-  @Test
-  public void locationWithNoAddressLine1Test() {
-    try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
-              .name(PersonName.builder().full("Marian C Reed").build())
-              .location(
-                  Location.builder()
-                      .addressLine2("Some Street")
-                      .city("Denver")
-                      .region("Denver")
-                      .regionCode("123123")
-                      .postalCode("23124")
-                      .build())
-              .build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
-          fce.getMessage());
-    }
-  }
-
-  @Test
-  public void locationWithOnlyAddressLine1Test() {
-    try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
-              .name(PersonName.builder().full("Marian C Reed").build())
-              .location(Location.builder().addressLine1("123/23").build())
-              .build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
-          fce.getMessage());
-    }
-  }
-
-  @Test
-  public void locationWithAddressLine1AndCityTest() {
-    try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
-              .name(PersonName.builder().full("Marian C Reed").build())
-              .location(Location.builder().addressLine1("123/23").city("Denver").build())
-              .build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
-          fce.getMessage());
-    }
-  }
-
-  @Test
-  public void locationWithAddressLine1AndRegionTest() {
-    try {
-      PersonRequest personRequest =
-          FullContact.buildPersonRequest()
-              .name(PersonName.builder().full("Marian C Reed").build())
-              .location(Location.builder().addressLine1("123/23").region("Denver").build())
-              .build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)",
-          fce.getMessage());
-    }
-  }
-
-  @Test
-  public void validLocation1Test() throws FullContactException {
+  public void nameWithLocationAsNullTest() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
-            .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
             .build();
+    personRequest.validate();
   }
 
   @Test
-  public void validLocation2Test() throws FullContactException {
+  public void locationWithNameAsNull() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
-            .name(PersonName.builder().full("Marian C Reed").build())
             .location(
                 Location.builder()
                     .addressLine1("123/23")
                     .addressLine2("Some Street")
                     .city("Denver")
                     .region("Denver")
+                    .regionCode("123123")
+                    .postalCode("23124")
                     .build())
             .build();
+    personRequest.validate();
   }
 
   @Test
-  public void validLocation3Test() throws FullContactException {
-
+  public void locationWithNoAddressLine1Test() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
             .location(
                 Location.builder()
-                    .addressLine1("123/23")
+                    .addressLine2("Some Street")
                     .city("Denver")
+                    .region("Denver")
                     .regionCode("123123")
+                    .postalCode("23124")
                     .build())
             .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithOnlyAddressLine1Test() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(Location.builder().addressLine1("123/23").build())
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithAddressLine1AndCityTest() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(Location.builder().addressLine1("123/23").city("Denver").build())
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithAddressLine1AndRegionTest() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(Location.builder().addressLine1("123/23").region("Denver").build())
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void validLocation1Test() throws FullContactException {
+    FullContact.buildPersonRequest()
+        .name(PersonName.builder().full("Marian C Reed").build())
+        .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
+        .build()
+        .validate();
+  }
+
+  @Test
+  public void validLocation2Test() throws FullContactException {
+    FullContact.buildPersonRequest()
+        .name(PersonName.builder().full("Marian C Reed").build())
+        .location(
+            Location.builder()
+                .addressLine1("123/23")
+                .addressLine2("Some Street")
+                .city("Denver")
+                .region("Denver")
+                .build())
+        .build()
+        .validate();
+  }
+
+  @Test
+  public void validLocation3Test() throws FullContactException {
+    FullContact.buildPersonRequest()
+        .name(PersonName.builder().full("Marian C Reed").build())
+        .location(
+            Location.builder().addressLine1("123/23").city("Denver").regionCode("123123").build())
+        .build()
+        .validate();
   }
 
   @Test
   public void validNameTest() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
-            .name(PersonName.builder().given("Marian").family("Reed").build())
-            .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
-            .build();
+    FullContact.buildPersonRequest()
+        .name(PersonName.builder().given("Marian").family("Reed").build())
+        .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
+        .build()
+        .validate();
   }
 
   @Test
   public void validProfileBuilder1Test() throws FullContactException {
-    PersonRequest personRequest =
-        FullContact.buildPersonRequest()
-            .profile(Profile.builder().url("https://twitter.com/mcreedy").build())
-            .build();
+    FullContact.buildPersonRequest()
+        .profile(Profile.builder().url("https://twitter.com/mcreedy").build())
+        .build()
+        .validate();
   }
 
   @Test
   public void validProfileBuilder2Test() throws FullContactException {
-    Profile profile = Profile.builder().service("twitter").url("mcreedy").build();
+    Profile.builder().service("twitter").url("mcreedy").build();
   }
 
   @Test
   public void validProfileBuilder3Test() throws FullContactException {
-    Profile profile = Profile.builder().service("twitter").username("mcreedy").build();
+    Profile.builder().service("twitter").username("mcreedy").build();
   }
 
   @Test
-  public void profileWithUrlAndUserid() {
-    try {
-      Profile profile =
-          Profile.builder().url("https://twitter.com/mcreedy").userid("mcreedy").build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Specifying username or userid together with url is not allowed", fce.getMessage());
-    }
+  public void profileWithUrlAndUserid() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Specifying username or userid together with url is not allowed");
+    Profile profile =
+        Profile.builder().url("https://twitter.com/mcreedy").userid("mcreedy").build();
   }
 
   @Test
-  public void profileWithUrlAndUsername() {
-    try {
-      Profile profile =
-          Profile.builder().url("https://twitter.com/mcreedy").username("mcreedy").build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Specifying username or userid together with url is not allowed", fce.getMessage());
-    }
+  public void profileWithUrlAndUsername() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Specifying username or userid together with url is not allowed");
+    Profile.builder().url("https://twitter.com/mcreedy").username("mcreedy").build();
   }
 
   @Test
-  public void profileWithOnlyService() {
-    try {
-      Profile profile = Profile.builder().service("twitter").build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Either url or service plus username or userid must be set on every profiles entry.",
-          fce.getMessage());
-    }
+  public void profileWithOnlyService() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage(
+        "Either url or service plus username or userid must be set on every profiles entry.");
+    Profile.builder().service("twitter").build();
   }
 
   @Test
-  public void profileWithServiceAndUseridAndUsername() {
-    try {
-      Profile profile =
-          Profile.builder().service("twitter").userid("mcreedy").username("mcreedy").build();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Specifying userid together with username is not allowed", fce.getMessage());
-    }
+  public void profileWithServiceAndUseridAndUsername() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Specifying userid together with username is not allowed");
+    Profile.builder().service("twitter").userid("mcreedy").username("mcreedy").build();
+  }
+
+  @Test
+  public void nameWithLocationAsNullWithQueryableTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .email("test@fullcontact.com")
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithNameAsNullWithQueryableTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .location(
+                Location.builder()
+                    .addressLine1("123/23")
+                    .addressLine2("Some Street")
+                    .city("Denver")
+                    .region("Denver")
+                    .regionCode("123123")
+                    .postalCode("23124")
+                    .build())
+            .phone("1234567")
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithNoAddressLine1WithQueryableTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(
+                Location.builder()
+                    .addressLine2("Some Street")
+                    .city("Denver")
+                    .region("Denver")
+                    .regionCode("123123")
+                    .postalCode("23124")
+                    .build())
+            .recordId("r1")
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithOnlyAddressLine1WithQueryableTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(Location.builder().addressLine1("123/23").build())
+            .profile(Profile.builder().url("http://linkedin/test").build())
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithAddressLine1AndCityWithQueryableTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(Location.builder().addressLine1("123/23").city("Denver").build())
+            .personId("test")
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
+  public void locationWithAddressLine1AndRegionWithQueryableTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .location(Location.builder().addressLine1("123/23").region("Denver").build())
+            .maid("1234-sfnos-3432-sdjnwoi")
+            .build();
+    personRequest.validate();
   }
 }

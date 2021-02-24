@@ -5,7 +5,9 @@ import com.fullcontact.apilib.models.Request.TagsRequest;
 import com.fullcontact.apilib.models.Tag;
 import com.google.gson.Gson;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class TagsRequestBuildTest {
   private static final Gson gson = new Gson();
+  @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
   @Test
   public void tagsRequestBuildAndSerializeTest() throws FullContactException, IOException {
@@ -34,43 +37,38 @@ public class TagsRequestBuildTest {
       while ((line = br.readLine()) != null) {
         sb.append(line.trim());
       }
-      Assert.assertEquals(sb.toString(), gson.toJson(tagsRequest));
+      TagsRequest expectedRequest = gson.fromJson(sb.toString(), TagsRequest.class);
+      Assert.assertEquals(expectedRequest, tagsRequest);
     }
   }
 
   @Test
-  public void invalidTagsRequestTest1() {
-    try {
-      TagsRequest tagsRequest =
-          FullContact.buildTagsRequest()
-              .recordId("customer123")
-              .tag(Tag.builder().key("gender").build())
-              .build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("Both Key and Value must be populated for adding a Tag", e.getMessage());
-    }
+  public void invalidTagsRequestTest1() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Both Key and Value must be populated for adding a Tag");
+    TagsRequest tagsRequest =
+        FullContact.buildTagsRequest()
+            .recordId("customer123")
+            .tag(Tag.builder().key("gender").build())
+            .build();
   }
 
   @Test
-  public void invalidTagsRequestTest2() {
-    try {
-      TagsRequest tagsRequest =
-          FullContact.buildTagsRequest()
-              .recordId("customer123")
-              .tag(Tag.builder().value("M").build())
-              .build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("Both Key and Value must be populated for adding a Tag", e.getMessage());
-    }
+  public void invalidTagsRequestTest2() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Both Key and Value must be populated for adding a Tag");
+    TagsRequest tagsRequest =
+        FullContact.buildTagsRequest()
+            .recordId("customer123")
+            .tag(Tag.builder().value("M").build())
+            .build();
   }
 
   @Test
-  public void invalidTagsRequestTest3() {
-    try {
-      TagsRequest tagsRequest =
-          FullContact.buildTagsRequest().tag(Tag.builder().key("G").value("M").build()).build();
-    } catch (FullContactException e) {
-      Assert.assertEquals("RecordId must be present for creating Tags", e.getMessage());
-    }
+  public void invalidTagsRequestTest3() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("RecordId must be present for creating Tags");
+    TagsRequest tagsRequest =
+        FullContact.buildTagsRequest().tag(Tag.builder().key("G").value("M").build()).build();
   }
 }

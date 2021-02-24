@@ -9,10 +9,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResolveResponse {
+public class ResolveResponse extends FCResponse {
   private List<String> recordIds, personIds, partnerIds;
   private List<Tag> tags;
-  public boolean isSuccessful;
-  public int statusCode;
-  public String message;
 }

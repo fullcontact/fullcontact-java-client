@@ -10,7 +10,7 @@ import java.util.Optional;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class PersonResponse {
+public class PersonResponse extends FCResponse {
   private String email,
       twitter,
       phone,
@@ -25,9 +25,6 @@ public class PersonResponse {
       avatar,
       website;
   private Details details;
-  public boolean isSuccessful;
-  public int statusCode;
-  public String message;
 
   public Optional<Details> getDetails() {
     return Optional.ofNullable(this.details);

@@ -10,12 +10,9 @@ import java.io.IOException;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class AudienceResponse {
+public class AudienceResponse extends FCResponse {
   private String requestId;
   private byte[] audienceBytes;
-  public boolean isSuccessful;
-  public int statusCode;
-  public String message;
 
   public AudienceResponse(byte[] audienceBytes) {
     this.audienceBytes = audienceBytes;

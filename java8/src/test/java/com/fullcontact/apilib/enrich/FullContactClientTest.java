@@ -3,22 +3,21 @@ package com.fullcontact.apilib.enrich;
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
 import org.junit.*;
+import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 
 public class FullContactClientTest {
+  @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
   @Test
-  public void buildClientWithoutKeyTest() {
+  public void buildClientWithoutKeyTest() throws FullContactException {
     HashMap<String, String> customHeader = new HashMap<>();
     customHeader.put("Reporting-Key", "clientXYZ");
-    try {
-      FullContact fcTest = FullContact.builder().headers(customHeader).build();
-      fcTest.close();
-    } catch (FullContactException fce) {
-      Assert.assertEquals(
-          "Couldn't find valid API Key from ENV variable: FC_API_KEY", fce.getMessage());
-    }
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("Couldn't find valid API Key from ENV variable: FC_API_KEY");
+    FullContact fcTest = FullContact.builder().headers(customHeader).build();
+    fcTest.close();
   }
 
   @Test
@@ -34,30 +33,21 @@ public class FullContactClientTest {
   }
 
   @Test
-  public void emptyStaticKeyTest() {
-    try {
-
-      FullContact fcTest =
-          FullContact.builder().credentialsProvider(new StaticApiKeyCredentialProvider("")).build();
-      fcTest.close();
-    } catch (FullContactException e) {
-      Assert.assertEquals("API Key can't be Empty", e.getMessage());
-    }
+  public void emptyStaticKeyTest() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("API Key can't be Empty");
+    FullContact fcTest =
+        FullContact.builder().credentialsProvider(new StaticApiKeyCredentialProvider("")).build();
+    fcTest.close();
   }
 
   @Test
-  public void nullStaticKeyTest() {
-    try {
-
-      FullContact fcTest =
-          FullContact.builder()
-              .credentialsProvider(new StaticApiKeyCredentialProvider(null))
-              .build();
-      fcTest.close();
-
-    } catch (FullContactException e) {
-      Assert.assertEquals("API Key can't be Empty", e.getMessage());
-    }
+  public void nullStaticKeyTest() throws FullContactException {
+    exceptionRule.expect(FullContactException.class);
+    exceptionRule.expectMessage("API Key can't be Empty");
+    FullContact fcTest =
+        FullContact.builder().credentialsProvider(new StaticApiKeyCredentialProvider(null)).build();
+    fcTest.close();
   }
 
   @Test
@@ -68,5 +58,6 @@ public class FullContactClientTest {
             .connectTimeoutMillis(2000)
             .retryHandler(new CustomRetryHandler())
             .build();
+    fcTest.close();
   }
 }

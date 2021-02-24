@@ -8,8 +8,10 @@ public class EmailVerificationTest {
   @Test
   public void emailVerificationDeserializationTest() {
     EmailVerificationResponse response =
-        FullContact.getEmailVerificationResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_201"));
+        (EmailVerificationResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_201"),
+                EmailVerificationResponse.class);
     Assert.assertTrue(response.isSuccessful);
     Assert.assertEquals(200, response.getStatus());
     Assert.assertEquals(

@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Profile {

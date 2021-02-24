@@ -25,8 +25,10 @@ public class ResolveResponseTest {
   @Test
   public void resolveResponseModelDeserializationTest1() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_101"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_101"),
+                ResolveResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -37,8 +39,10 @@ public class ResolveResponseTest {
   @Test
   public void resolveResponseModelDeserializationTest2() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_102"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_102"),
+                ResolveResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -50,8 +54,10 @@ public class ResolveResponseTest {
   @Test
   public void identityDeleteTest() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_103"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_103"),
+                ResolveResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(204, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
@@ -62,8 +68,10 @@ public class ResolveResponseTest {
   @Test
   public void responseStatus400Test() {
     ResolveResponse personResponse =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"),
+                ResolveResponse.class);
     Assert.assertFalse(personResponse.isSuccessful());
     Assert.assertEquals(400, personResponse.getStatusCode());
     Assert.assertEquals("Unable to process JSON", personResponse.getMessage());
@@ -72,8 +80,10 @@ public class ResolveResponseTest {
   @Test
   public void responseStatus401Test() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"),
+                ResolveResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("401: Invalid access token"));
@@ -82,8 +92,10 @@ public class ResolveResponseTest {
   @Test
   public void responseStatus404Test() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"),
+                ResolveResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Profile not found"));
@@ -92,8 +104,10 @@ public class ResolveResponseTest {
   @Test
   public void responseStatus403Test() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"),
+                ResolveResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -102,8 +116,10 @@ public class ResolveResponseTest {
   @Test
   public void responseStatus422Test() {
     ResolveResponse response =
-        FullContact.getResolveResponse(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"));
+        (ResolveResponse)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"),
+                ResolveResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(
@@ -115,8 +131,10 @@ public class ResolveResponseTest {
   @Test
   public void resolveResponseWithTagsModelDeserializationTest() {
     ResolveResponseWithTags response =
-        FullContact.getResolveResponseWithTags(
-            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_104"));
+        (ResolveResponseWithTags)
+            FullContact.getFCResponse(
+                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_104"),
+                ResolveResponseWithTags.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
