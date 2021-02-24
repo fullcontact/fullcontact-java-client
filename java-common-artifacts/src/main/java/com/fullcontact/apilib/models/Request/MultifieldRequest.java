@@ -7,11 +7,10 @@ import com.fullcontact.apilib.models.Profile;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Collections;
 import java.util.List;
 
 @Getter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @EqualsAndHashCode
 public class MultifieldRequest {
@@ -20,23 +19,6 @@ public class MultifieldRequest {
   private String recordId, personId, partnerId, li_nonid;
   @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
-
-  protected MultifieldRequest(MultifieldRequestBuilder<?, ?> b) {
-    this.name = b.name;
-    this.location = b.location;
-    this.recordId = b.recordId;
-    this.personId = b.personId;
-    this.partnerId = b.partnerId;
-    this.li_nonid = b.li_nonid;
-    this.phones =
-        b.phones != null ? Collections.unmodifiableList(b.phones) : Collections.emptyList();
-    this.emails =
-        b.emails != null ? Collections.unmodifiableList(b.emails) : Collections.emptyList();
-    this.maids =
-        b.maids != null ? Collections.unmodifiableList((b.maids)) : Collections.emptyList();
-    this.profiles =
-        b.profiles != null ? Collections.unmodifiableList(b.profiles) : Collections.emptyList();
-  }
 
   /**
    * Check the String if it is null or empty
