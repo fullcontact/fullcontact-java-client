@@ -11,7 +11,7 @@ import java.util.List;
 /** Class to create request for Resolve */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder(builderMethodName = "resolveRequestBuilder")
+@SuperBuilder(builderMethodName = "resolveRequestBuilder", toBuilder = true)
 public class ResolveRequest extends MultifieldRequest {
   @Singular private List<Tag> tags;
 
