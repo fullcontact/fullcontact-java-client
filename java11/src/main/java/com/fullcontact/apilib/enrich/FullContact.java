@@ -44,6 +44,11 @@ public class FullContact implements AutoCloseable {
   private boolean isShutdown = false;
   private static final Type companySearchResponseType =
       new TypeToken<ArrayList<CompanySearchResponse>>() {}.getType();
+  private static final Type permissionFindResponseType =
+      new TypeToken<ArrayList<PermissionResponse>>() {}.getType();
+  private static final Type permissionCurrentResponseType =
+      new TypeToken<Map<Integer, Map<String, PermissionResponse>>>() {}.getType();
+
   private static final Gson gson = new Gson();
 
   /**
@@ -113,6 +118,15 @@ public class FullContact implements AutoCloseable {
   /** @return Audience Request Builder for creating audience from your PIC */
   public static AudienceRequest.AudienceRequestBuilder buildAudienceRequest() {
     return AudienceRequest.builder();
+  }
+  /** @return Multifield Request builder */
+  public static MultifieldRequest.MultifieldRequestBuilder<?, ?> buildMultifieldRequest() {
+    return MultifieldRequest.builder();
+  }
+
+  /** @return Permission Request builder for Permission APIs */
+  public static PermissionRequest.PermissionRequestBuilder<?, ?> buildPermissionRequest() {
+    return PermissionRequest.permissionRequestBuilder();
   }
 
   /**
@@ -615,6 +629,156 @@ public class FullContact implements AutoCloseable {
     }
   }
 
+  /**
+   * Method for Permission Create without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param permissionRequest original request sent by client
+   * @return completed CompletableFuture with FCResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<FCResponse> permissionCreate(PermissionRequest permissionRequest)
+      throws FullContactException {
+    return this.permissionCreate(permissionRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Permission Create. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param permissionRequest original request sent by client
+   * @return completed CompletableFuture with FCResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<FCResponse> permissionCreate(
+      PermissionRequest permissionRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    permissionRequest.validate();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.permissionCreateUri, gson.toJson(permissionRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(
+        httpResponse -> FullContact.getFCResponse(httpResponse, FCResponse.class));
+  }
+
+  /**
+   * Method for Permission Delete without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param permissionRequest original request sent by client
+   * @return completed CompletableFuture with FCResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<FCResponse> permissionDelete(PermissionRequest permissionRequest)
+      throws FullContactException {
+    return this.permissionDelete(permissionRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Permission Delete. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param permissionRequest original request sent by client
+   * @return completed CompletableFuture with FCResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<FCResponse> permissionDelete(
+      PermissionRequest permissionRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    permissionRequest.validate();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.permissionDeleteUri, gson.toJson(permissionRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(
+        httpResponse -> FullContact.getFCResponse(httpResponse, FCResponse.class));
+  }
+
+  /**
+   * Method for Permission Verify without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with PermissionResponseList
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<PermissionResponseList> permissionFind(
+      MultifieldRequest multifieldRequest) throws FullContactException {
+    return this.permissionFind(multifieldRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Permission Verify. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with PermissionResponseList
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<PermissionResponseList> permissionFind(
+      MultifieldRequest multifieldRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    multifieldRequest.validate();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.permissionFindUri, gson.toJson(multifieldRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getPermissionFindResponse);
+  }
+
+  /**
+   * Method for Permission Verify without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with PermissionResponseList
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<PermissionCurrentResponseMap> permissionCurrent(
+      MultifieldRequest multifieldRequest) throws FullContactException {
+    return this.permissionCurrent(multifieldRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Permission Verify. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with PermissionResponseList
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<PermissionCurrentResponseMap> permissionCurrent(
+      MultifieldRequest multifieldRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    multifieldRequest.validate();
+    CompletableFuture<HttpResponse<String>> responseCF = new CompletableFuture<>();
+    HttpRequest httpRequest =
+        this.buildHttpRequest(FCConstants.permissionCurrentUri, gson.toJson(multifieldRequest));
+    sendRequest(httpRequest, retryHandler, responseCF);
+    return responseCF.thenApply(FullContact::getPermissionCurrentResponse);
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -750,6 +914,67 @@ public class FullContact implements AutoCloseable {
             || (httpResponse.statusCode() == 202)
             || (httpResponse.statusCode() == 404);
     return audienceResponse;
+  }
+
+  /**
+   * This method creates permission response and handle for different response codes
+   *
+   * @param httpResponse raw response from company search API
+   * @return PermissionResponseList
+   */
+  protected static PermissionResponseList getPermissionFindResponse(
+      HttpResponse<String> httpResponse) {
+    PermissionResponseList permissionResponseList = new PermissionResponseList();
+    if (httpResponse.body() != null && !httpResponse.body().trim().isEmpty()) {
+      if (httpResponse.statusCode() == 200) {
+        permissionResponseList.permissionResponseList =
+            gson.fromJson(httpResponse.body(), permissionFindResponseType);
+        permissionResponseList.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      } else {
+        permissionResponseList = gson.fromJson(httpResponse.body(), PermissionResponseList.class);
+      }
+    } else {
+      if (httpResponse.statusCode() >= 500) {
+        permissionResponseList.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    permissionResponseList.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 202)
+            || (httpResponse.statusCode() == 404);
+    permissionResponseList.statusCode = httpResponse.statusCode();
+    return permissionResponseList;
+  }
+
+  /**
+   * This method creates permission current response and handle for different response codes
+   *
+   * @param httpResponse raw response from company search API
+   * @return PermissionCurrentResponseMap
+   */
+  protected static PermissionCurrentResponseMap getPermissionCurrentResponse(
+      HttpResponse<String> httpResponse) {
+    PermissionCurrentResponseMap permissionCurrentResponseMap = new PermissionCurrentResponseMap();
+    if (httpResponse.body() != null && !httpResponse.body().trim().isEmpty()) {
+      if (httpResponse.statusCode() == 200) {
+        permissionCurrentResponseMap.responseMap =
+            gson.fromJson(httpResponse.body(), permissionCurrentResponseType);
+        permissionCurrentResponseMap.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
+      } else {
+        permissionCurrentResponseMap =
+            gson.fromJson(httpResponse.body(), PermissionCurrentResponseMap.class);
+      }
+    } else {
+      if (httpResponse.statusCode() >= 500) {
+        permissionCurrentResponseMap.message = FCConstants.HTTP_RESPONSE_STATUS_50X_MESSAGE;
+      }
+    }
+    permissionCurrentResponseMap.isSuccessful =
+        (httpResponse.statusCode() == 200)
+            || (httpResponse.statusCode() == 202)
+            || (httpResponse.statusCode() == 404);
+    permissionCurrentResponseMap.statusCode = httpResponse.statusCode();
+    return permissionCurrentResponseMap;
   }
 
   /**
