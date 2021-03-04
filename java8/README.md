@@ -14,7 +14,7 @@ API Clients for FullContact on V3 APIs supports Java8+
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java8:2.3.0'
+implementation 'com.fullcontact.client:java8:3.0.0'
 ```
 
 ### Maven users
@@ -25,7 +25,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>2.3.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
