@@ -965,7 +965,7 @@ public class FullContact implements AutoCloseable {
   /**
    * This method creates permission response and handle for different response codes
    *
-   * @param httpResponse raw response from company search API
+   * @param httpResponse raw response from PermissionFind API
    * @return PermissionResponseList
    */
   protected static PermissionResponseList getPermissionFindResponse(
@@ -995,7 +995,7 @@ public class FullContact implements AutoCloseable {
   /**
    * This method creates permission current response and handle for different response codes
    *
-   * @param httpResponse raw response from company search API
+   * @param httpResponse raw response from PermissionCurrent API
    * @return PermissionCurrentResponseMap
    */
   protected static PermissionCurrentResponseMap getPermissionCurrentResponse(
