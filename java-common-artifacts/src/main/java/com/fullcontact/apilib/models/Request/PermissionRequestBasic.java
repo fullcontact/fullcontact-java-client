@@ -29,7 +29,8 @@ public class PermissionRequestBasic {
 
   public void validate() throws FullContactException {
     if (this.getConsentPurposes() == null || this.getConsentPurposes().isEmpty()) {
-      throw new FullContactException("missing/empty required consent field: consentPurposes");
+      throw new FullContactException(
+          "At least 1 `consentPurpose` is Required for PermissionRequest");
     } else {
       for (PurposeRequest purposeRequest : this.getConsentPurposes()) {
         purposeRequest.validate();

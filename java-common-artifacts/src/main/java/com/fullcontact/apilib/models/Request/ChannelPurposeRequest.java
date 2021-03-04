@@ -2,8 +2,10 @@ package com.fullcontact.apilib.models.Request;
 
 import com.fullcontact.apilib.FullContactException;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@EqualsAndHashCode
 @Builder(toBuilder = true)
 @Getter
 public class ChannelPurposeRequest {
