@@ -14,7 +14,7 @@ public class PermissionRequest extends PermissionRequestBasic {
   public void validate() throws FullContactException {
     super.validate();
     if (this.getQuery() == null) {
-      throw new FullContactException("Query is required");
+      throw new FullContactException("Query is required for PermissionRequest");
     }
     this.getQuery().validate();
   }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Getter
-public class ConsentPurposeResponse {
+public class ConsentPurposeResponse extends FCResponse {
   private int ttl, purposeId;
   private boolean enabled;
   private String channel, purposeName;
