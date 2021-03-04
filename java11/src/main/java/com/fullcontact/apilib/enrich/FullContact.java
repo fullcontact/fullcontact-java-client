@@ -47,7 +47,7 @@ public class FullContact implements AutoCloseable {
   private static final Type permissionFindResponseType =
       new TypeToken<ArrayList<PermissionResponse>>() {}.getType();
   private static final Type permissionCurrentResponseType =
-      new TypeToken<Map<Integer, Map<String, PermissionResponse>>>() {}.getType();
+      new TypeToken<Map<Integer, Map<String, ConsentPurposeResponse>>>() {}.getType();
 
   private static final Gson gson = new Gson();
 

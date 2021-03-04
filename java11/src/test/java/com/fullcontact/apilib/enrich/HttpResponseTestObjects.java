@@ -98,6 +98,22 @@ public class HttpResponseTestObjects {
         statusCode = 200;
         fileName = "src/test/resources/audienceCreateResponse.json";
         break;
+      case "tc_501":
+        statusCode = 202;
+        fileName = null;
+        break;
+      case "tc_502":
+        statusCode = 200;
+        fileName = "src/test/resources/permissionResponseList.json";
+        break;
+      case "tc_503":
+        statusCode = 200;
+        fileName = "src/test/resources/permissionCurrentResponse.json";
+        break;
+      case "tc_504":
+        statusCode = 200;
+        fileName = "src/test/resources/permissionVerifyResponse.json";
+        break;
       default:
         statusCode = 500;
         fileName = "";
@@ -126,6 +142,9 @@ public class HttpResponseTestObjects {
 
       @Override
       public String body() {
+        if (fileName == null) {
+          return null;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
           String s;
           StringBuilder sb = new StringBuilder();
