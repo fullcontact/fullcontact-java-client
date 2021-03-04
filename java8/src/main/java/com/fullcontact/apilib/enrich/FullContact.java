@@ -1121,73 +1121,8 @@ public class FullContact implements AutoCloseable {
       int finalRetryAttemptsDone = retryAttemptsDone;
       this.executor.schedule(
           () -> {
-            CompletableFuture<Response<ResponseBody>> retryCF = null;
-            switch (fcApiEndpoint) {
-              case PERSON_ENRICH:
-                retryCF = this.client.personEnrich(httpRequest);
-                break;
-              case COMPANY_ENRICH:
-                retryCF = this.client.companyEnrich(httpRequest);
-                break;
-              case COMPANY_SEARCH:
-                retryCF = this.client.companySearch(httpRequest);
-                break;
-              case IDENTITY_MAP:
-                retryCF = this.client.identityMap(httpRequest);
-                break;
-              case IDENTITY_RESOLVE:
-                retryCF = this.client.identityResolve(httpRequest);
-                break;
-              case IDENTITY_RESOLVE_WITH_TAGS:
-                retryCF = this.client.identityResolveWithTags(true, httpRequest);
-                break;
-              case IDENTITY_DELETE:
-                retryCF = this.client.identityDelete(httpRequest);
-                break;
-              case TAGS_CREATE:
-                retryCF = this.client.tagsCreate(httpRequest);
-                break;
-              case TAGS_GET:
-                retryCF = this.client.tagsGet(httpRequest);
-                break;
-              case TAGS_DELETE:
-                retryCF = this.client.tagsDelete(httpRequest);
-                break;
-              case AUDIENCE_CREATE:
-                retryCF = this.client.audienceCreate(httpRequest);
-                break;
-              case AUDIENCE_DOWNLOAD:
-                try {
-                  final Buffer buffer = new Buffer();
-                  httpRequest.writeTo(buffer);
-                  retryCF = this.client.audienceDownload(buffer.readUtf8());
-                } catch (IOException ignored) {
-                }
-                break;
-              case EMAIL_VERIFICATION:
-                try {
-                  final Buffer buffer = new Buffer();
-                  httpRequest.writeTo(buffer);
-                  retryCF = this.client.emailVerification(buffer.readUtf8());
-                } catch (IOException ignored) {
-                }
-                break;
-              case PERMISSION_CREATE:
-                retryCF = this.client.permissionCreate(httpRequest);
-                break;
-              case PERMISSION_DELETE:
-                retryCF = this.client.permissionDelete(httpRequest);
-                break;
-              case PERMISSION_FIND:
-                retryCF = this.client.permissionFind(httpRequest);
-                break;
-              case PERMISSION_CURRENT:
-                retryCF = this.client.permissionCurrent(httpRequest);
-                break;
-              case PERMISSION_VERIFY:
-                retryCF = this.client.permissionVerify(httpRequest);
-                break;
-            }
+            CompletableFuture<Response<ResponseBody>> retryCF =
+                getRetryResponseCompletableFuture(httpRequest, fcApiEndpoint);
             retryCF.handle(
                 (retryResponse, retryThrowable) -> {
                   if (retryThrowable != null) {
@@ -1224,6 +1159,80 @@ public class FullContact implements AutoCloseable {
     } else {
       responseCF.complete(httpResponse);
     }
+  }
+
+  private CompletableFuture<Response<ResponseBody>> getRetryResponseCompletableFuture(
+      RequestBody httpRequest, FCApiEndpoint fcApiEndpoint) {
+    CompletableFuture<Response<ResponseBody>> retryCF = new CompletableFuture<>();
+    switch (fcApiEndpoint) {
+      case PERSON_ENRICH:
+        retryCF = this.client.personEnrich(httpRequest);
+        break;
+      case COMPANY_ENRICH:
+        retryCF = this.client.companyEnrich(httpRequest);
+        break;
+      case COMPANY_SEARCH:
+        retryCF = this.client.companySearch(httpRequest);
+        break;
+      case IDENTITY_MAP:
+        retryCF = this.client.identityMap(httpRequest);
+        break;
+      case IDENTITY_RESOLVE:
+        retryCF = this.client.identityResolve(httpRequest);
+        break;
+      case IDENTITY_RESOLVE_WITH_TAGS:
+        retryCF = this.client.identityResolveWithTags(true, httpRequest);
+        break;
+      case IDENTITY_DELETE:
+        retryCF = this.client.identityDelete(httpRequest);
+        break;
+      case TAGS_CREATE:
+        retryCF = this.client.tagsCreate(httpRequest);
+        break;
+      case TAGS_GET:
+        retryCF = this.client.tagsGet(httpRequest);
+        break;
+      case TAGS_DELETE:
+        retryCF = this.client.tagsDelete(httpRequest);
+        break;
+      case AUDIENCE_CREATE:
+        retryCF = this.client.audienceCreate(httpRequest);
+        break;
+      case AUDIENCE_DOWNLOAD:
+        try {
+          final Buffer buffer = new Buffer();
+          httpRequest.writeTo(buffer);
+          retryCF = this.client.audienceDownload(buffer.readUtf8());
+        } catch (IOException ignored) {
+        }
+        break;
+      case EMAIL_VERIFICATION:
+        try {
+          final Buffer buffer = new Buffer();
+          httpRequest.writeTo(buffer);
+          retryCF = this.client.emailVerification(buffer.readUtf8());
+        } catch (IOException ignored) {
+        }
+        break;
+      case PERMISSION_CREATE:
+        retryCF = this.client.permissionCreate(httpRequest);
+        break;
+      case PERMISSION_DELETE:
+        retryCF = this.client.permissionDelete(httpRequest);
+        break;
+      case PERMISSION_FIND:
+        retryCF = this.client.permissionFind(httpRequest);
+        break;
+      case PERMISSION_CURRENT:
+        retryCF = this.client.permissionCurrent(httpRequest);
+        break;
+      case PERMISSION_VERIFY:
+        retryCF = this.client.permissionVerify(httpRequest);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected API Endpoint: " + fcApiEndpoint);
+    }
+    return retryCF;
   }
 
   /** @return Person Request Builder for Person Enrich request */
