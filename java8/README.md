@@ -6,6 +6,42 @@ API Clients for FullContact on V3 APIs supports Java8+
 This client provides an interface to interact with Enrich,
 Resolve, Permission, Tags, Audience and Verification APIs. FullContact API Documentation is available
 at: https://platform.fullcontact.com/docs
+
+## Table of contents
+
+   - [Add to your Project](#add-to-your-project)
+   - [Dependencies](#dependencies)
+   - [Providing Authentication](#providing-authentication-to-fullcontact-client)
+   - [Building FullContact Client](#building-a-fullcontact-client)
+        - [Retry Handler](#retryhandler)
+   - [MultiFieldRequest](#multifieldrequest)
+   - [Enrich](#enrich)
+        - [Building a PersonRequest](#building-a-person-enrichresolve-request)
+        - [Person Enrich Request and Response](#person-enrich-request-and-response)
+        - [Company Enrich](#company-enrich-request-and-response)
+            - [Lookup By Domain](#lookup-by-company-domain)
+            - [Search By Company Name](#search-by-company-name)
+   - [Resolve](#resolve)
+        - [Resolve Request](#resolve-request)
+        - [Resolve Response](#resolve-response)
+   - [Tags/Metadata](#tagsmetadata)
+        - [Tags Create](#creating-tags)
+        - [Tags Get](#get-tags)
+        - [Tags Delete](#delete-tags)
+   - [Audience](#audience)
+        - [Audience Create](#audience-create)
+        - [Audience Download](#audience-download)
+   - [Verification](#verification)
+   - [Permission](#permission)
+        - [Permission Create](#permission-create)
+            - [PermissionRequest](#permissionrequest)
+        - [Permission Delete](#permission-delete)
+        - [Permission Find](#permission-find)
+        - [Permission Current](#permission-current)
+        - [Permission Verify](#permission-verify)
+            - [ChannelPurposeRequest](#channelpurposerequest)
+   - [Changelog](#changelog)
+   
 ## Add to your Project
 
 ### Requirements
