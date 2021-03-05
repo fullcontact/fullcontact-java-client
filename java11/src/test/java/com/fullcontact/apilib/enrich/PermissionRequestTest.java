@@ -1001,31 +1001,6 @@ public class PermissionRequestTest {
     permissionRequest.validate();
   }
 
-  @Test
-  public void nullIPAddressPermissionRequestTest() throws FullContactException {
-    exceptionRule.expect(FullContactException.class);
-    exceptionRule.expectMessage("ipAddress is required for PermissionRequest");
-    PermissionRequest permissionRequest =
-        FullContact.buildPermissionRequest()
-            .query(FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
-            .consentPurpose(
-                PurposeRequest.builder()
-                    .purposeId(1)
-                    .channel(List.of("web", "phone", "mobile", "offline", "email"))
-                    .enabled(true)
-                    .ttl(365)
-                    .build())
-            .policyUrl("https://policy.fullcontact.com/test")
-            .termsService("https://terms.fullcontact.com/test")
-            .collectionMethod("tag")
-            .collectionLocation("US")
-            .language("en")
-            .locale("US")
-            .timestamp(16528103039L)
-            .build();
-    permissionRequest.validate();
-  }
-
   // PermissionRequest validation specific tests - End
 
   // ChannelPurposeRequest validation specific tests - Start

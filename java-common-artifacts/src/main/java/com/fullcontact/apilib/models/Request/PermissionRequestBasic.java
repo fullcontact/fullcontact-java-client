@@ -48,8 +48,5 @@ public class PermissionRequestBasic {
     if (!isPopulated(this.getCollectionLocation())) {
       throw new FullContactException("collectionLocation is required for PermissionRequest");
     }
-    if (!isPopulated(this.getIpAddress())) {
-      throw new FullContactException("ipAddress is required for PermissionRequest");
-    }
   }
 }
