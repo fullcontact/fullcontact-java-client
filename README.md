@@ -81,3 +81,9 @@ your integration.
         - `audience.download`
 - _[Verification](https://platform.fullcontact.com/docs/apis/verification/introduction)_
     - `v2/verification/email`
+- _[Permission](https://platform.fullcontact.com/docs/apis/permission/introduction)_
+    - `permission.create`
+    - `permission.delete`
+    - `permission.find`
+    - `permission.current`
+    - `permission.verify`
