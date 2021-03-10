@@ -502,7 +502,7 @@ to a FullContact PersonID. This allows for real-time consent updates, suppressio
 ### Permission Create
 Create a new permission for a given consumer record. A successful creation request will return `FCResponse` with a 202 Response.
 
-Permission Create takes `PermissionRequest` and following fields are required to create a permission:
+Permission Create takes [PermissionRequest](#permissionrequest) and following fields are required to create a permission:
 
 - One or many of the acceptable multi field inputs
 - Permission Purposes purpose ID, enabled (true/false) & channel (valid channel of email, mobile, web, phone and/or offline)
@@ -572,10 +572,11 @@ Assert.assertEquals(202, response.getStatusCode());
 Delete a previously permitted consumer record by providing one or many of the acceptable multi field inputs.
 A successful deletion request will result in a 202 Response.
 
-Permission Create takes [PermissionRequest](#permissionrequest) as input parameter
+Permission Delete takes [MultiFieldRequest](#multifieldrequest) as input parameter
 and returns a Response of type `FCResponse`
 ```java
-FCResponse response = fcClient.permissionDelete(permissionRequest).get();
+MultifieldRequest query = FullContact.buildMultifieldRequest().email("test@fullcontact.com").build();
+FCResponse response = fcClient.permissionDelete(query).get();
 Assert.assertTrue(response.isSuccessful());
 Assert.assertEquals(202, response.getStatusCode());
 ```
@@ -618,7 +619,7 @@ The following fields are required to verify a permission:
 - One or many of the acceptable multi field inputs
 - Permission Purposes purpose ID & channel (valid channel of email, mobile, web, phone and/or offline)
 
-Permission Current takes [ChannelPurposeRequest](#channelpurposerequest) as input parameter 
+Permission Verify takes [ChannelPurposeRequest](#channelpurposerequest) as input parameter 
 and returns a Response of type `ConsentPurposeResponse`
 
 #### ChannelPurposeRequest
