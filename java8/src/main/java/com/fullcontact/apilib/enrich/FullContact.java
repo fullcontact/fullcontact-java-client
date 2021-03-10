@@ -716,33 +716,33 @@ public class FullContact implements AutoCloseable {
    * send the Asynchronous request using HTTP POST method. It also handles retries based on
    * retryHandler specified at FullContact Client level.
    *
-   * @param permissionRequest original request sent by client
+   * @param multifieldRequest original request sent by client
    * @return completed CompletableFuture with FCResponse
    * @throws FullContactException exception if client is shutdown
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
-  public CompletableFuture<FCResponse> permissionDelete(PermissionRequest permissionRequest)
+  public CompletableFuture<FCResponse> permissionDelete(MultifieldRequest multifieldRequest)
       throws FullContactException {
-    return this.permissionDelete(permissionRequest, this.retryHandler);
+    return this.permissionDelete(multifieldRequest, this.retryHandler);
   }
 
   /**
    * Method for Permission Delete. It converts the request to json, send the Asynchronous request
    * using HTTP POST method. It also handles retries based on retry condition.
    *
-   * @param permissionRequest original request sent by client
+   * @param multifieldRequest original request sent by client
    * @return completed CompletableFuture with FCResponse
    * @throws FullContactException exception if client is shutdown
    * @see <a href =
    *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
    */
   public CompletableFuture<FCResponse> permissionDelete(
-      PermissionRequest permissionRequest, RetryHandler retryHandler) throws FullContactException {
+      MultifieldRequest multifieldRequest, RetryHandler retryHandler) throws FullContactException {
     checkForShutdown();
-    permissionRequest.validate();
+    multifieldRequest.validate();
     CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
-    RequestBody httpRequest = buildHttpRequest(gson.toJson(permissionRequest));
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(multifieldRequest));
     CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
         this.client.permissionDelete(httpRequest);
     handleHttpResponse(
