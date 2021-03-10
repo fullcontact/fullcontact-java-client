@@ -1,7 +1,6 @@
 package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.models.Response.FCResponse;
-import com.fullcontact.apilib.models.Response.PersonResponse;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,23 +17,19 @@ public class FCResponseTest {
 
   @Test
   public void responseStatus400Test() {
-    PersonResponse personResponse =
-        (PersonResponse)
-            FullContact.getFCResponse(
-                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"),
-                PersonResponse.class);
-    Assert.assertFalse(personResponse.isSuccessful());
-    Assert.assertEquals(400, personResponse.getStatusCode());
-    Assert.assertEquals("Unable to process JSON", personResponse.getMessage());
+    FCResponse response =
+        FullContact.getFCResponse(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_002"), FCResponse.class);
+    Assert.assertFalse(response.isSuccessful());
+    Assert.assertEquals(400, response.getStatusCode());
+    Assert.assertEquals("Unable to process JSON", response.getMessage());
   }
 
   @Test
   public void responseStatus401Test() {
-    PersonResponse response =
-        (PersonResponse)
-            FullContact.getFCResponse(
-                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"),
-                PersonResponse.class);
+    FCResponse response =
+        FullContact.getFCResponse(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_004"), FCResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(401, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("401: Invalid access token"));
@@ -42,11 +37,9 @@ public class FCResponseTest {
 
   @Test
   public void responseStatus404Test() {
-    PersonResponse response =
-        (PersonResponse)
-            FullContact.getFCResponse(
-                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"),
-                PersonResponse.class);
+    FCResponse response =
+        FullContact.getFCResponse(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_005"), FCResponse.class);
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(404, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("Profile not found"));
@@ -54,11 +47,9 @@ public class FCResponseTest {
 
   @Test
   public void responseStatus403Test() {
-    PersonResponse response =
-        (PersonResponse)
-            FullContact.getFCResponse(
-                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"),
-                PersonResponse.class);
+    FCResponse response =
+        FullContact.getFCResponse(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_006"), FCResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(403, response.getStatusCode());
     Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
@@ -66,11 +57,9 @@ public class FCResponseTest {
 
   @Test
   public void responseStatus422Test() {
-    PersonResponse response =
-        (PersonResponse)
-            FullContact.getFCResponse(
-                HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"),
-                PersonResponse.class);
+    FCResponse response =
+        FullContact.getFCResponse(
+            HttpResponseTestObjects.httpResponseTestObjectProvider("tc_007"), FCResponse.class);
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(422, response.getStatusCode());
     Assert.assertTrue(

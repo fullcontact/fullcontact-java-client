@@ -27,6 +27,7 @@ public class FCResponseTest {
     System.clearProperty("FC_TEST_ENV");
   }
 
+  // Permission Create Response Test - Start
   @Test
   public void personResponseModelDeserializationTest()
       throws FullContactException, InterruptedException, ExecutionException {
@@ -79,33 +80,6 @@ public class FCResponseTest {
     Assert.assertFalse(response.isSuccessful());
     Assert.assertEquals(400, response.getStatusCode());
     Assert.assertEquals("Unable to process JSON", response.getMessage());
-  }
-
-  @Test
-  public void responseStatus202Test()
-      throws FullContactException, InterruptedException, ExecutionException {
-    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
-    customHeader.put("testCode", "tc_003");
-    FullContact fcTest =
-        FullContact.builder()
-            .credentialsProvider(staticCredentialsProvider)
-            .headers(customHeader)
-            .build();
-
-    PermissionRequest permissionRequest =
-        FullContact.buildPermissionRequest()
-            .consentPurpose(PurposeRequest.builder().purposeId(1).enabled(true).build())
-            .query(FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
-            .policyUrl("test")
-            .termsService("test")
-            .ipAddress("test")
-            .collectionLocation("test")
-            .collectionMethod("test")
-            .build();
-    FCResponse response = fcTest.permissionCreate(permissionRequest).get();
-    Assert.assertTrue(response.isSuccessful());
-    Assert.assertEquals(202, response.getStatusCode());
-    Assert.assertTrue(response.getMessage().contains("Queued for search"));
   }
 
   @Test
@@ -219,4 +193,139 @@ public class FCResponseTest {
             .getMessage()
             .contains("Input domain parameter (\"fullcontact\") does not contain a valid domain."));
   }
+
+  // Permission Create Response Test - End
+
+  // Permission Delete Response Test - Start
+
+  @Test
+  public void personDeleteResponseModelDeserializationTest()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_501");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+    FCResponse response =
+        fcTest
+            .permissionDelete(
+                FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
+            .get();
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(202, response.getStatusCode());
+    Assert.assertEquals("Accepted", response.getMessage());
+  }
+
+  @Test
+  public void permissionDeleteResponseStatus400Test()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_002");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    FCResponse response =
+        fcTest
+            .permissionDelete(
+                FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
+            .get();
+    Assert.assertFalse(response.isSuccessful());
+    Assert.assertEquals(400, response.getStatusCode());
+    Assert.assertEquals("Unable to process JSON", response.getMessage());
+  }
+
+  @Test
+  public void permissionDeleteResponseStatus401Test()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_004");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    FCResponse response =
+        fcTest
+            .permissionDelete(
+                FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
+            .get();
+    Assert.assertFalse(response.isSuccessful());
+    Assert.assertEquals(401, response.getStatusCode());
+    Assert.assertTrue(
+        response.getMessage().contains("401: Invalid access token: 0kj39la0c309cnw90"));
+  }
+
+  @Test
+  public void permissionDeleteResponseStatus404Test()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_005");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    FCResponse response =
+        fcTest
+            .permissionDelete(
+                FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
+            .get();
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(404, response.getStatusCode());
+    Assert.assertTrue(response.getMessage().contains("Profile not found"));
+  }
+
+  @Test
+  public void permissionDeleteResponseStatus403Test()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_006");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    FCResponse response =
+        fcTest
+            .permissionDelete(
+                FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
+            .get();
+    Assert.assertFalse(response.isSuccessful());
+    Assert.assertEquals(403, response.getStatusCode());
+    Assert.assertTrue(response.getMessage().contains("API Key is missing or invalid."));
+  }
+
+  @Test
+  public void permissionDeleteResponseStatus422Test()
+      throws FullContactException, InterruptedException, ExecutionException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_007");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    FCResponse response =
+        fcTest
+            .permissionDelete(
+                FullContact.buildMultifieldRequest().email("test@fullcontact.com").build())
+            .get();
+    Assert.assertFalse(response.isSuccessful());
+    Assert.assertEquals(422, response.getStatusCode());
+    Assert.assertTrue(
+        response
+            .getMessage()
+            .contains("Input domain parameter (\"fullcontact\") does not contain a valid domain."));
+  }
+
+  // Permission Delete Response Test - End
 }
