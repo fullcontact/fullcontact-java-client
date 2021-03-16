@@ -111,11 +111,43 @@ public class MockInterceptor implements Interceptor {
           statusCode = 200;
           message = "OK";
           break;
+        case "tc_501":
+          statusCode = 202;
+          fileName = null;
+          message = "Accepted";
+          break;
+        case "tc_502":
+          statusCode = 200;
+          fileName = "src/test/resources/permissionResponseList.json";
+          message = "OK";
+          break;
+        case "tc_503":
+          statusCode = 200;
+          fileName = "src/test/resources/permissionCurrentResponse.json";
+          message = "OK";
+          break;
+        case "tc_504":
+          statusCode = 200;
+          fileName = "src/test/resources/permissionVerifyResponse.json";
+          message = "OK";
+          break;
         default:
           fileName = "";
           statusCode = 500;
           break;
       }
+    }
+    if (fileName == null) {
+      response =
+          new Response.Builder()
+              .code(statusCode)
+              .message(message)
+              .request(chain.request())
+              .protocol(Protocol.HTTP_1_0)
+              .body(ResponseBody.create(MediaType.parse(mContentType), ""))
+              .addHeader("content-type", mContentType)
+              .build();
+      return response;
     }
     try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
       String line;

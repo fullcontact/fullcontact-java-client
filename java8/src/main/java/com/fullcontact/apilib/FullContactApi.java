@@ -55,4 +55,19 @@ public interface FullContactApi {
 
   @GET(FCConstants.API_ENDPOINT_AUDIENCE_DOWNLOAD)
   CompletableFuture<Response<ResponseBody>> audienceDownload(@Query("requestId") String requestId);
+
+  @POST(FCConstants.API_ENDPOINT_PERMISSION_CREATE)
+  CompletableFuture<Response<ResponseBody>> permissionCreate(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_PERMISSION_DELETE)
+  CompletableFuture<Response<ResponseBody>> permissionDelete(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_PERMISSION_FIND)
+  CompletableFuture<Response<ResponseBody>> permissionFind(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_PERMISSION_CURRENT)
+  CompletableFuture<Response<ResponseBody>> permissionCurrent(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_PERMISSION_VERIFY)
+  CompletableFuture<Response<ResponseBody>> permissionVerify(@Body RequestBody body);
 }

@@ -7,7 +7,7 @@ public class FCConstants {
   public static final String API_BASE_DEFAULT = "https://api.fullcontact.com/v3/";
   public static final String API_BASE_V2 = "https://api.fullcontact.com/v2/";
 
-  public static final String VERSION = "2.3.0";
+  public static final String VERSION = "3.0.0";
 
   // User Agent
   public static final String USER_AGENT_Java8 = "FullContact_Java8_Client_V" + VERSION;
@@ -39,6 +39,13 @@ public class FCConstants {
   // Email Verification
   public static final String API_ENDPOINT_VERIFICATION_EMAIL = "verification/email";
 
+  // Permission API endpoints
+  public static final String API_ENDPOINT_PERMISSION_CREATE = "permission.create";
+  public static final String API_ENDPOINT_PERMISSION_DELETE = "permission.delete";
+  public static final String API_ENDPOINT_PERMISSION_FIND = "permission.find";
+  public static final String API_ENDPOINT_PERMISSION_CURRENT = "permission.current";
+  public static final String API_ENDPOINT_PERMISSION_VERIFY = "permission.verify";
+
   // URIs
   public static final URI personEnrichUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERSON_ENRICH);
@@ -58,4 +65,14 @@ public class FCConstants {
   public static final URI tagsDeleteUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_DELETE);
   public static final URI audienceCreateUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_AUDIENCE_CREATE);
+  public static final URI permissionCreateUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_CREATE);
+  public static final URI permissionDeleteUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_DELETE);
+  public static final URI permissionFindUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_FIND);
+  public static final URI permissionCurrentUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_CURRENT);
+  public static final URI permissionVerifyUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_VERIFY);
 }

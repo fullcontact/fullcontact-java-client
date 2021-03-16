@@ -3,6 +3,45 @@ API Clients for FullContact on V3 APIs supports Java11+
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.fullcontact.client/java11)](https://mvnrepository.com/artifact/com.fullcontact.client/java11)
 
+This client provides an interface to interact with Enrich,
+Resolve, Permission, Tags, Audience and Verification APIs. FullContact API Documentation is available
+at: https://platform.fullcontact.com/docs
+
+## Table of contents
+
+   - [Add to your Project](#add-to-your-project)
+   - [Dependencies](#dependencies)
+   - [Providing Authentication](#providing-authentication-to-fullcontact-client)
+   - [Building FullContact Client](#building-a-fullcontact-client)
+        - [Retry Handler](#retryhandler)
+   - [MultiFieldRequest](#multifieldrequest)
+   - [Enrich](#enrich)
+        - [Building a PersonRequest](#building-a-person-enrichresolve-request)
+        - [Person Enrich Request and Response](#person-enrich-request-and-response)
+        - [Company Enrich](#company-enrich-request-and-response)
+            - [Lookup By Domain](#lookup-by-company-domain)
+            - [Search By Company Name](#search-by-company-name)
+   - [Resolve](#resolve)
+        - [Resolve Request](#resolve-request)
+        - [Resolve Response](#resolve-response)
+   - [Tags/Metadata](#tagsmetadata)
+        - [Tags Create](#creating-tags)
+        - [Tags Get](#get-tags)
+        - [Tags Delete](#delete-tags)
+   - [Audience](#audience)
+        - [Audience Create](#audience-create)
+        - [Audience Download](#audience-download)
+   - [Verification](#verification)
+   - [Permission](#permission)
+        - [Permission Create](#permission-create)
+            - [PermissionRequest](#permissionrequest)
+        - [Permission Delete](#permission-delete)
+        - [Permission Find](#permission-find)
+        - [Permission Current](#permission-current)
+        - [Permission Verify](#permission-verify)
+            - [ChannelPurposeRequest](#channelpurposerequest)
+   - [Changelog](#changelog)
+   
 ## Add to your Project
 
 ### Requirements
@@ -14,7 +53,7 @@ API Clients for FullContact on V3 APIs supports Java11+
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:2.3.0'
+implementation 'com.fullcontact.client:java11:3.0.0'
 ```
 
 ### Maven users
@@ -25,7 +64,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>2.3.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
@@ -90,19 +129,10 @@ FullContact fcClient = FullContact.builder()
                 .retryHandler(new CustomRetryHandler())
                 .build();
 ```
-## Enrich
-[Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
-- `person.enrich`
-- `company.enrich`
-- `company.search`
-#### Building a Person Enrich/Resolve Request
-Our V3 Person Enrich supports __Multi Field Request:__ ability to match on __one or many__ input fields
 
-You can build a Person Request by getting a builder from the fcClient or FullContact class
-and setting different input parameters that you have. If you want to use Webhook, you can specify
-it in `webhookUrl` field.
-API can lookup and enrich individuals by sending any identifiers you may already have, 
-such as: 
+## MultiFieldRequest
+Ability to match on one or many input fields. The more contact data inputs you can provide, the better. 
+By providing more contact inputs, the more accurate and precise we can get with our identity resolution capabilities.
 
 - `email`: _String_
 - `emails`: _List&lt;String&gt;_
@@ -124,16 +154,30 @@ such as:
     - `username`: _String_
     - `userid`: _String_
     - `url`: _String_
-- `dataFilters`: _List&lt;String&gt;_
-- `maids`: _List&lt;String&gt;_
-- `confidence`: _Confidence Enum_
-- `infer`: _boolean_
-- `webhookUrl`: _String_
+- `maids`: _List<String>_
+- `li_nonid`: _String_
 - `recordId`: _String_
 - `personId`: _String_
 - `partnerId`: _String_
-- `li_nonid`: _String_
 
+## Enrich
+[Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
+- `person.enrich`
+- `company.enrich`
+- `company.search`
+#### Building a Person Enrich/Resolve Request
+Our V3 Person Enrich supports __Multi Field Request:__ ability to match on __one or many__ input fields
+
+You can build a Person Request by getting a builder from the fcClient or FullContact class
+and setting different input parameters that you have. If you want to use Webhook, you can specify
+it in `webhookUrl` field.
+API can lookup and enrich individuals by sending any identifiers you may already have, 
+as such specified in [MultiFieldRequest](#multifieldrequest). Some additional fields available in `PersonRequest`:
+
+- `dataFilters`: _List&lt;String&gt;_
+- `confidence`: _Confidence Enum_
+- `infer`: _boolean_
+- `webhookUrl`: _String_
 
 ```java
 PersonRequest personRequest = fcClient
@@ -255,35 +299,12 @@ and setting different input parameters that you have.
 Note: For `identity.map` any of `email`, `phone`, `profile`, `name & location` 
 must be present.
  
+ 
 API can lookup and resolve individuals by sending any identifiers you may already have, 
-such as: 
+as such specified in [MultiFieldRequest](#multifieldrequest). Additional field available in `ResolveRequest`:
 
-- `email`: _String_
-- `emails`: _List&lt;String&gt;_
-- `phone`: _String_
-- `phones`: _List&lt;String&gt;_
-- `location`: _Location Object_
-    - `addressLine1`: _String_
-    - `addressLine2`: _String_
-    - `city`: _String_
-    - `region`: _String_
-    - `regionCode`: _String_
-    - `postalCode`: _String_
-- `name`: _PersonName Object_
-    - `full`: _String_
-    - `given`: _String_
-    - `family`: _String_
-- `profiles`: _List&lt;Profile&gt;_
-    - `service`: _String_
-    - `username`: _String_
-    - `userid`: _String_
-    - `url`: _String_
-- `maids`: _List&lt;String&gt;_
 - `tags`: _List&lt;Tag&gt;_
-- `li_nonid`: _String_
-- `recordId`: _String_
-- `personId`: _String_
-- `partnerId`: _String_
+
 
 ```java
 ResolveRequest resolveRequest = fcClient
@@ -457,7 +478,180 @@ using HTTP GET and request email is set as a query parameter. It returns a `Comp
 CompletableFuture<EmailVerificationResponse> emailVerificationResponse = fcClient.emailVerification("bart@fullcontact.com");
 ```
 
+## Permission
+[Permission APIs Reference](https://platform.fullcontact.com/docs/apis/permission/introduction)
+
+- `permission.create`
+- `permission.delete`
+- `permission.find`
+- `permission.current`
+- `permission.verify`
+
+FullContact's Permission API is a ledger that allows brands, partners, agencies alike to track a variety of 
+permission and preference operations over time paired with details about what an individual's consent entails, 
+such as:
+
+- Acknowledgment of consented data
+- Purpose of consented data
+- Which Partner or Vendor of FullContact's is enabling the consent on the user
+- Location of Terms of service and/or Privacy Policy
+
+Each preference acknowledgment is securely captured, maintained and accurately linked using [MultiFieldRequest](#multifieldrequest) 
+to a FullContact PersonID. This allows for real-time consent updates, suppression, creation and retrieval.
+
+### Permission Create
+Create a new permission for a given consumer record. A successful creation request will return `FCResponse` with a 202 Response.
+
+Permission Create takes [PermissionRequest](#permissionrequest) and following fields are required to create a permission:
+
+- One or many of the acceptable multi field inputs
+- Permission Purposes purpose ID, enabled (true/false) & channel (valid channel of email, mobile, web, phone and/or offline)
+- Collection Method
+- Collection Location
+- Policy URL
+- Terms of Service
+
+#### PermissionRequest
+- `query` : [MultiFieldRequest](#multifieldrequest)
+- `consentPurposes` : [PurposeRequest](#purposerequest)
+- `locale` : _String_
+- `ipAddress` : _String_
+- `language` : _String_
+- `collectionMethod` : _String_
+- `collectionLocation` : _String_
+- `policyUrl` : _String_
+- `termsService` : _String_
+- `tcf` : _String_
+- `timestamp` : _Long_
+
+#### PurposeRequest
+- `purposeId` : _Integer_
+- `channel` : _List&lt;String&gt;_
+- `ttl` : _Integer_
+- `enabled` : _Boolean_
+
+```java
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build()
+
+PermissionRequest permissionRequest =
+        FullContact.buildPermissionRequest()
+            .query(mFQuery)
+            .consentPurpose(
+                PurposeRequest.builder()
+                    .purposeId(1)
+                    .channel(Arrays.asList("web", "phone", "mobile", "offline", "email"))
+                    .enabled(true)
+                    .ttl(365)
+                    .build())
+            .consentPurpose(
+                PurposeRequest.builder()
+                    .purposeId(4)
+                    .channel(Arrays.asList("web", "phone", "mobile", "offline", "email"))
+                    .enabled(true)
+                    .ttl(365)
+                    .build())
+            .policyUrl("https://policy.fullcontact.com/test")
+            .termsService("https://terms.fullcontact.com/test")
+            .collectionMethod("tag")
+            .collectionLocation("US")
+            .ipAddress("127.0.0.1")
+            .language("en")
+            .locale("US")
+            .timestamp(16528103039L)
+            .build();
+
+FCResponse response = fcClient.permissionCreate(permissionRequest).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(202, response.getStatusCode());
+```
+
+### Permission Delete
+Delete a previously permitted consumer record by providing one or many of the acceptable multi field inputs.
+A successful deletion request will result in a 202 Response.
+
+Permission Delete takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `FCResponse`
+```java
+MultifieldRequest query = FullContact.buildMultifieldRequest().email("test@fullcontact.com").build();
+FCResponse response = fcClient.permissionDelete(query).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(202, response.getStatusCode());
+```
+
+### Permission Find
+Find and retrieve the permission history for an individual using one or many of the acceptable multi field inputs. 
+A successful response will return all permissions history for an individual.
+
+Permission Find takes [MultiFieldRequest](#multifieldrequest) as input parameter 
+and returns a Response of type `PermissionResponseList`
+
+```java
+MultifieldRequest query = FullContact.buildMultifieldRequest().email("test@fullcontact.com").build();
+PermissionResponseList response = fcClient.permissionFind(query).get();
+
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+Assert.assertEquals("create", response.permissionResponseList.get(0).getPermissionType());
+```
+
+### Permission Current
+Retrieve an individual's current permissions state by purpose by providing one or many of the acceptable multi field inputs.
+Permission Current takes [MultiFieldRequest](#multifieldrequest) as input parameter 
+and returns a Response of type `PermissionCurrentResponseMap`
+
+```java
+MultifieldRequest query = FullContact.buildMultifieldRequest().email("test@fullcontact.com").build();
+PermissionCurrentResponseMap response = fcClient.permissionCurrent(query).get();
+
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+Assert.assertTrue(response.getResponseMap().get(3).get("mobile").isEnabled());
+```
+
+### Permission Verify
+Retrieve and verify the permission state for an individual by purpose and channel. 
+Response will return the current purposes and whether or not an individual has provided permissions.
+
+The following fields are required to verify a permission:
+- One or many of the acceptable multi field inputs
+- Permission Purposes purpose ID & channel (valid channel of email, mobile, web, phone and/or offline)
+
+Permission Verify takes [ChannelPurposeRequest](#channelpurposerequest) as input parameter 
+and returns a Response of type `ConsentPurposeResponse`
+
+#### ChannelPurposeRequest
+- `query` : [MultiFieldRequest](#multifieldrequest)
+- `purposeId` : _Integer_
+- `channel` : _List&lt;String&gt;_
+
+```java
+MultifieldRequest query = FullContact.buildMultifieldRequest().email("test@fullcontact.com").build();
+ChannelPurposeRequest channelPurposeRequest = FullContact
+                                              .buildChannelPurposeRequest()
+                                              .query(query).channel("web").purposeId(6)
+                                              .build();
+
+ConsentPurposeResponse response = fcClient.permissionVerify(channelPurposeRequest).get();
+
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+Assert.assertEquals("OK", response.getMessage());
+Assert.assertEquals(6, response.getPurposeId());
+Assert.assertTrue(response.isEnabled());
+```
+
 ## Changelog
+- v3.0.0 - Support for Permission APIs
+- v2.3.0 - Separated MultifieldReq and less strict on reqeust validation
+- v2.2.1 - Updated docs links, and added lombok config
+- v2.2.0 - Support for Tag and Audience APIs
+- v2.1.1 - Removing Shadow jar, transitive dependency fix
+- v2.0.1 - Added Email Verification API
+- v2.0.0 - Added Support for Resolve APIs
+- v1.0.0 - Initial Release, Support for Person and Company Enrich
 - If you are updating the version of this client from `1.0.0`, please note that
  `retryAttmpts` and `retryDelayMillis` fields were removed from FullContact client
  for a [RetryHandler](https://github.com/fullcontact/fullcontact-java-client/tree/master/java11#retryhandler)

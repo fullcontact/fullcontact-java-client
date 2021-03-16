@@ -1,0 +1,80 @@
+[
+  {
+    "permissionType": "create",
+    "permissionId": "0089ce-eaa8-4ac4-a6b2-de9d928461",
+    "consentPurposes": [
+      {
+        "ttl": null,
+        "enabled": true,
+        "channel": "web",
+        "purposeId": 6,
+        "purposeName": "Content selection, delivery & reporting",
+        "timestamp": 1614855618604
+      }
+    ],
+    "locale": "US",
+    "ipAddress": "127.0.0.1",
+    "language": "en",
+    "collectionMethod": "cookie",
+    "collectionLocation": "ae",
+    "policyUrl": "http://sdcon.com",
+    "termsService": "http://aef.com",
+    "timestamp": null,
+    "created": 1614855618604
+  },
+  {
+    "permissionType": "create",
+    "permissionId": "71d0a4-0a95-4212-aecb-adbab41e75cd",
+    "consentPurposes": [
+      {
+        "ttl": 1095,
+        "enabled": true,
+        "channel": "web",
+        "purposeId": 1,
+        "purposeName": "Information storage & access",
+        "timestamp": 1614837182361
+      },
+      {
+        "ttl": 1095,
+        "enabled": true,
+        "channel": "phone",
+        "purposeId": 1,
+        "purposeName": "Information storage & access",
+        "timestamp": 1614837182361
+      },
+      {
+        "ttl": 1095,
+        "enabled": true,
+        "channel": "mobile",
+        "purposeId": 1,
+        "purposeName": "Information storage & access",
+        "timestamp": 1614837182361
+      },
+      {
+        "ttl": 1095,
+        "enabled": true,
+        "channel": "offline",
+        "purposeId": 1,
+        "purposeName": "Information storage & access",
+        "timestamp": 1614837182361
+      },
+      {
+        "ttl": 1095,
+        "enabled": true,
+        "channel": "email",
+        "purposeId": 1,
+        "purposeName": "Information storage & access",
+        "timestamp": 1614837182361
+      }
+    ],
+    "locale": "US",
+    "ipAddress": null,
+    "language": "en",
+    "collectionMethod": "FC",
+    "collectionLocation": "FC",
+    "policyUrl": "privacy-policy",
+    "termsService": "terms",
+    "timestamp": null,
+    "created": 1614837182361
+  }
+]
