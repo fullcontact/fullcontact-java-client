@@ -32,6 +32,7 @@ public class PermissionRequestTest {
             .email("marianrd97@outlook.com")
             .phone("123-4567890")
             .emails(emails)
+            .placekey("123-456@5s9-qns-bfp")
             .location(
                 Location.builder()
                     .addressLine1("123/23")
@@ -115,6 +116,7 @@ public class PermissionRequestTest {
             .email("marianrd97@outlook.com")
             .phone("123-4567890")
             .emails(emails)
+            .placekey("123-456@5s9-qns-bfp")
             .location(
                 Location.builder()
                     .addressLine1("123/23")
@@ -154,7 +156,7 @@ public class PermissionRequestTest {
   public void nameWithLocationAsNullTest() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+        "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     MultifieldRequest query =
         FullContact.buildMultifieldRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -186,10 +188,43 @@ public class PermissionRequestTest {
   }
 
   @Test
+  public void nameWithPlacekeyTest() throws FullContactException {
+    MultifieldRequest query =
+        FullContact.buildMultifieldRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .placekey("test")
+            .build();
+    PermissionRequest permissionRequest =
+        FullContact.buildPermissionRequest()
+            .query(query)
+            .consentPurpose(
+                PurposeRequest.builder()
+                    .purposeId(1)
+                    .channel(List.of("web", "phone", "mobile", "offline", "email"))
+                    .enabled(true)
+                    .ttl(365)
+                    .build())
+            .policyUrl("https://policy.fullcontact.com/test")
+            .termsService("https://terms.fullcontact.com/test")
+            .collectionMethod("tag")
+            .collectionLocation("US")
+            .ipAddress("127.0.0.1")
+            .language("en")
+            .locale("US")
+            .timestamp(16528103039L)
+            .build();
+    permissionRequest.validate();
+
+    ChannelPurposeRequest channelPurposeRequest =
+        FullContact.buildChannelPurposeRequest().query(query).purposeId(1).channel("web").build();
+    channelPurposeRequest.validate();
+  }
+
+  @Test
   public void locationWithNameAsNull() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+        "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     MultifieldRequest query =
         FullContact.buildMultifieldRequest()
             .location(

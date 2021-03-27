@@ -39,6 +39,7 @@ public class PersonRequestTest {
             .confidence(Confidence.HIGH)
             .infer(false)
             .dataFilter(dataFilters)
+            .placekey("123-456@5s9-qns-bfp")
             .location(
                 Location.builder()
                     .addressLine1("123/23")
@@ -79,7 +80,7 @@ public class PersonRequestTest {
   public void nameWithLocationAsNullTest() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+        "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -88,10 +89,20 @@ public class PersonRequestTest {
   }
 
   @Test
+  public void nameWithPlacekeyTest() throws FullContactException {
+    PersonRequest personRequest =
+        FullContact.buildPersonRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .placekey("test")
+            .build();
+    personRequest.validate();
+  }
+
+  @Test
   public void locationWithNameAsNull() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+        "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .location(
@@ -111,7 +122,7 @@ public class PersonRequestTest {
   public void locationWithNoAddressLine1Test() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+        "A valid placekey is required or Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -131,7 +142,7 @@ public class PersonRequestTest {
   public void locationWithOnlyAddressLine1Test() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+        "A valid placekey is required or Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -144,7 +155,7 @@ public class PersonRequestTest {
   public void locationWithAddressLine1AndCityTest() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+        "A valid placekey is required or Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -157,7 +168,7 @@ public class PersonRequestTest {
   public void locationWithAddressLine1AndRegionTest() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+        "A valid placekey is required or Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
     PersonRequest personRequest =
         FullContact.buildPersonRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -173,6 +184,7 @@ public class PersonRequestTest {
             .name(PersonName.builder().full("Marian C Reed").build())
             .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
             .build();
+    personRequest.validate();
   }
 
   @Test
@@ -188,6 +200,7 @@ public class PersonRequestTest {
                     .region("Denver")
                     .build())
             .build();
+    personRequest.validate();
   }
 
   @Test
@@ -203,6 +216,7 @@ public class PersonRequestTest {
                     .regionCode("123123")
                     .build())
             .build();
+    personRequest.validate();
   }
 
   @Test
@@ -212,6 +226,7 @@ public class PersonRequestTest {
             .name(PersonName.builder().given("Marian").family("Reed").build())
             .location(Location.builder().addressLine1("123/23").postalCode("23124").build())
             .build();
+    personRequest.validate();
   }
 
   @Test
@@ -220,6 +235,7 @@ public class PersonRequestTest {
         FullContact.buildPersonRequest()
             .profile(Profile.builder().url("https://twitter.com/mcreedy").build())
             .build();
+    personRequest.validate();
   }
 
   @Test
