@@ -53,7 +53,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:3.0.0'
+implementation 'com.fullcontact.client:java11:3.0.1'
 ```
 
 ### Maven users
@@ -64,7 +64,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
 </dependency>
 ```
 
@@ -138,6 +138,7 @@ By providing more contact inputs, the more accurate and precise we can get with 
 - `emails`: _List&lt;String&gt;_
 - `phone`: _String_
 - `phones`: _List&lt;String&gt;_
+- `placekey`: _String_
 - `location`: _Location Object_
     - `addressLine1`: _String_
     - `addressLine2`: _String_
@@ -644,6 +645,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
+- v3.0.1 - Support for Placekey
 - v3.0.0 - Support for Permission APIs
 - v2.3.0 - Separated MultifieldReq and less strict on reqeust validation
 - v2.2.1 - Updated docs links, and added lombok config

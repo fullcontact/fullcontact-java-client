@@ -33,6 +33,7 @@ public class ResolveRequestBuildTest {
             .email("marianrd97@outlook.com")
             .phone("123-4567890")
             .emails(emails)
+            .placekey("123-456@5s9-qns-bfp")
             .location(
                 Location.builder()
                     .addressLine1("123/23")
@@ -72,7 +73,7 @@ public class ResolveRequestBuildTest {
   public void nameWithLocationAsNullTest() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+        "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     ResolveRequest resolveRequest =
         FullContact.buildResolveRequest()
             .name(PersonName.builder().full("Marian C Reed").build())
@@ -81,10 +82,20 @@ public class ResolveRequestBuildTest {
   }
 
   @Test
+  public void nameWithPlacekeyTest() throws FullContactException {
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest()
+            .name(PersonName.builder().full("Marian C Reed").build())
+            .placekey("test")
+            .build();
+    resolveRequest.validate();
+  }
+
+  @Test
   public void locationWithNameAsNull() throws FullContactException {
     exceptionRule.expect(FullContactException.class);
     exceptionRule.expectMessage(
-        "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+        "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     ResolveRequest resolveRequest =
         FullContact.buildResolveRequest()
             .location(

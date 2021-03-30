@@ -16,7 +16,7 @@ import java.util.List;
 public class MultifieldRequest {
   @With private PersonName name;
   @With private Location location;
-  private String recordId, personId, partnerId, li_nonid;
+  private String recordId, personId, partnerId, li_nonid, placekey;
   @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
 
@@ -50,26 +50,34 @@ public class MultifieldRequest {
     if (!this.isQueryable()) {
       if (location == null && name == null) {
         return;
-      } else if (location != null && name != null) {
+      } else if ((location != null || placekey != null) && name != null) {
         // Validating Location fields
-        if (isPopulated(location.getAddressLine1())
-            && ((isPopulated(location.getCity())
-                    && (isPopulated(location.getRegion()) || isPopulated(location.getRegionCode())))
-                || (isPopulated(location.getPostalCode())))) {
+        if ((location != null && this.validateLocation()) || isPopulated(this.placekey)) {
           // Validating Name fields
-          if ((isPopulated(name.getFull()))
-              || (isPopulated(name.getGiven()) && isPopulated(name.getFamily()))) {
+          if (this.validateName()) {
             return;
           } else {
             throw new FullContactException("Name data requires full name or given and family name");
           }
         } else {
           throw new FullContactException(
-              "Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
+              "A valid placekey is required or Location data requires addressLine1 and postalCode or addressLine1, city and regionCode (or region)");
         }
       }
       throw new FullContactException(
-          "If you want to use 'location' or 'name' as an input, both must be present and they must have non-blank values");
+          "If you want to use 'location'(or placekey) or 'name' as an input, both must be present and they must have non-blank values");
     }
+  }
+
+  private boolean validateName() {
+    return (isPopulated(name.getFull()))
+        || (isPopulated(name.getGiven()) && isPopulated(name.getFamily()));
+  }
+
+  private boolean validateLocation() {
+    return isPopulated(location.getAddressLine1())
+        && ((isPopulated(location.getCity())
+                && (isPopulated(location.getRegion()) || isPopulated(location.getRegionCode())))
+            || (isPopulated(location.getPostalCode())));
   }
 }
