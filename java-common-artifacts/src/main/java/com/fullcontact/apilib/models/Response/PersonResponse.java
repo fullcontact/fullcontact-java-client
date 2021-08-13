@@ -4,6 +4,7 @@ import com.fullcontact.apilib.models.Location;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Getter
@@ -25,6 +26,8 @@ public class PersonResponse extends FCResponse {
       avatar,
       website;
   private Details details;
+  private Boolean verifiedPhysical;
+  private Map<String, String> epsilon;
 
   public Optional<Details> getDetails() {
     return Optional.ofNullable(this.details);

@@ -17,4 +17,6 @@ public class PersonRequest extends MultifieldRequest {
   private Confidence confidence;
   @Builder.Default private boolean infer = true;
   private List<String> dataFilter;
+  private boolean verifiedPhysical, expandedInterests;
+  private Integer maxMaids;
 }
