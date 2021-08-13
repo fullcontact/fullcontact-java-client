@@ -53,7 +53,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:3.0.1'
+implementation 'com.fullcontact.client:java11:3.0.2'
 ```
 
 ### Maven users
@@ -64,7 +64,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version>
 </dependency>
 ```
 
