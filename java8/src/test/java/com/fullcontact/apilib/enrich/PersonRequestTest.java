@@ -56,6 +56,9 @@ public class PersonRequestTest {
             .webhookUrl("http://www.fullcontact.com/hook")
             .recordId("customer123")
             .personId("VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345")
+            .verifiedPhysical(true)
+            .maxMaids(5)
+            .expandedInterests(true)
             .build();
     try (BufferedReader br =
         new BufferedReader(new FileReader("src/test/resources/personRequestBuildTest.txt"))) {
@@ -65,6 +68,7 @@ public class PersonRequestTest {
         sb.append(line.trim());
       }
       PersonRequest expectedRequest = gson.fromJson(sb.toString(), PersonRequest.class);
+      //      Assert.assertEquals(sb.toString(), gson.toJson(personRequest));
       Assert.assertEquals(expectedRequest, personRequest);
     }
   }

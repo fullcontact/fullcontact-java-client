@@ -2,7 +2,8 @@ package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
