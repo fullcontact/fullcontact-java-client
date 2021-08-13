@@ -179,6 +179,9 @@ as such specified in [MultiFieldRequest](#multifieldrequest). Some additional fi
 - `confidence`: _Confidence Enum_
 - `infer`: _boolean_
 - `webhookUrl`: _String_
+- `expandedInterests`: _boolean_
+- `verifiedPhysical`: _boolean_
+- `maxMaids`: _Integer_
 
 ```java
 PersonRequest personRequest = fcClient
@@ -645,6 +648,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
+- v3.0.2 - Support for verifiedPhysical, expandedInterests, maxMaids, Epsilon data (in PersonResponse) 
 - v3.0.1 - Support for Placekey
 - v3.0.0 - Support for Permission APIs
 - v2.3.0 - Separated MultifieldReq and less strict on reqeust validation
