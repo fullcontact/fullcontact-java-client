@@ -53,7 +53,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:3.0.1'
+implementation 'com.fullcontact.client:java11:3.0.2'
 ```
 
 ### Maven users
@@ -64,7 +64,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version>
 </dependency>
 ```
 
@@ -179,6 +179,9 @@ as such specified in [MultiFieldRequest](#multifieldrequest). Some additional fi
 - `confidence`: _Confidence Enum_
 - `infer`: _boolean_
 - `webhookUrl`: _String_
+- `expandedInterests`: _boolean_ : Temporary option to opt-in for more affinities data
+- `verifiedPhysical`: _boolean_ : Return only profiles which are with verified physical address
+- `maxMaids`: _Integer_ : Limit the number of MAIDs in response
 
 ```java
 PersonRequest personRequest = fcClient
@@ -645,6 +648,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
+- v3.0.2 - Support for verifiedPhysical, expandedInterests, maxMaids, Epsilon data (in PersonResponse) 
 - v3.0.1 - Support for Placekey
 - v3.0.0 - Support for Permission APIs
 - v2.3.0 - Separated MultifieldReq and less strict on reqeust validation
