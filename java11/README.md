@@ -160,6 +160,7 @@ By providing more contact inputs, the more accurate and precise we can get with 
 - `recordId`: _String_
 - `personId`: _String_
 - `partnerId`: _String_
+- `panoramaId`: _String_
 
 ## Enrich
 [Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
