@@ -53,7 +53,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java11:3.0.2'
+implementation 'com.fullcontact.client:java11:3.1.0'
 ```
 
 ### Maven users
@@ -64,7 +64,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>3.0.2</version>
+  <version>3.1.0</version>
 </dependency>
 ```
 
@@ -197,7 +197,8 @@ PersonRequest personRequest = fcClient
                             .webhookUrl("")
                             .recordId("customer123")
                             .personId("eYxWc0B-dKRxerTw_uQpxCssM_GyPaLErj0Eu3y2FrU6py1J")
-                            .li_nonid("CmQui5eT6tqBVqQ874WGCv4DNO_taXJOAxVlQ")       
+                            .li_nonid("CmQui5eT6tqBVqQ874WGCv4DNO_taXJOAxVlQ")     
+                            .panoramaId("panoramaId")
                             .build();
 ```
 #### Person Enrich Request and Response
@@ -293,6 +294,7 @@ companySearchResponseListCompletableFuture.thenAccept(
 - `identity.map`
 - `identity.resolve`
 - `identity.delete`
+- `identity.mapResolve`
 #### Resolve Request
 Resolve uses `ResolveRequest` object for its request which supports
  __Multi Field Request:__ ability to match on __one or many__ input fields
@@ -300,14 +302,16 @@ Resolve uses `ResolveRequest` object for its request which supports
 You can build a Resolve Request by getting a builder from the fcClient or FullContact class
 and setting different input parameters that you have.
 
-Note: For `identity.map` any of `email`, `phone`, `profile`, `name & location` 
-must be present.
- 
+Note: 
+- For `identity.map` any of `email`, `phone`, `profile`, `name & location` 
+must be present. 
+- `generatePid` (boolean) can be set to _always_ return PID
  
 API can lookup and resolve individuals by sending any identifiers you may already have, 
 as such specified in [MultiFieldRequest](#multifieldrequest). Additional field available in `ResolveRequest`:
 
 - `tags`: _List&lt;Tag&gt;_
+- `generatePid`: _String_
 
 
 ```java
@@ -321,7 +325,9 @@ ResolveRequest resolveRequest = fcClient
                             .profile(Profile.builder().service("twitter").userName("bartlorang").build())
                             .profile(Profile.builder().service("linkedin").url("https://www.linkedin.com/in/bartlorang").build())
                             .recordId("customer123")
-                            .li_nonid("CmQui5eT6tqBVqQ874WGCv4DNO_taXJOAxVlQ")      
+                            .li_nonid("CmQui5eT6tqBVqQ874WGCv4DNO_taXJOAxVlQ")
+                            .panoramaId("panoramaId")
+                            .generatePid(true)     
                             .build();
 ```
 
@@ -348,6 +354,13 @@ CompletableFuture<ResolveResponse> deleteResponse = fcClient.identityDelete(reso
 deleteResponse.thenAccept(
           response -> {
             System.out.println("identity.delete " + response.toString());
+          });
+
+CompletableFuture<ResolveResponse> mapResolveResponse = fcClient.identityMapResolve(resolveRequest);
+
+mapResolveResponse.thenAccept(
+          response -> {
+            System.out.println("identity.mapResolve " + response.toString());
           });
 ```
 
@@ -648,6 +661,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
+- v3.1.0 - Support got identity.mapResolve, panoramaId, generatePid. Remove 'expandedInterests'
 - v3.0.2 - Support for verifiedPhysical, expandedInterests, maxMaids, Epsilon data (in PersonResponse) 
 - v3.0.1 - Support for Placekey
 - v3.0.0 - Support for Permission APIs

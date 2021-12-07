@@ -13,11 +13,11 @@ Add this dependency to your project's build file:
 
 - Java11+
 ```groovy
-implementation 'com.fullcontact.client:java11:3.0.2'
+implementation 'com.fullcontact.client:java11:3.1.0'
 ```
 - Java8+
 ```groovy
-implementation 'com.fullcontact.client:java8:3.0.2'
+implementation 'com.fullcontact.client:java8:3.1.0'
 ```
 
 ### Maven users
@@ -29,7 +29,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>3.0.2</version>
+  <version>3.1.0</version>
 </dependency>
 ```
 - Java8+
@@ -37,7 +37,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>3.0.2</version>
+  <version>3.1.0</version>
 </dependency>
 ```
 
@@ -72,6 +72,7 @@ your integration.
         - `identity.map`
         - `identity.resolve`
         - `identity.delete`
+        - `identity.mapResolve`
     - [Tags](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
         - `tags.create`
         - `tags.get`
