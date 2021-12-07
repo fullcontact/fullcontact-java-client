@@ -179,7 +179,6 @@ as such specified in [MultiFieldRequest](#multifieldrequest). Some additional fi
 - `confidence`: _Confidence Enum_
 - `infer`: _boolean_
 - `webhookUrl`: _String_
-- `expandedInterests`: _boolean_ : Temporary option to opt-in for more affinities data
 - `verifiedPhysical`: _boolean_ : Return only profiles which are with verified physical address
 - `maxMaids`: _Integer_ : Limit the number of MAIDs in response
 

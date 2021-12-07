@@ -58,7 +58,6 @@ public class PersonRequestTest {
             .personId("VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345")
             .verifiedPhysical(true)
             .maxMaids(5)
-            .expandedInterests(true)
             .build();
     try (BufferedReader br =
         new BufferedReader(new FileReader("src/test/resources/personRequestBuildTest.txt"))) {
