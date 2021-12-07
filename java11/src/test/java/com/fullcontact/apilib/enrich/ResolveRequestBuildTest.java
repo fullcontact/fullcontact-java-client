@@ -49,6 +49,7 @@ public class ResolveRequestBuildTest {
             .maid("1234-snbk-lkldiemvmruixp-2kdp-vdm")
             .recordId("customer123")
             .personId("VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345")
+            .generatePid(true)
             .build();
     try (BufferedReader br =
         new BufferedReader(new FileReader("src/test/resources/resolveRequestBuildTest.txt"))) {

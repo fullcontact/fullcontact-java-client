@@ -56,6 +56,7 @@ public class PersonRequestTest {
             .webhookUrl("http://www.fullcontact.com/hook")
             .recordId("customer123")
             .personId("VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345")
+            .panoramaId("panoId")
             .verifiedPhysical(true)
             .maxMaids(5)
             .build();

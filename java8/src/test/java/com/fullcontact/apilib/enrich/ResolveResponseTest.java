@@ -74,6 +74,29 @@ public class ResolveResponseTest {
   }
 
   @Test
+  public void resolveResponseModelDeserializationTest3()
+      throws FullContactException, ExecutionException, InterruptedException {
+    CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
+    customHeader.put("testCode", "tc_102");
+    FullContact fcTest =
+        FullContact.builder()
+            .credentialsProvider(staticCredentialsProvider)
+            .headers(customHeader)
+            .build();
+
+    ResolveRequest resolveRequest =
+        FullContact.buildResolveRequest().email("test").recordId("customer123").build();
+
+    ResolveResponse response = fcTest.identityMapResolve(resolveRequest).get();
+    Assert.assertTrue(response.isSuccessful());
+    Assert.assertEquals(200, response.getStatusCode());
+    Assert.assertEquals("OK", response.getMessage());
+    Assert.assertEquals("customer123", response.getRecordIds().get(0));
+    Assert.assertEquals(
+        "VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345", response.getPersonIds().get(0));
+  }
+
+  @Test
   public void identityDeleteTest()
       throws FullContactException, ExecutionException, InterruptedException {
     CredentialsProvider staticCredentialsProvider = new StaticApiKeyCredentialProvider("fc_test");
