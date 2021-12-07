@@ -38,6 +38,9 @@ public interface FullContactApi {
   @POST(FCConstants.API_ENDPOINT_IDENTITY_DELETE)
   CompletableFuture<Response<ResponseBody>> identityDelete(@Body RequestBody body);
 
+  @POST(FCConstants.API_ENDPOINT_IDENTITY_MAP_RESOLVE)
+  CompletableFuture<Response<ResponseBody>> identityMapResolve(@Body RequestBody body);
+
   @GET(FCConstants.API_ENDPOINT_VERIFICATION_EMAIL)
   CompletableFuture<Response<ResponseBody>> emailVerification(@Query("email") String email);
 

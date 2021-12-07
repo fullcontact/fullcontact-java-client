@@ -14,6 +14,7 @@ import java.util.List;
 @SuperBuilder(builderMethodName = "resolveRequestBuilder", toBuilder = true)
 public class ResolveRequest extends MultifieldRequest {
   @Singular private List<Tag> tags;
+  private boolean generatePid;
 
   /**
    * Method to validate request for Identity map. It validates that personId should be null and must
