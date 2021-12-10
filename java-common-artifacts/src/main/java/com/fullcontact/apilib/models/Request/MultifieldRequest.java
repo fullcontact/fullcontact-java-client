@@ -16,7 +16,7 @@ import java.util.List;
 public class MultifieldRequest {
   @With private PersonName name;
   @With private Location location;
-  private String recordId, personId, partnerId, li_nonid, placekey;
+  private String recordId, personId, partnerId, li_nonid, placekey, panoramaId;
   @Singular private List<String> phones, emails, maids;
   @Singular private List<Profile> profiles;
 

@@ -387,6 +387,40 @@ public class FullContact implements AutoCloseable {
     return resolveRequest(resolveRequest, retryHandler, FCConstants.identityDeleteUri);
   }
 
+  /**
+   * Method for mapping and resolving a record in a single call. It calls 'identity.mapResolve'
+   * endpoint in Resolve. It converts the request to json, send the Asynchronous request using HTTP
+   * POST method. It also handles retries based on retryHandler specified at FullContact Client
+   * level.
+   *
+   * @param resolveRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityMapResolve(ResolveRequest resolveRequest)
+      throws FullContactException {
+    return this.identityMapResolve(resolveRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for mapping and resolving a record in a single call. It calls 'identity.mapResolve'
+   * endpoint in Resolve. It converts the request to json, send the Asynchronous request using HTTP
+   * POST method. It also handles retries based on retryHandler specified.
+   *
+   * @param resolveRequest original request sent by client
+   * @return completed CompletableFuture with ResolveResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ResolveResponse> identityMapResolve(
+      ResolveRequest resolveRequest, RetryHandler retryHandler) throws FullContactException {
+    resolveRequest.validateForIdentityMap();
+    return resolveRequest(resolveRequest, retryHandler, FCConstants.identityMapResolveUri);
+  }
+
   protected CompletableFuture<ResolveResponse> resolveRequest(
       ResolveRequest resolveRequest, RetryHandler retryHandler, URI resolveUri)
       throws FullContactException {

@@ -7,7 +7,7 @@ public class FCConstants {
   public static final String API_BASE_DEFAULT = "https://api.fullcontact.com/v3/";
   public static final String API_BASE_V2 = "https://api.fullcontact.com/v2/";
 
-  public static final String VERSION = "3.0.2";
+  public static final String VERSION = "3.1.0";
 
   // User Agent
   public static final String USER_AGENT_Java8 = "FullContact_Java8_Client_V" + VERSION;
@@ -26,6 +26,7 @@ public class FCConstants {
   public static final String API_ENDPOINT_IDENTITY_RESOLVE = "identity.resolve";
   public static final String API_ENDPOINT_IDENTITY_RESOLVE_With_TAGS = "identity.resolve?tags=true";
   public static final String API_ENDPOINT_IDENTITY_DELETE = "identity.delete";
+  public static final String API_ENDPOINT_IDENTITY_MAP_RESOLVE = "identity.mapResolve";
 
   // Tags/Metadata endpoints
   public static final String API_ENDPOINT_TAGS_CREATE = "tags.create";
@@ -60,6 +61,8 @@ public class FCConstants {
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_RESOLVE_With_TAGS);
   public static final URI identityDeleteUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_DELETE);
+  public static final URI identityMapResolveUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_IDENTITY_MAP_RESOLVE);
   public static final URI tagsCreateUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_CREATE);
   public static final URI tagsGetUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_GET);
   public static final URI tagsDeleteUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_TAGS_DELETE);
