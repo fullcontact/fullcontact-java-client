@@ -143,7 +143,6 @@ public class PersonResponseTest {
     Assert.assertEquals("9", response.getEpsilon().get("epsilon_key_1"));
     Assert.assertEquals("Q", response.getEpsilon().get("epsilon_key_3"));
     Assert.assertEquals("11", response.getEpsilon().get("epsilon_key_5"));
-    Assert.assertTrue(response.getVerifiedPhysical());
   }
 
   @Test

@@ -13,11 +13,11 @@ Add this dependency to your project's build file:
 
 - Java11+
 ```groovy
-implementation 'com.fullcontact.client:java11:3.1.0'
+implementation 'com.fullcontact.client:java11:4.0.0'
 ```
 - Java8+
 ```groovy
-implementation 'com.fullcontact.client:java8:3.1.0'
+implementation 'com.fullcontact.client:java8:4.0.0'
 ```
 
 ### Maven users
@@ -29,7 +29,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java11</artifactId>
-  <version>3.1.0</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 - Java8+
@@ -37,7 +37,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>3.1.0</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 
@@ -66,7 +66,6 @@ your integration.
 - _[Enrich](https://platform.fullcontact.com/docs/apis/enrich/introduction)_
     - `person.enrich`
     - `company.enrich`
-    - `company.search`
 - Private Identity Cloud
     - _[Resolve](https://platform.fullcontact.com/docs/apis/resolve/introduction)_
         - `identity.map`
@@ -80,8 +79,6 @@ your integration.
     - [Audience](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
         - `audience.create`
         - `audience.download`
-- _[Verification](https://platform.fullcontact.com/docs/apis/verification/introduction)_
-    - `v2/verification/email`
 - _[Permission](https://platform.fullcontact.com/docs/apis/permission/introduction)_
     - `permission.create`
     - `permission.delete`

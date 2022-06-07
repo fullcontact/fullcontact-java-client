@@ -4,7 +4,7 @@ API Clients for FullContact on V3 APIs supports Java8+
 [![Maven Central](https://img.shields.io/maven-central/v/com.fullcontact.client/java8)](https://mvnrepository.com/artifact/com.fullcontact.client/java8)
 
 This client provides an interface to interact with Enrich,
-Resolve, Permission, Tags, Audience and Verification APIs. FullContact API Documentation is available
+Resolve, Permission, Tags, Audience and Verify APIs. FullContact API Documentation is available
 at: https://platform.fullcontact.com/docs
 
 ## Table of contents
@@ -20,7 +20,6 @@ at: https://platform.fullcontact.com/docs
         - [Person Enrich Request and Response](#person-enrich-request-and-response)
         - [Company Enrich](#company-enrich-request-and-response)
             - [Lookup By Domain](#lookup-by-company-domain)
-            - [Search By Company Name](#search-by-company-name)
    - [Resolve](#resolve)
         - [Resolve Request](#resolve-request)
         - [Resolve Response](#resolve-response)
@@ -31,7 +30,6 @@ at: https://platform.fullcontact.com/docs
    - [Audience](#audience)
         - [Audience Create](#audience-create)
         - [Audience Download](#audience-download)
-   - [Verification](#verification)
    - [Permission](#permission)
         - [Permission Create](#permission-create)
             - [PermissionRequest](#permissionrequest)
@@ -53,7 +51,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java8:3.1.0'
+implementation 'com.fullcontact.client:java8:4.0.0'
 ```
 
 ### Maven users
@@ -64,7 +62,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>3.1.0</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 
@@ -165,7 +163,7 @@ By providing more contact inputs, the more accurate and precise we can get with 
 [Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
 - `person.enrich`
 - `company.enrich`
-- `company.search`
+
 #### Building a Person Enrich/Resolve Request
 Our V3 Person Enrich supports __Multi Field Request:__ ability to match on __one or many__ input fields
 
@@ -179,7 +177,6 @@ as such specified in [MultiFieldRequest](#multifieldrequest). Some additional fi
 - `confidence`: _Confidence Enum_
 - `infer`: _boolean_
 - `webhookUrl`: _String_
-- `verifiedPhysical`: _boolean_ : Return only profiles which are with verified physical address
 - `maxMaids`: _Integer_ : Limit the number of MAIDs in response
 
 ```java
@@ -223,11 +220,7 @@ personResponseCompletableFuture.thenAccept(
 ```
 
 #### Company Enrich Request and Response
-To Enrich Company data FullContact library provides two methods __Lookup by Company Domain__ or
-__Search by Company Name__. More data is available through the Lookup by Company Domain, 
-but if the domain is unknown, use our Search by Company Name to find the list of domains 
-that could be related to the Company you are looking for and then call the Lookup by 
-Company Domain with that domain to get the full information about the company.
+To Enrich Company data FullContact library provides method to __Lookup by Company Domain__.
 
 ##### Lookup by Company Domain
 - Request:
@@ -252,42 +245,6 @@ companyResponseCompletableFuture.thenAccept(
                     + companyResponse.getMessage());
           });
 ```
-
-##### Search by Company Name
-- Request:
-    - Parameters:
-        - `companyName`
-        - `webhookUrl` 
-        - `location`
-        - `locality` 
-        - `region`
-        - `country`
-```java
-CompanyRequest companySearch = fcClient.buildCompanyRequest().companyName("fullContact").build();
-```
-- Response: It returns a CompletableFuture of ```CompanySearchResponseList```, from which you can 
-get a ```List``` for CompanySearch responses.
-```java
-CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletableFuture =
-          fcClient.search(companySearch);
-
-companySearchResponseListCompletableFuture.thenAccept(
-          companySearchResponseList -> {
-            System.out.println(
-                "Company search "
-                    + companySearchResponseList.isSuccessful()
-                    + " "
-                    + companySearchResponseList.getMessage()
-                    + " "
-                    + companySearchResponseList.getStatus()
-                    + " "
-                    + companySearchResponseList
-                        .getCompanySearchResponses()
-                        .get(0)
-                        .getLookupDomain());
-          });
-```
-
 
 ## Resolve
 [Resolve API Reference](https://platform.fullcontact.com/docs/apis/resolve/introduction)
@@ -482,16 +439,6 @@ audienceResponseCompletableFuture.thenAccept(
               e.printStackTrace();
             }
           });
-```
-
-## Verification
-[EmailVerification API Reference](https://platform.fullcontact.com/docs/apis/verification/introduction)
-- `v2/verification/email`
-
-FullContact Email Verification API accepts single `email` request, as a `String`. Requests are sent 
-using HTTP GET and request email is set as a query parameter. It returns a `CompletableFuture<EmailVerificationResponse>`
-```java
-CompletableFuture<EmailVerificationResponse> emailVerificationResponse = fcClient.emailVerification("bart@fullcontact.com");
 ```
 
 ## Permission

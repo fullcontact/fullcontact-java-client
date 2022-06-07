@@ -32,9 +32,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The FullContact class represents FullContact client. It supports V3 Person Enrich, Company
- * Enrich, Company Search and Resolve endpoints. It uses Retrofit for sending all requests. All
- * requests are converted to JSON and sent via POST method asynchronously
+ * The FullContact class represents FullContact client. It supports V3 Person Enrich, Company Enrich
+ * and Resolve endpoints. It uses Retrofit for sending all requests. All requests are converted to
+ * JSON and sent via POST method asynchronously
  */
 public class FullContact implements AutoCloseable {
   private final String baseUrl = FCConstants.API_BASE_DEFAULT;
@@ -47,8 +47,6 @@ public class FullContact implements AutoCloseable {
   private final ScheduledExecutorService executor;
   private boolean isShutdown = false;
   private static final MediaType JSONMediaType = MediaType.parse("application/json; charset=utf-8");
-  private static final Type companySearchResponseType =
-      new TypeToken<ArrayList<CompanySearchResponse>>() {}.getType();
   private static final Type permissionFindResponseType =
       new TypeToken<ArrayList<PermissionResponse>>() {}.getType();
   private static final Type permissionCurrentResponseType =
@@ -210,48 +208,6 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(
         httpResponse ->
             (CompanyResponse) FullContact.getFCResponse(httpResponse, CompanyResponse.class));
-  }
-
-  /**
-   * Method for Company Search without any custom RetryHandler, It converts the request to json,
-   * send the Asynchronous request using HTTP POST method. It also handles retries based on
-   * retryHandler specified at FullContact Client level.
-   *
-   * @param companyRequest original request sent by client
-   * @return completed CompletableFuture with CompanySearchResponseList
-   * @throws FullContactException exception if client is shutdown or request fails validation
-   * @see <a href =
-   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
-   */
-  public CompletableFuture<CompanySearchResponseList> search(CompanyRequest companyRequest)
-      throws FullContactException {
-    return this.search(companyRequest, this.retryHandler);
-  }
-
-  /**
-   * Method for Company Search. It converts the request to json, send the Asynchronous request using
-   * HTTP POST method. It also handles retries based on retry condition.
-   *
-   * @param companyRequest original request sent by client
-   * @return completed CompletableFuture with CompanySearchResponseList
-   * @throws FullContactException exception if client is shutdown or request fails validation
-   * @see <a href =
-   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
-   */
-  public CompletableFuture<CompanySearchResponseList> search(
-      CompanyRequest companyRequest, RetryHandler retryHandler) throws FullContactException {
-    checkForShutdown();
-    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
-    RequestBody httpRequest = buildHttpRequest(gson.toJson(companyRequest));
-    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
-        this.client.companySearch(httpRequest);
-    handleHttpResponse(
-        httpRequest,
-        retryHandler,
-        httpResponseCompletableFuture,
-        responseCF,
-        FCApiEndpoint.COMPANY_SEARCH);
-    return responseCF.thenApply(FullContact::getCompanySearchResponse);
   }
 
   /**
@@ -458,54 +414,6 @@ public class FullContact implements AutoCloseable {
     return responseCF.thenApply(
         httpResponse ->
             (ResolveResponse) FullContact.getFCResponse(httpResponse, ResolveResponse.class));
-  }
-
-  /**
-   * Method for Email Verification. It sends a Asynchronous request using HTTP GET method. It also
-   * handles retries based RetryHandler specified on FullContact client level.
-   *
-   * @param email original email sent by client for verification
-   * @return completed CompletableFuture with EmailVerificationResponse
-   * @throws FullContactException exception if client is shutdown
-   * @see <a href =
-   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
-   */
-  public CompletableFuture<EmailVerificationResponse> emailVerification(String email)
-      throws FullContactException {
-    return this.emailVerification(email, this.retryHandler);
-  }
-
-  /**
-   * Method for Email Verification. It sends a Asynchronous request using HTTP GET method. It also
-   * handles retries based on retry condition specified in RetryHandler.
-   *
-   * @param email original email sent by client for verification
-   * @return completed CompletableFuture with EmailVerificationResponse
-   * @throws FullContactException exception if client is shutdown
-   * @see <a href =
-   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
-   */
-  public CompletableFuture<EmailVerificationResponse> emailVerification(
-      String email, RetryHandler retryHandler) throws FullContactException {
-    checkForShutdown();
-    if (email != null && !email.trim().isEmpty()) {
-      CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
-      RequestBody httpRequest = buildHttpRequest(email);
-      CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
-          this.client.emailVerification(email);
-      handleHttpResponse(
-          httpRequest,
-          retryHandler,
-          httpResponseCompletableFuture,
-          responseCF,
-          FCApiEndpoint.EMAIL_VERIFICATION);
-      return responseCF.thenApply(
-          httpResponse ->
-              (EmailVerificationResponse)
-                  FullContact.getFCResponse(httpResponse, EmailVerificationResponse.class));
-    } else {
-      throw new FullContactException("Email can't be empty");
-    }
   }
 
   /**
@@ -996,39 +904,6 @@ public class FullContact implements AutoCloseable {
   }
 
   /**
-   * This method creates company search response and handle for different response codes
-   *
-   * @param response raw response from company search API
-   * @return CompanySearchResponseList
-   */
-  protected static CompanySearchResponseList getCompanySearchResponse(
-      Response<ResponseBody> response) {
-    CompanySearchResponseList companySearchResponseList = new CompanySearchResponseList();
-    if (response.body() != null) {
-      if (response.code() == 200) {
-        companySearchResponseList.companySearchResponses =
-            gson.fromJson(response.body().charStream(), companySearchResponseType);
-        companySearchResponseList.message = FCConstants.HTTP_RESPONSE_STATUS_200_MESSAGE;
-        companySearchResponseList.isSuccessful = true;
-      } else {
-        companySearchResponseList =
-            gson.fromJson(response.body().charStream(), CompanySearchResponseList.class);
-      }
-    } else {
-      if (response.errorBody() != null) {
-        companySearchResponseList =
-            gson.fromJson(response.errorBody().charStream(), CompanySearchResponseList.class);
-      } else {
-        companySearchResponseList.message = response.message();
-      }
-    }
-    companySearchResponseList.isSuccessful =
-        (response.code() == 200) || (response.code() == 202) || (response.code() == 404);
-    companySearchResponseList.statusCode = response.code();
-    return companySearchResponseList;
-  }
-
-  /**
    * This method creates Audience response and handle for different response codes
    *
    * @param response raw response from various tags API
@@ -1206,9 +1081,6 @@ public class FullContact implements AutoCloseable {
       case COMPANY_ENRICH:
         retryCF = this.client.companyEnrich(httpRequest);
         break;
-      case COMPANY_SEARCH:
-        retryCF = this.client.companySearch(httpRequest);
-        break;
       case IDENTITY_MAP:
         retryCF = this.client.identityMap(httpRequest);
         break;
@@ -1244,14 +1116,6 @@ public class FullContact implements AutoCloseable {
         } catch (IOException ignored) {
         }
         break;
-      case EMAIL_VERIFICATION:
-        try {
-          final Buffer buffer = new Buffer();
-          httpRequest.writeTo(buffer);
-          retryCF = this.client.emailVerification(buffer.readUtf8());
-        } catch (IOException ignored) {
-        }
-        break;
       case PERMISSION_CREATE:
         retryCF = this.client.permissionCreate(httpRequest);
         break;
@@ -1278,7 +1142,7 @@ public class FullContact implements AutoCloseable {
     return PersonRequest.personRequestBuilder();
   }
 
-  /** @return Company Request Builder for Company Enrich and Company Search requests */
+  /** @return Company Request Builder for Company Enrich requests */
   public static CompanyRequest.CompanyRequestBuilder buildCompanyRequest() {
     return CompanyRequest.builder();
   }

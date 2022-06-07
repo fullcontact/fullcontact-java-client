@@ -6,11 +6,7 @@ public interface FCStats {
 
   long companyEnrichResponseTime(long time);
 
-  long companySearchResponseTime(long time);
-
   int personEnrichResponseCode(int code);
 
   int companyEnrichResponseCode(int code);
-
-  int companySearchResponseCode(int code);
 }

@@ -26,8 +26,6 @@ public class PersonResponse extends FCResponse {
       avatar,
       website;
   private Details details;
-  /** Indicates if returned profile is verified Physical */
-  private Boolean verifiedPhysical;
   /** Data sourced only from Epsilon */
   private Map<String, String> epsilon;
 

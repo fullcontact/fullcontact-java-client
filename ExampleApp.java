@@ -97,29 +97,6 @@ public class App {
                     + companyResponse.getMessage());
           });
 
-      // Company Search by Name: Request build
-      CompanyRequest companySearch =
-          fcClient.buildCompanyRequest().companyName("fullContact").build();
-
-      // Company Search by Name: sending Asynchronous Request
-      CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletableFuture =
-          fcClient.search(companySearch);
-      companySearchResponseListCompletableFuture.thenAccept(
-          companySearchResponseList -> {
-            System.out.println(
-                "Company search "
-                    + companySearchResponseList.isSuccessful()
-                    + " "
-                    + companySearchResponseList.getMessage()
-                    + " "
-                    + companySearchResponseList.getStatusCode()
-                    + " "
-                    + companySearchResponseList
-                        .getCompanySearchResponses()
-                        .get(0)
-                        .getLookupDomain());
-          });
-
       // Identity Map request
       ResolveRequest identityMapRequest =
           FullContact.buildResolveRequest()
@@ -235,13 +212,6 @@ public class App {
                         e.printStackTrace();
                     }
                 });
-      //Email Verification
-      CompletableFuture<EmailVerificationResponse> emailVerificationResponse =
-          fcClient.emailVerification("bart@fullcontact.com");
-      emailVerificationResponse.thenAccept(
-          response -> {
-            System.out.println("send Safely " + response.getEmails().get("bart@fullcontact.com").isSendSafely())
-          });
       Thread.sleep(5000);
       fcClient.close();
 
