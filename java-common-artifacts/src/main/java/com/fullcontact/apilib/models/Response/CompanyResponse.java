@@ -12,5 +12,4 @@ public class CompanyResponse extends FCResponse {
   private String name, location, twitter, linkedin, bio, logo, website, locale, category, updated;
   private int founded, employees;
   private CompanyDetails details;
-  private List<DataAddOns> dataAddOns;
 }

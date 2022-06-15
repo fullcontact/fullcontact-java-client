@@ -72,9 +72,6 @@ public class CompanyEnrichResponse {
         88991, response.getDetails().getTraffic().getCountryRank().getGlobal().getRank());
     Assert.assertEquals(
         24385, response.getDetails().getTraffic().getLocaleRank().getUs().getRank());
-    Assert.assertEquals(
-        "http://docs.fullcontact.com/api/#key-people",
-        response.getDataAddOns().get(0).getDocLink());
   }
 
   @Test

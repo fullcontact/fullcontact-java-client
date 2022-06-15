@@ -199,15 +199,5 @@
       }
     }
   },
-  "dataAddOns": [
-    {
-      "id": "keypeople",
-      "name": "Key People",
-      "enabled": false,
-      "applied": false,
-      "description": "Displays information about people of interest at this company.",
-      "docLink": "http://docs.fullcontact.com/api/#key-people"
-    }
-  ],
   "updated": "2020-04-01"
 }

@@ -26,8 +26,7 @@ public class PersonResponse extends FCResponse {
       avatar,
       website;
   private Details details;
-  /** Data sourced only from Epsilon */
-  private Map<String, String> epsilon;
+  private Map<String, String> extended;
 
   public Optional<Details> getDetails() {
     return Optional.ofNullable(this.details);
