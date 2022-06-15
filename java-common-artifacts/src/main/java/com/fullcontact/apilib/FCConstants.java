@@ -41,6 +41,11 @@ public class FCConstants {
   public static final String API_ENDPOINT_PERMISSION_CURRENT = "permission.current";
   public static final String API_ENDPOINT_PERMISSION_VERIFY = "permission.verify";
 
+  // Verify API endpoints
+  public static final String API_ENDPOINT_VERIFY_SIGNALS = "verify.signals";
+  public static final String API_ENDPOINT_VERIFY_MATCH = "verify.match";
+  public static final String API_ENDPOINT_VERIFY_ACTIVITY = "verify.activity";
+
   // URIs
   public static final URI personEnrichUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERSON_ENRICH);
@@ -70,4 +75,9 @@ public class FCConstants {
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_CURRENT);
   public static final URI permissionVerifyUri =
       URI.create(API_BASE_DEFAULT + API_ENDPOINT_PERMISSION_VERIFY);
+  public static final URI verifySignalsUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_VERIFY_SIGNALS);
+  public static final URI verifyMatchUri = URI.create(API_BASE_DEFAULT + API_ENDPOINT_VERIFY_MATCH);
+  public static final URI verifyActivityUri =
+      URI.create(API_BASE_DEFAULT + API_ENDPOINT_VERIFY_ACTIVITY);
 }

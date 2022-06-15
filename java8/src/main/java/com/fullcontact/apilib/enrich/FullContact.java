@@ -832,6 +832,142 @@ public class FullContact implements AutoCloseable {
                 FullContact.getFCResponse(httpResponse, ConsentPurposeResponse.class));
   }
 
+  // Verify APIs
+  /**
+   * Method for Verify Signals without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with SignalsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<SignalsResponse> verifySignals(MultifieldRequest multifieldRequest)
+      throws FullContactException {
+    return this.verifySignals(multifieldRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Verify Signals. It converts the request to json, send the Asynchronous request using
+   * HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with SignalsResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<SignalsResponse> verifySignals(
+      MultifieldRequest multifieldRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    multifieldRequest.validate();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(multifieldRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.verifySignals(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.VERIFY_SIGNALS);
+    return responseCF.thenApply(
+        httpResponse ->
+            (SignalsResponse) FullContact.getFCResponse(httpResponse, SignalsResponse.class));
+  }
+
+  /**
+   * Method for Verify Match without any custom RetryHandler, It converts the request to json, send
+   * the Asynchronous request using HTTP POST method. It also handles retries based on retryHandler
+   * specified at FullContact Client level.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with MatchResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<MatchResponse> verifyMatch(MultifieldRequest multifieldRequest)
+      throws FullContactException {
+    return this.verifyMatch(multifieldRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Verify Match. It converts the request to json, send the Asynchronous request using
+   * HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with MatchResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<MatchResponse> verifyMatch(
+      MultifieldRequest multifieldRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    multifieldRequest.validate();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(multifieldRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.verifyMatch(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.VERIFY_MATCH);
+    return responseCF.thenApply(
+        httpResponse ->
+            (MatchResponse) FullContact.getFCResponse(httpResponse, MatchResponse.class));
+  }
+
+  /**
+   * Method for Verify Activity without any custom RetryHandler, It converts the request to json,
+   * send the Asynchronous request using HTTP POST method. It also handles retries based on
+   * retryHandler specified at FullContact Client level.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with ActivityResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ActivityResponse> verifyActivity(MultifieldRequest multifieldRequest)
+      throws FullContactException {
+    return this.verifyActivity(multifieldRequest, this.retryHandler);
+  }
+
+  /**
+   * Method for Verify Activity. It converts the request to json, send the Asynchronous request
+   * using HTTP POST method. It also handles retries based on retry condition.
+   *
+   * @param multifieldRequest original request sent by client
+   * @return completed CompletableFuture with ActivityResponse
+   * @throws FullContactException exception if client is shutdown
+   * @see <a href =
+   *     "https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>
+   */
+  public CompletableFuture<ActivityResponse> verifyActivity(
+      MultifieldRequest multifieldRequest, RetryHandler retryHandler) throws FullContactException {
+    checkForShutdown();
+    multifieldRequest.validate();
+    CompletableFuture<Response<ResponseBody>> responseCF = new CompletableFuture<>();
+    RequestBody httpRequest = buildHttpRequest(gson.toJson(multifieldRequest));
+    CompletableFuture<Response<ResponseBody>> httpResponseCompletableFuture =
+        this.client.verifyActivity(httpRequest);
+    handleHttpResponse(
+        httpRequest,
+        retryHandler,
+        httpResponseCompletableFuture,
+        responseCF,
+        FCApiEndpoint.VERIFY_ACTIVITY);
+    return responseCF.thenApply(
+        httpResponse ->
+            (ActivityResponse) FullContact.getFCResponse(httpResponse, ActivityResponse.class));
+  }
+
   protected void checkForShutdown() throws FullContactException {
     if (isShutdown) {
       throw new FullContactException("FullContact client is shutdown. Please create a new client");
@@ -1130,6 +1266,15 @@ public class FullContact implements AutoCloseable {
         break;
       case PERMISSION_VERIFY:
         retryCF = this.client.permissionVerify(httpRequest);
+        break;
+      case VERIFY_SIGNALS:
+        retryCF = this.client.verifySignals(httpRequest);
+        break;
+      case VERIFY_MATCH:
+        retryCF = this.client.verifyMatch(httpRequest);
+        break;
+      case VERIFY_ACTIVITY:
+        retryCF = this.client.verifyActivity(httpRequest);
         break;
       default:
         throw new IllegalStateException("Unexpected API Endpoint: " + fcApiEndpoint);

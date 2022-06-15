@@ -121,6 +121,21 @@ public class MockInterceptor implements Interceptor {
           fileName = "src/test/resources/permissionVerifyResponse.json";
           message = "OK";
           break;
+        case "tc_601":
+          statusCode = 200;
+          fileName = "src/test/resources/verifySignalsResponse.json";
+          message = "OK";
+          break;
+        case "tc_602":
+          statusCode = 200;
+          fileName = "src/test/resources/verifyActivityResponse.json";
+          message = "OK";
+          break;
+        case "tc_603":
+          statusCode = 200;
+          fileName = "src/test/resources/verifyMatchResponse.json";
+          message = "OK";
+          break;
         default:
           fileName = "";
           statusCode = 500;

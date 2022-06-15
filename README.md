@@ -43,16 +43,18 @@ Add this dependency to your project's POM:
 
 
 ## Working with FullContact Client
-FullContact client supports v3 Enrich and Resolve APIs which are super simplified to easily 
-enrich Person and Company data and Resolve fragmented customer data. 
+FullContact client supports v3 Enrich and Resolve, Verify and Permission APIs,
+and are super simplified to easily 
+enrich Person and Company data, Resolve fragmented customer data and Verify signals. 
 All the API requests are over HTTPS using POST method 
 with content sent as JSON. This library supports Multi Field Request, Person Enrichment 
-& Data Packs, Company Enrichment & Data Packs and Webhooks. Just build a FullContact 
-Client with your API Key, make a enrich request and get a response object back.
+& Data Packs, Company Enrichment & Data Packs and Webhooks, Resolve & PIC, Verify and Permission. 
+Just build a FullContact 
+Client with your API Key, make a http request and get a response object back.
 
 ### Quick Overview
 If you are not familiar with the FullContact APIs, complete details can be found 
-@[API documentation](https://platform.fullcontact.com/docs/apis/enrich/introduction) 
+@[API documentation](https://docs.fullcontact.com/docs/getting-started) 
 
 
 FullContact Client provides an object layer to FullContact API communication, 
@@ -63,23 +65,27 @@ Once you’re on board with the API behavior, FullContact Client library should 
 your integration.
 
 ### Supported APIs
-- _[Enrich](https://platform.fullcontact.com/docs/apis/enrich/introduction)_
+- _[Enrich](https://docs.fullcontact.com/docs/enrich-overview)_
     - `person.enrich`
     - `company.enrich`
 - Private Identity Cloud
-    - _[Resolve](https://platform.fullcontact.com/docs/apis/resolve/introduction)_
+    - _[Resolve](https://docs.fullcontact.com/docs/resolve-overview)_
         - `identity.map`
         - `identity.resolve`
         - `identity.delete`
         - `identity.mapResolve`
-    - [Tags](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
+    - [Tags](https://docs.fullcontact.com/docs/customer-tags)
         - `tags.create`
         - `tags.get`
         - `tags.delete`
-    - [Audience](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
+    - [Audience](https://docs.fullcontact.com/docs/customer-tags)
         - `audience.create`
         - `audience.download`
-- _[Permission](https://platform.fullcontact.com/docs/apis/permission/introduction)_
+- _[Verify](https://docs.fullcontact.com/docs/verify-overview)_
+    - `verify.signals`
+    - `verify.match`
+    - `verify.activity`
+- _[Permission](https://docs.fullcontact.com/docs/permission-overview)_
     - `permission.create`
     - `permission.delete`
     - `permission.find`

@@ -106,6 +106,18 @@ public class HttpResponseTestObjects {
         statusCode = 200;
         fileName = "src/test/resources/permissionVerifyResponse.json";
         break;
+      case "tc_601":
+        statusCode = 200;
+        fileName = "src/test/resources/verifySignalsResponse.json";
+        break;
+      case "tc_602":
+        statusCode = 200;
+        fileName = "src/test/resources/verifyActivityResponse.json";
+        break;
+      case "tc_603":
+        statusCode = 200;
+        fileName = "src/test/resources/verifyMatchResponse.json";
+        break;
       default:
         statusCode = 500;
         fileName = "";

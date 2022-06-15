@@ -86,7 +86,7 @@ CredentialsProvider envCredentialsProvider = new DefaultCredentialProvider("ENV_
 - If __no__ ```CredentialsProvider``` is specified while building FullContact Client,
 it automatically looks for API key from Environment variable ```"FC_API_KEY"```
 
-(Don't have an API key? You can pick one up for free [right here.](https://www.fullcontact.com/developer-portal/))
+(Don't have an API key? You can pick one up for free [right here.](https://docs.fullcontact.com/docs/generate-an-api-key))
 
 ## Building a FullContact Client
 Our Java 11 Client library uses in-built HTTP Client.
@@ -161,7 +161,7 @@ By providing more contact inputs, the more accurate and precise we can get with 
 - `panoramaId`: _String_
 
 ## Enrich
-[Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
+[Enrich API Reference](https://docs.fullcontact.com/docs/enrich-overview)
 - `person.enrich`
 - `company.enrich`
 
@@ -248,7 +248,7 @@ companyResponseCompletableFuture.thenAccept(
 ```
 
 ## Resolve
-[Resolve API Reference](https://platform.fullcontact.com/docs/apis/resolve/introduction)
+[Resolve API Reference](https://docs.fullcontact.com/docs/resolve-overview)
 - `identity.map`
 - `identity.resolve`
 - `identity.delete`
@@ -324,7 +324,7 @@ mapResolveResponse.thenAccept(
 
 ### Tags/Metadata
 
-[Tags API Reference](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
+[Tags API Reference](https://docs.fullcontact.com/docs/customer-tags)
 - `tags.create`
 - `tags.get`
 - `tags.delete`
@@ -443,8 +443,76 @@ audienceResponseCompletableFuture.thenAccept(
           });
 ```
 
+## Verify
+[Verify APIs Reference](https://docs.fullcontact.com/docs/verify-overview)
+
+- `verify.signals`
+- `verify.match`
+- `verify.activity`
+
+FullContact's Verify APIs allows brands, partners and agencies alike to get raw signals 
+on individuals, understand how well personal identifiers being inputted match 
+to FullContact's Identity Graph alongside an associated score for each raw signal.
+
+### Verify Signals
+Verify Signals provides high value information for identifiers in order to model risk. 
+For each contact identifier being passed back in Verify Signals such as, emails, phones, 
+Non IDs, Panorama IDs, MAIDs and IP Addresses you will receive a max of 5 additional identifiers 
+for each.
+
+Verify Signals takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `SignalsResponse`
+
+```java
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build();
+
+SignalsResponse response = fcClient.verifySignals(mFQuery).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+```
+
+### Verify Match
+Based upon the provided information, understand whether or not the information you have on an individual matches 
+the FullContact Identity Graph and points to the same individual. 
+This can help you identify risk on a form field or application. 
+FullContact will return true for the input with the highest confidence found in our Graph. 
+
+Verify Match takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `MatchResponse`
+
+```java
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build();
+
+MatchResponse response = fcClient.verifyMatch(mFQuery).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+```
+
+### Verify Activity
+Verify Activity provides a numerical score of the level of activity we see on a given identifier for an individual. 
+
+Verify Activity takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `ActivityResponse`
+
+```java
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build();
+
+ActivityResponse response = fcClient.verifyActivity(mFQuery).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+```
+
 ## Permission
-[Permission APIs Reference](https://platform.fullcontact.com/docs/apis/permission/introduction)
+[Permission APIs Reference](https://docs.fullcontact.com/docs/permission-overview)
 
 - `permission.create`
 - `permission.delete`
@@ -499,7 +567,7 @@ Permission Create takes [PermissionRequest](#permissionrequest) and following fi
 MultifieldRequest mFQuery =
         FullContact.buildMultifieldRequest()
             .email("bart@fullcontact.com")
-            .build()
+            .build();
 
 PermissionRequest permissionRequest =
         FullContact.buildPermissionRequest()
@@ -609,6 +677,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
+- v4.0.0 - Removed Company Search, Email Verification and verifiedPhysical support. Added Verify APIs.
 - v3.1.0 - Support got identity.mapResolve, panoramaId, generatePid. Remove 'expandedInterests'
 - v3.0.2 - Support for verifiedPhysical, expandedInterests, maxMaids, Epsilon data (in PersonResponse) 
 - v3.0.1 - Support for Placekey
