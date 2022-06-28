@@ -56,8 +56,8 @@ public class VerifyResponseTest {
         response.getEmails().get(0).getSha256());
     Assert.assertEquals(207, response.getEmails().get(0).getObservations());
     Assert.assertEquals("1.0", String.valueOf(response.getEmails().get(0).getConfidence()));
-    Assert.assertEquals("Chip", response.getName().getGiven());
-    Assert.assertEquals("Shipperman", response.getName().getFamily());
+    Assert.assertEquals("Chip", response.getName().getGivenName());
+    Assert.assertEquals("Shipperman", response.getName().getFamilyName());
     Assert.assertEquals(
         "https://twitter.com/ChipShipperman", response.getSocialProfiles().getTwitterUrl());
   }

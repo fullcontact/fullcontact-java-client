@@ -1,6 +1,5 @@
 package com.fullcontact.apilib.models.Response;
 
-import com.fullcontact.apilib.models.PersonName;
 import lombok.*;
 
 import java.util.List;
@@ -13,10 +12,11 @@ public class SignalsResponse extends FCResponse {
   private List<EmailAndPhone> emails, phones;
   private List<String> personIds;
   private List<Maids> maids;
-  private PersonName name;
+  private Name name;
   private List<PanoId> panoIds;
   private List<NonId> nonIds;
   private List<IpAddress> ipAddresses;
   private SocialProfile socialProfiles;
-  // TODO: Add demogrphics, employment and maybe modify socialProfiles
+  private VerifiedDemographics demographics;
+  private VerifiedEmployment employment;
 }
