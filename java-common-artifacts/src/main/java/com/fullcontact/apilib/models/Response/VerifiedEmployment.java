@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class CompanySearchLocation {
-  private String locality;
-  private CompanyRegion region, country;
+public class VerifiedEmployment {
+  private String company, title;
+  private Boolean current;
 }

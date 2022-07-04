@@ -57,7 +57,6 @@ public class PersonRequestTest {
             .recordId("customer123")
             .personId("VS1OPPPPvxHcCNPezUbvYBCDEAOdSj5AI0adsA2bLmh12345")
             .panoramaId("panoId")
-            .verifiedPhysical(true)
             .maxMaids(5)
             .build();
     try (BufferedReader br =

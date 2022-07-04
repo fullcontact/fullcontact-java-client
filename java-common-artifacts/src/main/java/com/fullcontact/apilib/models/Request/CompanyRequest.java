@@ -1,19 +1,17 @@
 package com.fullcontact.apilib.models.Request;
 
 import com.fullcontact.apilib.FullContactException;
-import com.fullcontact.apilib.models.enums.Sort;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.With;
 
-/** Class to create requests for Company Enrich and Company Search */
+/** Class to create requests for Company Enrich */
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 @Getter
 public class CompanyRequest {
-  @With private String domain, companyName, webhookUrl, location, locality, region, country;
-  private Sort sort;
+  @With private String domain, webhookUrl;
 
   /**
    * Method to validate request for company enrich. It validates that company domain name should not
@@ -24,18 +22,6 @@ public class CompanyRequest {
   public void validateForEnrich() throws FullContactException {
     if (this.domain == null || this.domain.trim().isEmpty()) {
       throw new FullContactException("Company Domain is mandatory for Company Enrich");
-    }
-  }
-
-  /**
-   * Method to validate request for company search. It validates that companyName should not be null
-   * or empty
-   *
-   * @throws FullContactException if companyName is null or empty
-   */
-  public void validateForSearch() throws FullContactException {
-    if (this.companyName == null || this.companyName.trim().isEmpty()) {
-      throw new FullContactException("Company Name is mandatory for Company Search.");
     }
   }
 }

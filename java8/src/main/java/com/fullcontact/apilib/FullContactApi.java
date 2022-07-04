@@ -22,9 +22,6 @@ public interface FullContactApi {
   @POST(FCConstants.API_ENDPOINT_COMPANY_ENRICH)
   CompletableFuture<Response<ResponseBody>> companyEnrich(@Body RequestBody body);
 
-  @POST(FCConstants.API_ENDPOINT_COMPANY_SEARCH)
-  CompletableFuture<Response<ResponseBody>> companySearch(@Body RequestBody body);
-
   @POST(FCConstants.API_ENDPOINT_IDENTITY_MAP)
   CompletableFuture<Response<ResponseBody>> identityMap(@Body RequestBody body);
 
@@ -40,9 +37,6 @@ public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_IDENTITY_MAP_RESOLVE)
   CompletableFuture<Response<ResponseBody>> identityMapResolve(@Body RequestBody body);
-
-  @GET(FCConstants.API_ENDPOINT_VERIFICATION_EMAIL)
-  CompletableFuture<Response<ResponseBody>> emailVerification(@Query("email") String email);
 
   @POST(FCConstants.API_ENDPOINT_TAGS_CREATE)
   CompletableFuture<Response<ResponseBody>> tagsCreate(@Body RequestBody body);
@@ -73,4 +67,13 @@ public interface FullContactApi {
 
   @POST(FCConstants.API_ENDPOINT_PERMISSION_VERIFY)
   CompletableFuture<Response<ResponseBody>> permissionVerify(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_VERIFY_SIGNALS)
+  CompletableFuture<Response<ResponseBody>> verifySignals(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_VERIFY_MATCH)
+  CompletableFuture<Response<ResponseBody>> verifyMatch(@Body RequestBody body);
+
+  @POST(FCConstants.API_ENDPOINT_VERIFY_ACTIVITY)
+  CompletableFuture<Response<ResponseBody>> verifyActivity(@Body RequestBody body);
 }

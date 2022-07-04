@@ -4,7 +4,7 @@ API Clients for FullContact on V3 APIs supports Java8+
 [![Maven Central](https://img.shields.io/maven-central/v/com.fullcontact.client/java8)](https://mvnrepository.com/artifact/com.fullcontact.client/java8)
 
 This client provides an interface to interact with Enrich,
-Resolve, Permission, Tags, Audience and Verification APIs. FullContact API Documentation is available
+Resolve, Permission, Tags, Audience and Verify APIs. FullContact API Documentation is available
 at: https://platform.fullcontact.com/docs
 
 ## Table of contents
@@ -20,7 +20,6 @@ at: https://platform.fullcontact.com/docs
         - [Person Enrich Request and Response](#person-enrich-request-and-response)
         - [Company Enrich](#company-enrich-request-and-response)
             - [Lookup By Domain](#lookup-by-company-domain)
-            - [Search By Company Name](#search-by-company-name)
    - [Resolve](#resolve)
         - [Resolve Request](#resolve-request)
         - [Resolve Response](#resolve-response)
@@ -31,7 +30,10 @@ at: https://platform.fullcontact.com/docs
    - [Audience](#audience)
         - [Audience Create](#audience-create)
         - [Audience Download](#audience-download)
-   - [Verification](#verification)
+   - [Verify](#verify)
+        - [Verify Signals](#verify-signals)
+        - [Verify Match](#verify-match)
+        - [Verify Activity](#verify-activity)
    - [Permission](#permission)
         - [Permission Create](#permission-create)
             - [PermissionRequest](#permissionrequest)
@@ -53,7 +55,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java8:3.1.0'
+implementation 'com.fullcontact.client:java8:4.0.0'
 ```
 
 ### Maven users
@@ -64,7 +66,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>3.1.0</version>
+  <version>4.0.0</version>
 </dependency>
 ```
 
@@ -90,7 +92,7 @@ CredentialsProvider envCredentialsProvider = new DefaultCredentialProvider("ENV_
 - If __no__ ```CredentialsProvider``` is specified while building FullContact Client,
 it automatically looks for API key from Environment variable ```"FC_API_KEY"```
 
-(Don't have an API key? You can pick one up for free [right here.](https://www.fullcontact.com/developer-portal/))
+(Don't have an API key? You can pick one up for free [right here.](https://docs.fullcontact.com/docs/generate-an-api-key))
 
 
 ## Building a FullContact Client
@@ -162,10 +164,10 @@ By providing more contact inputs, the more accurate and precise we can get with 
 - `panoramaId`: _String_
 
 ## Enrich
-[Enrich API Reference](https://platform.fullcontact.com/docs/apis/enrich/introduction)
+[Enrich API Reference](https://docs.fullcontact.com/docs/enrich-overview)
 - `person.enrich`
 - `company.enrich`
-- `company.search`
+
 #### Building a Person Enrich/Resolve Request
 Our V3 Person Enrich supports __Multi Field Request:__ ability to match on __one or many__ input fields
 
@@ -179,7 +181,6 @@ as such specified in [MultiFieldRequest](#multifieldrequest). Some additional fi
 - `confidence`: _Confidence Enum_
 - `infer`: _boolean_
 - `webhookUrl`: _String_
-- `verifiedPhysical`: _boolean_ : Return only profiles which are with verified physical address
 - `maxMaids`: _Integer_ : Limit the number of MAIDs in response
 
 ```java
@@ -223,11 +224,7 @@ personResponseCompletableFuture.thenAccept(
 ```
 
 #### Company Enrich Request and Response
-To Enrich Company data FullContact library provides two methods __Lookup by Company Domain__ or
-__Search by Company Name__. More data is available through the Lookup by Company Domain, 
-but if the domain is unknown, use our Search by Company Name to find the list of domains 
-that could be related to the Company you are looking for and then call the Lookup by 
-Company Domain with that domain to get the full information about the company.
+To Enrich Company data FullContact library provides method to __Lookup by Company Domain__.
 
 ##### Lookup by Company Domain
 - Request:
@@ -253,44 +250,8 @@ companyResponseCompletableFuture.thenAccept(
           });
 ```
 
-##### Search by Company Name
-- Request:
-    - Parameters:
-        - `companyName`
-        - `webhookUrl` 
-        - `location`
-        - `locality` 
-        - `region`
-        - `country`
-```java
-CompanyRequest companySearch = fcClient.buildCompanyRequest().companyName("fullContact").build();
-```
-- Response: It returns a CompletableFuture of ```CompanySearchResponseList```, from which you can 
-get a ```List``` for CompanySearch responses.
-```java
-CompletableFuture<CompanySearchResponseList> companySearchResponseListCompletableFuture =
-          fcClient.search(companySearch);
-
-companySearchResponseListCompletableFuture.thenAccept(
-          companySearchResponseList -> {
-            System.out.println(
-                "Company search "
-                    + companySearchResponseList.isSuccessful()
-                    + " "
-                    + companySearchResponseList.getMessage()
-                    + " "
-                    + companySearchResponseList.getStatus()
-                    + " "
-                    + companySearchResponseList
-                        .getCompanySearchResponses()
-                        .get(0)
-                        .getLookupDomain());
-          });
-```
-
-
 ## Resolve
-[Resolve API Reference](https://platform.fullcontact.com/docs/apis/resolve/introduction)
+[Resolve API Reference](https://docs.fullcontact.com/docs/resolve-overview)
 - `identity.map`
 - `identity.resolve`
 - `identity.delete`
@@ -365,7 +326,7 @@ mapResolveResponse.thenAccept(
 
 ### Tags/Metadata
 
-[Tags API Reference](https://platform.fullcontact.com/docs/apis/resolve/customer-tags)
+[Tags API Reference](https://docs.fullcontact.com/docs/customer-tags~~~~)
 - `tags.create`
 - `tags.get`
 - `tags.delete`
@@ -484,18 +445,76 @@ audienceResponseCompletableFuture.thenAccept(
           });
 ```
 
-## Verification
-[EmailVerification API Reference](https://platform.fullcontact.com/docs/apis/verification/introduction)
-- `v2/verification/email`
+## Verify
+[Verify APIs Reference](https://docs.fullcontact.com/docs/verify-overview)
 
-FullContact Email Verification API accepts single `email` request, as a `String`. Requests are sent 
-using HTTP GET and request email is set as a query parameter. It returns a `CompletableFuture<EmailVerificationResponse>`
+- `verify.signals`
+- `verify.match`
+- `verify.activity`
+
+FullContact's Verify APIs allows brands, partners and agencies alike to get raw signals 
+on individuals, understand how well personal identifiers being inputted match 
+to FullContact's Identity Graph alongside an associated score for each raw signal.
+
+### Verify Signals
+Verify Signals provides high value information for identifiers in order to model risk. 
+For each contact identifier being passed back in Verify Signals such as, emails, phones, 
+Non IDs, Panorama IDs, MAIDs and IP Addresses you will receive a max of 5 additional identifiers 
+for each.
+
+Verify Signals takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `SignalsResponse`
+
 ```java
-CompletableFuture<EmailVerificationResponse> emailVerificationResponse = fcClient.emailVerification("bart@fullcontact.com");
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build();
+
+SignalsResponse response = fcClient.verifySignals(mFQuery).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+```
+
+### Verify Match
+Based upon the provided information, understand whether or not the information you have on an individual matches 
+the FullContact Identity Graph and points to the same individual. 
+This can help you identify risk on a form field or application. 
+FullContact will return true for the input with the highest confidence found in our Graph. 
+
+Verify Match takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `MatchResponse`
+
+```java
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build();
+
+MatchResponse response = fcClient.verifyMatch(mFQuery).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
+```
+
+### Verify Activity
+Verify Activity provides a numerical score of the level of activity we see on a given identifier for an individual. 
+
+Verify Activity takes [MultiFieldRequest](#multifieldrequest) as input parameter
+and returns a Response of type `ActivityResponse`
+
+```java
+MultifieldRequest mFQuery =
+        FullContact.buildMultifieldRequest()
+            .email("bart@fullcontact.com")
+            .build();
+
+ActivityResponse response = fcClient.verifyActivity(mFQuery).get();
+Assert.assertTrue(response.isSuccessful());
+Assert.assertEquals(200, response.getStatusCode());
 ```
 
 ## Permission
-[Permission APIs Reference](https://platform.fullcontact.com/docs/apis/permission/introduction)
+[Permission APIs Reference](https://docs.fullcontact.com/docs/permission-overview)
 
 - `permission.create`
 - `permission.delete`
@@ -660,6 +679,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
+- v4.0.0 - Removed Company Search, Email Verification and verifiedPhysical support. Added Verify APIs.
 - v3.1.0 - Support got identity.mapResolve, panoramaId, generatePid. Remove 'expandedInterests'
 - v3.0.2 - Support for verifiedPhysical, expandedInterests, maxMaids, Epsilon data (in PersonResponse) 
 - v3.0.1 - Support for Placekey

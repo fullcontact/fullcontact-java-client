@@ -17,8 +17,6 @@ public class PersonRequest extends MultifieldRequest {
   private Confidence confidence;
   @Builder.Default private boolean infer = true;
   private List<String> dataFilter;
-  /** Return only profiles which are with verified physical address */
-  private boolean verifiedPhysical;
   /** Limit the number of MAIDs in response */
   private Integer maxMaids;
 }

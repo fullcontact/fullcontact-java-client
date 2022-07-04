@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class CompanySearchResponse {
-  private String lookupDomain, orgName, logo;
-  private CompanySearchLocation location;
+public class PanoId {
+  private String id;
+  private long firstSeenMs, lastSeenMs;
+  private int observations;
+  private double confidence;
 }

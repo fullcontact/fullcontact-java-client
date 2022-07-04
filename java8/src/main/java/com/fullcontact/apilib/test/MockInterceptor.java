@@ -60,11 +60,6 @@ public class MockInterceptor implements Interceptor {
           statusCode = 200;
           message = "OK";
           break;
-        case "tc_071":
-          fileName = "src/test/resources/companySearchResponse.json";
-          statusCode = 200;
-          message = "OK";
-          break;
         case "tc_101":
           fileName = "src/test/resources/identityMapResponse.json";
           statusCode = 200;
@@ -83,11 +78,6 @@ public class MockInterceptor implements Interceptor {
           break;
         case "tc_104":
           fileName = "src/test/resources/identityResolveResponseWithTags.json";
-          statusCode = 200;
-          message = "OK";
-          break;
-        case "tc_201":
-          fileName = "src/test/resources/emailVerificationResponse.json";
           statusCode = 200;
           message = "OK";
           break;
@@ -129,6 +119,21 @@ public class MockInterceptor implements Interceptor {
         case "tc_504":
           statusCode = 200;
           fileName = "src/test/resources/permissionVerifyResponse.json";
+          message = "OK";
+          break;
+        case "tc_601":
+          statusCode = 200;
+          fileName = "src/test/resources/verifySignalsResponse.json";
+          message = "OK";
+          break;
+        case "tc_602":
+          statusCode = 200;
+          fileName = "src/test/resources/verifyActivityResponse.json";
+          message = "OK";
+          break;
+        case "tc_603":
+          statusCode = 200;
+          fileName = "src/test/resources/verifyMatchResponse.json";
           message = "OK";
           break;
         default:

@@ -1,0 +1,10 @@
+{
+  "city": true,
+  "country": true,
+  "continent": true,
+  "postalCode": true,
+  "familyName": true,
+  "givenName": true,
+  "email": false,
+  "maid": false
+}

@@ -61,10 +61,6 @@ public class HttpResponseTestObjects {
         statusCode = 200;
         fileName = "src/test/resources/companyEnrichResponse.json";
         break;
-      case "tc_071":
-        statusCode = 200;
-        fileName = "src/test/resources/companySearchResponse.json";
-        break;
       case "tc_101":
         statusCode = 200;
         fileName = "src/test/resources/identityMapResponse.json";
@@ -81,10 +77,6 @@ public class HttpResponseTestObjects {
       case "tc_104":
         statusCode = 200;
         fileName = "src/test/resources/identityResolveResponseWithTags.json";
-        break;
-      case "tc_201":
-        statusCode = 200;
-        fileName = "src/test/resources/emailVerificationResponse.json";
         break;
       case "tc_301":
         statusCode = 200;
@@ -113,6 +105,18 @@ public class HttpResponseTestObjects {
       case "tc_504":
         statusCode = 200;
         fileName = "src/test/resources/permissionVerifyResponse.json";
+        break;
+      case "tc_601":
+        statusCode = 200;
+        fileName = "src/test/resources/verifySignalsResponse.json";
+        break;
+      case "tc_602":
+        statusCode = 200;
+        fileName = "src/test/resources/verifyActivityResponse.json";
+        break;
+      case "tc_603":
+        statusCode = 200;
+        fileName = "src/test/resources/verifyMatchResponse.json";
         break;
       default:
         statusCode = 500;

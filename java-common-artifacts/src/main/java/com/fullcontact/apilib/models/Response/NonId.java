@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class DataAddOns {
-  private String id, name, description, docLink;
-  private boolean enabled, applied;
+public class NonId {
+  private String id;
+  private long firstSeenMs, lastSeenMs;
+  private int observations;
+  private double confidence;
 }

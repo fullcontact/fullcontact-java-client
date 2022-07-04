@@ -140,10 +140,9 @@ public class PersonResponseTest {
         response.getDetails().get().getEducation().get(0).getName());
     Assert.assertEquals(
         "http://marquitaas8.com/", response.getDetails().get().getUrls().get(0).getValue());
-    Assert.assertEquals("9", response.getEpsilon().get("epsilon_key_1"));
-    Assert.assertEquals("Q", response.getEpsilon().get("epsilon_key_3"));
-    Assert.assertEquals("11", response.getEpsilon().get("epsilon_key_5"));
-    Assert.assertTrue(response.getVerifiedPhysical());
+    Assert.assertEquals("9", response.getExtended().get("key_1"));
+    Assert.assertEquals("Q", response.getExtended().get("key_3"));
+    Assert.assertEquals("11", response.getExtended().get("key_5"));
   }
 
   @Test

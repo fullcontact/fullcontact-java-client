@@ -6,6 +6,6 @@ import lombok.*;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-public class EmailAttributes {
-  private boolean validSyntax, deliverable, catchall, risky, disposable;
+public class ActivityResponse extends FCResponse {
+  Double emails;
 }
