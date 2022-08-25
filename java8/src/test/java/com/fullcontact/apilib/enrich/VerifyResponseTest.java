@@ -9,13 +9,12 @@ import com.fullcontact.apilib.models.Request.MultifieldRequest;
 import com.fullcontact.apilib.models.Response.ActivityResponse;
 import com.fullcontact.apilib.models.Response.MatchResponse;
 import com.fullcontact.apilib.models.Response.SignalsResponse;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class VerifyResponseTest {
   private static HashMap<String, String> customHeader = new HashMap<>();
@@ -79,7 +78,10 @@ public class VerifyResponseTest {
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    Assert.assertEquals("0.61", String.valueOf(response.getEmails()));
+    Assert.assertEquals("0.82", String.valueOf(response.getEmails()));
+    Assert.assertEquals("0.32", String.valueOf(response.getSocial()));
+    Assert.assertEquals("0.78", String.valueOf(response.getEmployment()));
+    Assert.assertEquals("0.91", String.valueOf(response.getOnline()));
   }
 
   @Test
@@ -110,14 +112,11 @@ public class VerifyResponseTest {
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    Assert.assertFalse(response.getEmail());
-    Assert.assertFalse(response.getMaid());
-    Assert.assertTrue(response.getGivenName());
-    Assert.assertTrue(response.getFamilyName());
-    Assert.assertTrue(response.getContinent());
-    Assert.assertTrue(response.getPostalCode());
-    Assert.assertTrue(response.getCountry());
-    Assert.assertTrue(response.getCity());
+    Assert.assertEquals("self", response.getEmail());
+    Assert.assertEquals("household", response.getFamilyName());
+    Assert.assertEquals("household", response.getPostalCode());
+    Assert.assertEquals("household", response.getCountry());
+    Assert.assertEquals("household", response.getCity());
   }
 
   @Test
