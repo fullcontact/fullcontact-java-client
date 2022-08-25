@@ -1,6 +1,5 @@
 package com.fullcontact.apilib.enrich;
 
-import javax.net.ssl.SSLSession;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
@@ -12,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
 import java.util.zip.GZIPOutputStream;
+import javax.net.ssl.SSLSession;
 
 public class HttpResponseTestObjects {
 

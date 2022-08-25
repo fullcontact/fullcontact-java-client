@@ -5,13 +5,12 @@ import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
 import com.fullcontact.apilib.models.Request.PersonRequest;
 import com.fullcontact.apilib.models.Response.PersonResponse;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class PersonResponseTest {
   private static HashMap<String, String> customHeader = new HashMap<>();

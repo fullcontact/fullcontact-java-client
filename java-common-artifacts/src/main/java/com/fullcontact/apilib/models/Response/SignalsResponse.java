@@ -1,8 +1,7 @@
 package com.fullcontact.apilib.models.Response;
 
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Getter
 @ToString

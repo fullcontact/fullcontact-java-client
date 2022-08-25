@@ -2,12 +2,11 @@ package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.models.Request.CompanyRequest;
 import com.google.gson.Gson;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class CompanyRequestBuildTest {
   private static final Gson gson = new Gson();

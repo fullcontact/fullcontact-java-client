@@ -13,14 +13,6 @@ import com.fullcontact.apilib.retry.RetryHandler;
 import com.fullcontact.apilib.test.MockInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import lombok.Builder;
-import lombok.SneakyThrows;
-import okhttp3.*;
-import okhttp3.logging.HttpLoggingInterceptor;
-import okio.Buffer;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,6 +22,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import lombok.Builder;
+import lombok.SneakyThrows;
+import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * The FullContact class represents FullContact client. It supports V3 Person Enrich, Company Enrich

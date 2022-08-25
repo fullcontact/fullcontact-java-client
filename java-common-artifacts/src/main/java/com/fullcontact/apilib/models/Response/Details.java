@@ -2,12 +2,11 @@ package com.fullcontact.apilib.models.Response;
 
 import com.fullcontact.apilib.models.Location;
 import com.fullcontact.apilib.models.PersonName;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

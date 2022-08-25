@@ -1,5 +1,6 @@
 package com.fullcontact.apilib;
 
+import java.util.concurrent.CompletableFuture;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -7,8 +8,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Defines all the Retrofit endpoints for the FullContact API. All requests are HTTP POST type with

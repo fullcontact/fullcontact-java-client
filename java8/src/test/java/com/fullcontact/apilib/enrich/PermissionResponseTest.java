@@ -8,13 +8,12 @@ import com.fullcontact.apilib.models.Request.MultifieldRequest;
 import com.fullcontact.apilib.models.Response.ConsentPurposeResponse;
 import com.fullcontact.apilib.models.Response.PermissionCurrentResponseMap;
 import com.fullcontact.apilib.models.Response.PermissionResponseList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class PermissionResponseTest {
   private static HashMap<String, String> customHeader = new HashMap<>();

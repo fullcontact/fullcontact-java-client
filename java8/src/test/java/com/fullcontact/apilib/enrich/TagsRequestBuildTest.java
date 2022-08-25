@@ -4,16 +4,15 @@ import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Request.TagsRequest;
 import com.fullcontact.apilib.models.Tag;
 import com.google.gson.Gson;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class TagsRequestBuildTest {
   private static final Gson gson = new Gson();

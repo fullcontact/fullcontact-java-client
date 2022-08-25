@@ -5,13 +5,12 @@ import com.fullcontact.apilib.auth.CredentialsProvider;
 import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
 import com.fullcontact.apilib.models.Request.CompanyRequest;
 import com.fullcontact.apilib.models.Response.CompanyResponse;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class CompanyEnrichResponse {
   private static HashMap<String, String> customHeader = new HashMap<>();

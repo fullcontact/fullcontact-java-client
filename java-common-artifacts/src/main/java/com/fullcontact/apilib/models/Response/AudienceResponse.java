@@ -1,10 +1,9 @@
 package com.fullcontact.apilib.models.Response;
 
-import lombok.*;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import lombok.*;
 
 @Getter
 @ToString

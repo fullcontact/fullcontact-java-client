@@ -1,12 +1,11 @@
 package com.fullcontact.apilib.models.Request;
 
 import com.fullcontact.apilib.models.enums.Confidence;
+import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 /** Class to create request for Person Enrich */
 @Getter
