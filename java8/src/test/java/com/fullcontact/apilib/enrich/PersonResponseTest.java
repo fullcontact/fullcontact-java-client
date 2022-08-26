@@ -62,90 +62,12 @@ public class PersonResponseTest {
     Assert.assertEquals("35-44", response.getDetails().get().getAge().getRange());
     Assert.assertEquals(42, (int) response.getDetails().get().getAge().getValue());
     Assert.assertEquals("Female", response.getDetails().get().getGender());
-    Assert.assertEquals(2, response.getFamilyInfo().get().getTotalAdults());
-    Assert.assertEquals(1, response.getFamilyInfo().get().getTotalChildren());
-    Assert.assertEquals(3, response.getFamilyInfo().get().getTotalPeopleInHousehold());
     Assert.assertEquals(
         "Multi Family Dwelling/Apartment", response.getHomeInfo().get().getDwellingType());
-    Assert.assertEquals(513, response.getHomeInfo().get().getHomeValueEstimate());
-    Assert.assertEquals(4, response.getHomeInfo().get().getLoanToValueEstimate());
-    Assert.assertTrue(response.getLocationInfo().get().isSeasonalAddress());
     Assert.assertEquals("PO Box", response.getLocationInfo().get().getCarrierRoute());
-    Assert.assertEquals("807", response.getLocationInfo().get().getDesignatedMarketArea());
     Assert.assertEquals(
         "41860 - San Francisco-Oakland-Hayward, CA Metropolitan Statistical Area",
         response.getLocationInfo().get().getCoreBasedStatisticalArea());
-    Assert.assertEquals("AT_LARGE", response.getLocationInfo().get().getCongressionalDistrict());
-    Assert.assertEquals(222, response.getLocationInfo().get().getNumericCountyCode());
-    Assert.assertEquals(
-        "PRESENT", response.getHouseHoldPresence().get().getMultigenerationalResident());
-    Assert.assertEquals("PRESENT", response.getHouseHoldPresence().get().getChildren());
-    Assert.assertEquals(
-        45,
-        response.getDetails().get().getHousehold().getFinance().getDiscretionaryIncomeEstimate());
-    Assert.assertEquals(
-        "$150,000 - $199,999",
-        response.getDetails().get().getHousehold().getFinance().getHouseholdIncomeEstimate());
-    Assert.assertEquals(
-        "$25,000 - $49,999",
-        response
-            .getDetails()
-            .get()
-            .getHousehold()
-            .getFinance()
-            .getCashValueBalanceHouseholdEstimate());
-    Assert.assertEquals("Probable Homeowner", response.getDemographics().get().getLivingStatus());
-    Assert.assertEquals(
-        "Professional - Engineer/Industrial", response.getDemographics().get().getOccupation());
-    Assert.assertEquals("Multiple Bank Card", response.getFinance().get().getBankCard());
-    Assert.assertEquals("Multiple Retail Card", response.getFinance().get().getRetailCard());
-    Assert.assertTrue(response.getFinance().get().isActiveLineOfCredit());
-    Assert.assertEquals(145, response.getDetails().get().getCensus().getBasicTractNumber());
-    Assert.assertEquals(2, response.getDetails().get().getCensus().getBasicBlockGroup());
-    Assert.assertEquals(
-        "High School Diploma",
-        response.getDetails().get().getCensus().getYear2010().getEducationLevel());
-    Assert.assertEquals(
-        90, response.getDetails().get().getCensus().getYear2010().getPercent().getHomeowner());
-    Assert.assertEquals(
-        35, response.getDetails().get().getCensus().getYear2010().getMedian().getHomeValue());
-    Assert.assertEquals(
-        17,
-        response
-            .getDetails()
-            .get()
-            .getCensus()
-            .getYear2010()
-            .getPopulationDensity()
-            .getCentileInUs());
-    Assert.assertEquals(
-        29, response.getDetails().get().getCensus().getYear2010().getSocioEconomicScore());
-    Assert.assertTrue(response.getBuyerCatalogPayment().get().isCreditCard());
-    Assert.assertTrue(response.getBuyerCatalogPayment().get().isHouseCharge());
-    Assert.assertTrue(response.getBuyerCatalogPayment().get().isMasterCard());
-    Assert.assertTrue(response.getBuyerCatalogApparel().get().isChildren());
-    Assert.assertTrue(response.getBuyerCatalogApparel().get().isMen());
-    Assert.assertTrue(response.getDetails().get().getBuyer().getCatalog().isBeauty());
-    Assert.assertTrue(response.getDetails().get().getBuyer().getCatalog().isVideoEntertainment());
-    Assert.assertTrue(response.getDetails().get().getBuyer().getRetail().isBeauty());
-    Assert.assertTrue(response.getBuyerRetailApparel().get().isChildren());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getOwn().isOwnDigitalCamera());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getCollectibles().isCoins());
-    Assert.assertTrue(
-        response.getDetails().get().getSurvey().getCreditCards().getPremium().isAmex());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getCreditCards().isDebit());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getDietConcerns().isHealthy());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getHobby().isCigarSmoking());
-    Assert.assertTrue(
-        response.getDetails().get().getSurvey().getHobby().getGardening().isFlowers());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getHobby().isSpirituality());
-    Assert.assertTrue(response.getDetails().get().getSurvey().isInvestments());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getMusic().isClassical());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getReading().isHistory());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getSporting().isFitness());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getTravel().isCasinoVacations());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getElectronics().isHomeTheater());
-    Assert.assertTrue(response.getDetails().get().getSurvey().getPurchase().isUsesCoupons());
     Assert.assertEquals(
         "marqross91", response.getDetails().get().getProfiles().getTwitter().getUsername());
     Assert.assertEquals(
@@ -166,9 +88,6 @@ public class PersonResponseTest {
         response.getDetails().get().getEducation().get(0).getName());
     Assert.assertEquals(
         "http://marquitaas8.com/", response.getDetails().get().getUrls().get(0).getValue());
-    Assert.assertEquals("9", response.getExtended().get("key_1"));
-    Assert.assertEquals("Q", response.getExtended().get("key_3"));
-    Assert.assertEquals("11", response.getExtended().get("key_5"));
   }
 
   @Test
