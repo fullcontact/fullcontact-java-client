@@ -14,4 +14,5 @@ public class Household {
   private Finance finance;
   private LocationInfo locationInfo;
   private FamilyInfo familyInfo;
+  private ChildrenInfo childrenInfo;
 }

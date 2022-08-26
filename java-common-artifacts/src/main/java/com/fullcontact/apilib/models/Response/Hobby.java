@@ -9,34 +9,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Hobby {
-  private Gardening gardening;
-  private boolean general,
-      baking,
-      birdWatching,
-      cars,
-      cigarSmoking,
-      gourmetCooking,
-      cooking,
-      crafts,
-      casinoGambling,
-      homeImprovement,
-      homeStudyCourses,
-      knitting,
-      lotteries,
-      quilting,
-      selfImprovementCourses,
-      sewing,
-      theater,
-      woodworking,
-      wineAppreciation,
-      photography,
-      exercise3xPerWeek,
-      scrapBooking,
-      lowFatCooking,
-      careerAdvancementCourses,
-      jewelryMaking,
-      diy,
-      green,
-      socialNetworking,
-      spirituality;
+  private String baking;
+  private String cigarSmoking;
+  private String cooking;
+  private String crafts;
+  private String gardening;
+  private String homeStudyCourses;
+  private String quilting;
+  private String selfImprovementCourses;
+  private String woodworking;
+  private String photography;
+  private String careerAdvancementCourses;
+
+  private String any;
+  private String automotiveWork;
+  private String birdFeedingOrWatching;
+  private String culturalArtsOrEvents;
+  private String gourmetFoods;
+  private String homeImprovementOrDIY;
+  private String motorcycleRiding;
+  private String scrapbooking;
+  private String sewingOrNeedleworkOrKnitting;
+  private String wine;
 }

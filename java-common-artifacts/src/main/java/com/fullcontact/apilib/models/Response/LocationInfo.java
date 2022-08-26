@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class LocationInfo {
-  private String carrierRoute,
-      designatedMarketArea,
-      coreBasedStatisticalArea,
-      nielsenCountySize,
-      congressionalDistrict;
-  private int numericCountyCode;
-  private boolean seasonalAddress;
+  private String carrierRoute;
+  private String coreBasedStatisticalArea;
+  private String nielsenCountySize;
+  private String blockGroupNumber;
+  private String censusTractSuffix;
+  private String countyCode;
+  private String dsfSeasonCode;
+  private String nielsenCountySizeCode;
 }

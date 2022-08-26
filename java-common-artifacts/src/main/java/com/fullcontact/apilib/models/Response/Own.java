@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Own {
-  private boolean ownCat,
-      ownDog,
-      ownDigitalCamera,
-      ownHorse,
-      ownMotorcycle,
-      ownSwimmingPool,
-      ownAtv,
-      ownRv;
+  private String smartPhone;
+  private String cat;
+  private String dog;
+  private String pets;
 }

@@ -2,7 +2,6 @@ package com.fullcontact.apilib.models.Response;
 
 import com.fullcontact.apilib.models.Location;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.*;
 
@@ -25,7 +24,6 @@ public class PersonResponse extends FCResponse {
       avatar,
       website;
   private Details details;
-  private Map<String, String> extended;
 
   public Optional<Details> getDetails() {
     return Optional.ofNullable(this.details);
@@ -37,10 +35,6 @@ public class PersonResponse extends FCResponse {
 
   public Optional<Date> getBirthday() {
     return this.getDetails().map(Details::getAge).map(Age::getBirthday);
-  }
-
-  public Optional<Finance> getFinance() {
-    return this.getDetails().map(Details::getFinance);
   }
 
   public Optional<LocationInfo> getLocationInfo() {
@@ -85,42 +79,6 @@ public class PersonResponse extends FCResponse {
 
   public Optional<List<Interest>> getInterestList() {
     return this.getDetails().map(Details::getInterests);
-  }
-
-  public Optional<PurchaseBehavior> getBuyerCatalog() {
-    return this.getDetails().map(Details::getBuyer).map(Buyer::getCatalog);
-  }
-
-  public Optional<PurchaseBehavior> getBuyerRetail() {
-    return this.getDetails().map(Details::getBuyer).map(Buyer::getRetail);
-  }
-
-  public Optional<Apparel> getBuyerCatalogApparel() {
-    return this.getDetails()
-        .map(Details::getBuyer)
-        .map(Buyer::getCatalog)
-        .map(PurchaseBehavior::getApparel);
-  }
-
-  public Optional<Apparel> getBuyerRetailApparel() {
-    return this.getDetails()
-        .map(Details::getBuyer)
-        .map(Buyer::getRetail)
-        .map(PurchaseBehavior::getApparel);
-  }
-
-  public Optional<Payment> getBuyerCatalogPayment() {
-    return this.getDetails()
-        .map(Details::getBuyer)
-        .map(Buyer::getCatalog)
-        .map(PurchaseBehavior::getPayment);
-  }
-
-  public Optional<Payment> getBuyerRetailPayment() {
-    return this.getDetails()
-        .map(Details::getBuyer)
-        .map(Buyer::getRetail)
-        .map(PurchaseBehavior::getPayment);
   }
 
   public Optional<Presence> getHouseHoldPresence() {

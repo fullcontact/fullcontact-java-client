@@ -9,5 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Collectibles {
-  boolean general, coins, dolls, figurines, other, plates, sportsMemorabilia, stamps, fineArts;
+  private String dolls;
+  private String figurines;
+  private String any;
+  private String artAntique;
+  private String clubContinuity;
 }

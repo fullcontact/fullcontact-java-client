@@ -9,6 +9,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class HomeInfo {
-  private int homeValueEstimate, loanToValueEstimate, yearsInHome;
   private String dwellingType;
+  private String dwellingTypeIndicator;
+  private String householdEducation;
+  private String householdEducationIndicator;
+  private String maritalStatus;
+  private String lengthOfResidence;
+  private String lengthOfResidenceIndicator;
+  private String affluents;
+  private String currentLoanToValue;
+  private String homeHeatSource;
+  private String householdOccupation;
+  private String familyComposition;
+  private String homeMarketValue;
+  private String ownerToOwner;
+  private String rentertoOwner;
+  private String yearHomeBuilt;
 }

@@ -9,35 +9,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Reading {
-  private boolean likesToRead,
-      astrology,
-      bibleOrDevotional,
-      bestSellingFiction,
-      audiobooks,
-      childrens,
-      cooking,
-      computer,
-      countryLifestyle,
-      fashion,
-      history,
-      interiorDecorating,
-      health,
-      military,
-      mystery,
-      naturalHealthRemedies,
-      entertainment,
-      romance,
-      scienceFiction,
-      technology,
-      sports,
-      worldNewsOrPolitics,
-      suspense,
-      bestSellers,
-      bookClub,
-      comics,
-      financial,
-      homeAndGarden,
-      selfImprovement,
-      travel,
-      magazines;
+  private String bibleOrDevotional;
+  private String bestSellingFiction;
+  private String childrens;
+  private String fashion;
+  private String military;
+  private String entertainment;
+  private String romance;
+  private String sports;
+  private String books;
+  private String cookingOrCulinary;
+  private String countryOrLifestyle;
+  private String interior;
+  private String medicalOrHealth;
+  private String worldNews;
 }

@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class DietConcerns {
-  private boolean general, loseWeight, eatNatural, vitaminSupplements, healthy;
+  private String naturalFoods;
+  private String diet;
+  private String weightControl;
 }
