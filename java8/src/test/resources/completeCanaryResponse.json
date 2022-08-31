@@ -1,13 +1,12 @@
 {
   "fullName": "Marquita H Ross",
-  "ageRange": "37-47",
+  "ageRange": "40-49",
   "gender": "Female",
   "location": "San Francisco, California, United States",
   "title": "Senior Petroleum Manager",
   "organization": "Mostow Co.",
   "twitter": "https://twitter.com/marqross91",
   "linkedin": "https://www.linkedin.com/in/marquita-ross-5b6b72192",
-  "facebook": null,
   "bio": "Senior Petroleum Manager at Mostow Co.",
   "avatar": "https://img.fullcontact.com/sandbox/1gagrO2K67_oc5DLG_siVCpYVE5UvCu2Z.png",
   "website": "http://marquitaas8.com/",
@@ -18,247 +17,272 @@
       "full": "Marquita H Ross"
     },
     "age": {
-      "range": "35-44",
+      "range": "40-49",
       "value": 42
     },
     "gender": "Female",
     "household": {
       "familyInfo": {
-        "totalAdults": 2,
-        "totalChildren": 1,
-        "totalPeopleInHousehold": 3
+        "householdSize": "4",
+        "numberOfAdults": "3",
+        "numberOfChildren": "3",
+        "lifeCycles": {
+          "babyBoomers": "Y",
+          "dualIncomeNoKids": "Y",
+          "generationX": "Y",
+          "millenialsButFirstLetMeTakeASelfie": "Y",
+          "millenialsGettinHitched": "Y",
+          "millenialsIAmAnAdult": "Y",
+          "millenialsLivesWithMom": "Y",
+          "millenialsMomLife": "Y",
+          "millenialsPuttingDownRoots": "Y"
+        }
       },
       "homeInfo": {
-        "dwellingType": "Multi Family Dwelling/Apartment",
-        "homeValueEstimate": 513,
-        "loanToValueEstimate": 4
+        "dwellingType": "MFDU",
+        "dwellingTypeIndicator": "S",
+        "householdEducation": "Unknown",
+        "householdEducationIndicator": "H",
+        "maritalStatus": "Both married and single",
+        "lengthOfResidence": "1-2 yrs",
+        "lengthOfResidenceIndicator": "S",
+        "affluents": "Gold",
+        "currentLoanToValue": "82",
+        "householdOccupation": "Business Owner",
+        "familyComposition": "1",
+        "homeMarketValue": "0253S",
+        "ownerToOwner": "Highly Likely",
+        "rentertoOwner": "Highly Likely",
+        "yearHomeBuilt": "1988"
       },
       "locationInfo": {
-        "seasonalAddress": true,
-        "carrierRoute": "PO Box",
-        "designatedMarketArea": "807",
-        "coreBasedStatisticalArea": "41860 - San Francisco-Oakland-Hayward, CA Metropolitan Statistical Area",
-        "nielsenCountySize": "B - All counties in the next largest set of metropolitan areas which together account for 30% of U.S. households according to the 2000 Census. No non-metropolitan counties qualify as A or B counties.",
-        "congressionalDistrict": "AT_LARGE",
-        "numericCountyCode": 222
+        "nielsenCountySize": "All counties in the largest metropolitan areas which together account for 40% of U.S. households according to the 2010 census.",
+        "carrierRoute": "C032",
+        "coreBasedStatisticalArea": "24660",
+        "blockGroupNumber": "8",
+        "censusTractSuffix": "5",
+        "countyCode": "81",
+        "dsfSeasonCode": "B"
       },
       "presence": {
-        "multigenerationalResident": "PRESENT",
-        "children": "PRESENT"
+        "presenceOfChildren": "Y",
+        "presenceOfChildrenIndicator": "H",
+        "adult": {
+          "age18to24": "Male",
+          "age25to34": "Female",
+          "age35to44": "Male",
+          "age45to54": "Female",
+          "age55to64": "Male",
+          "age65to74": "Male",
+          "age75above": "Female"
+        },
+        "child": {
+          "age0to2": "Male",
+          "age11to15": "Male",
+          "age16to17": "Female",
+          "age3to5": "Female",
+          "age6to10": "Female"
+        }
       },
       "finance": {
-        "discretionaryIncomeEstimate": 45,
-        "financialDebtRangeEstimate": "$0",
-        "householdIncomeEstimate": "$150,000 - $199,999",
-        "netWorthRange": "$50,000 - $74,999",
-        "cashValueBalanceHouseholdEstimate": "$25,000 - $49,999"
+        "income": "$20,000 - $29,999",
+        "incomeIndicator": "H",
+        "narrowBandIncome": "$25,000 - $29,999",
+        "discretionarySpendingIncome": "$55,000 - $64,999",
+        "firstMortgageAmountInThousands": "383",
+        "homeEquityLoanDate": "201107",
+        "homeMarketValueTaxRecord": "150",
+        "homeEquityLoanInThousands": "539",
+        "homeEquityLoanIndicator": "1",
+        "investmentResources": "$15,000 - $24,999",
+        "liquidResources": "$100,000 or more",
+        "mortgageInterestRateTypeOrRefinance": "Fixed Rate Loan",
+        "mortgageLiability": "372",
+        "mortgageLoanTypeOrRefinance": "Conventional",
+        "mortgageDate": "200308",
+        "refinanceIndicator": "1",
+        "secondMortgageAmountInThousands": "120",
+        "shortTermLiability": "0",
+        "incomeIndex": "59",
+        "netWorth": "Under $25,000",
+        "wealthResources": "Less than $25,000",
+        "paymentMethodCreditCard": "Y"
+      },
+      "childrenInfo": {
+        "gender": {
+          "firstChild": "Unknown Gender",
+          "secondChild": "Male",
+          "thirdChild": "Male",
+          "fourthChild": "Female"
+        },
+        "birthDate": {
+          "firstChild": "201503",
+          "secondChild": "201703",
+          "thirdChild": "201803",
+          "fourthChild": "201903"
+        }
       }
     },
     "demographics": {
       "gender": "Female",
       "age": {
-        "range": "35-44",
+        "range": "40-49",
         "value": 42
       },
-      "livingStatus": "Probable Homeowner",
-      "maritalStatus": "MARRIED",
-      "occupation": "Professional - Engineer/Industrial"
+      "consumers": {
+        "valueScore": "Best Profit Margin"
+      },
+      "homeInfo": {
+        "homeOwner": "Unknown",
+        "homeOwnerIndicator": "S"
+      },
+      "enthusiasts": {
+        "niches": "Already Affluent"
+      },
+      "maritalInfo": {
+        "maritalStatus": "Married",
+        "maritalStatusIndicator": "S"
+      }
     },
-    "survey": {
+    "surveys": {
       "own": {
-        "ownDigitalCamera": true,
-        "ownDog": true,
-        "ownSwimmingPool": true,
-        "ownRv": true
+        "smartPhone": "Y",
+        "cat": "Y",
+        "dog": "Y",
+        "pets": "Y"
       },
       "collectibles": {
-        "general": true,
-        "coins": true,
-        "stamps": true
-      },
-      "creditCards": {
-        "premium": {
-          "amex": true,
-          "store": true,
-          "visaOrMasterCard": true
-        },
-        "regular": {
-          "amex": true,
-          "other": true,
-          "visaOrMasterCard": true
-        },
-        "debit": true
+        "figurines": "Y",
+        "any": "Y",
+        "artAntique": "Y"
       },
       "dietConcerns": {
-        "general": true,
-        "loseWeight": true,
-        "vitaminSupplements": true,
-        "healthy": true
+        "naturalFoods": "Y"
       },
       "hobby": {
-        "general": true,
-        "baking": true,
-        "cigarSmoking": true,
-        "gourmetCooking": true,
-        "cooking": true,
-        "gardening": {
-          "general": true,
-          "flowers": true
-        },
-        "homeImprovement": true,
-        "exercise3xPerWeek": true,
-        "lowFatCooking": true,
-        "diy": true,
-        "spirituality": true
+        "baking": "Y",
+        "cooking": "Y",
+        "gardening": "Y",
+        "woodworking": "Y",
+        "careerAdvancementCourses": "Y",
+        "any": "Y",
+        "gourmetFoods": "Y",
+        "homeImprovementOrDIY": "Y",
+        "motorcycleRiding": "Y"
       },
-      "onlinePurchaser": true,
-      "investments": true,
+      "investments": {
+        "juvenileLifeInsurance": "Y",
+        "burialInsurance": "Y",
+        "insurance": "Y",
+        "investments": "Y",
+        "lifeInsurance": "Y",
+        "medicareCoverage": "Y",
+        "mutualFunds": "Y",
+        "stocksOrBonds": "Y"
+      },
       "music": {
-        "general": true,
-        "christianOrGospel": true,
-        "classical": true,
-        "other": true,
-        "rhythmAndBlues": true
+        "christianOrGospel": "Y",
+        "jazz": "Y",
+        "rythmAndBlues": "Y"
       },
       "reading": {
-        "likesToRead": true,
-        "bibleOrDevotional": true,
-        "bestSellingFiction": true,
-        "childrens": true,
-        "history": true,
-        "health": true,
-        "naturalHealthRemedies": true,
-        "entertainment": true,
-        "worldNewsOrPolitics": true,
-        "bestSellers": true,
-        "magazines": true
+        "bibleOrDevotional": "Y",
+        "childrens": "Y",
+        "fashion": "Y",
+        "entertainment": "Y",
+        "romance": "Y",
+        "sports": "Y",
+        "books": "Y",
+        "cookingOrCulinary": "Y",
+        "medicalOrHealth": "Y",
+        "worldNews": "Y"
       },
       "sporting": {
-        "fitness": true,
-        "walking": true,
-        "running": true
+        "campingOrHiking": "Y",
+        "nascar": "Y",
+        "cycling": "Y",
+        "bigGameHunting": "Y",
+        "huntingOrShooting": "Y",
+        "sportsMerchandiseOrActivewearRecency": "7 - 12 months",
+        "sportsParticipation": "Y",
+        "walkingForHealth": "Y",
+        "yogaOrPilates": "Y"
       },
       "travel": {
-        "general": true,
-        "usBusiness": true,
-        "casinoVacations": true,
-        "frequentFlyer": true
-      },
-      "religious": true,
-      "electronics": {
-        "appleDevice": true,
-        "cableTv": true,
-        "highSpeedInternet": true,
-        "dvdPlayer": true,
-        "hdtv": true,
-        "homeTheater": true,
-        "other": true
+        "business": "Y",
+        "international": "Y",
+        "rvVacations": "Y",
+        "travelInTheUSA": "Y",
+        "traveler": "Y"
       },
       "purchase": {
-        "homeDecorating": true,
-        "beautyProducts": true,
-        "clubStores": true,
-        "usesCoupons": true
-      }
-    },
-    "finance": {
-      "bankCard": "Multiple Bank Card",
-      "activeLineOfCredit": true,
-      "retailCard": "Multiple Retail Card"
-    },
-    "census": {
-      "basicTractNumber": 145,
-      "basicBlockGroup": 2,
-      "year2010": {
-        "educationLevel": "High School Diploma",
-        "average": {
-          "numberOfCarsInHousehold": 2.3000000000000003
-        },
-        "percent": {
-          "abovePovertyLevel": 74,
-          "belowPovertyLevel": 28,
-          "black": 17,
-          "blueCollarEmployed": 35,
-          "divorcedOrSeparated": 14,
-          "hispanic": 43,
-          "homesBuiltSince2000": 52,
-          "homeowner": 90,
-          "householdsWithChildren": 38,
-          "married": 36,
-          "mobileHome": 45,
-          "movedToAreaSince2000": 21,
-          "salariedProfessional": 35,
-          "singleFamilyHome": 43,
-          "vehicleOwnership": 84,
-          "white": 35
-        },
-        "median": {
-          "ageOfHouseholder": 23,
-          "effectiveBuyingIncome": 18,
-          "homeValue": 35,
-          "householdIncome": 18,
-          "householdIncomeByState": 69
-        },
-        "populationDensity": {
-          "centileInState": 67,
-          "centileInUs": 17
-        },
-        "socioEconomicScore": 29
-      }
-    },
-    "buyer": {
-      "catalog": {
-        "payment": {
-          "amx": true,
-          "creditCard": true,
-          "houseCharge": true,
-          "masterCard": true,
-          "retailCard": true,
-          "visa": true
-        },
-        "apparel": {
-          "general": true,
-          "children": true,
-          "men": true,
-          "mensBigTall": true,
-          "nonGenderSpecific": true,
-          "womenPetiteSize": true,
-          "womenPlusSize": true
-        },
-        "beauty": true,
-        "books": true,
-        "childrenProducts": true,
-        "electronics": true,
-        "furniture": true,
-        "health": true,
-        "jewelry": true,
-        "music": true,
-        "stationery": true,
-        "travel": true,
-        "videoEntertainment": true
+        "artsCraftsRecency": "0 - 6 months",
+        "beautyAndSpaRecency": "0 - 6 months",
+        "beveragesRecency": "7 - 12 months",
+        "booksRecency": "0 - 6 months",
+        "clubContinuity": "Y",
+        "gardenAndBackyardRecency": "13 - 18 months",
+        "homeDecorRecency": "7 - 12 months",
+        "sweepstakes": "Y",
+        "maleApparelRecency": "7 - 12 months",
+        "musicVideosRecency": "13 - 18 months",
+        "specialtyFoodsAndGiftsRecency": "7 - 12 months",
+        "sportsAndOutdoorRecency": "0 - 6 months",
+        "toolsAndElectronicsRecency": "7 - 12 months",
+        "femaleAndMaleRecency": "7 - 12 months",
+        "femaleBrandAndFitRecency": "0 - 6 months"
       },
-      "retail": {
-        "apparel": {
-          "general": true,
-          "children": true,
-          "women": true
-        },
-        "beauty": true,
-        "books": true,
-        "childrenProducts": true,
-        "collectibles": true,
-        "foodBeverages": true,
-        "gift": true,
-        "health": true,
-        "homeFurnishings": true,
-        "jewelry": true,
-        "music": true,
-        "stationery": true,
-        "travel": true
+      "donor": {
+        "activeMilitary": "Y",
+        "animalWelfare": "Y",
+        "artsOrCultural": "Y",
+        "cancer": "Y",
+        "catholic": "Y",
+        "childrens": "Y",
+        "charitable": "Y",
+        "humanitarian": "Y",
+        "nativeAmerican": "Y",
+        "politicalConservative": "Y",
+        "politicalLiberal": "Y",
+        "veteran": "Y",
+        "worldRelief": "Y"
+      },
+      "mailOrder": {
+        "any": "Y",
+        "books": "Y",
+        "buyer": "Y",
+        "food": "Y",
+        "healthOrBeautyProducts": "Y",
+        "homeFurnishing": "Y",
+        "jewelry": "Y",
+        "magazines": "Y",
+        "videosOrDVD": "Y",
+        "womensPlusApparel": "Y"
+      },
+      "other": {
+        "grandchildren": "Y",
+        "militaryVeteran": "Y",
+        "swimmingPool": "Y"
+      },
+      "social": {
+        "facebookUser": "Y",
+        "instagramUser": "Y",
+        "pinterestUser": "Y",
+        "twitterUser": "Y"
       }
     },
-    "emails": [],
-    "phones": [],
+    "emails": [
+      {
+        "label": "Work",
+        "md5": "e553346f9a9e8dbe56493a581706f318"
+      }
+    ],
+    "phones": [
+      {
+        "label": "work",
+        "value": "+13305336017"
+      }
+    ],
     "profiles": {
       "twitter": {
         "username": "marqross91",
@@ -321,7 +345,372 @@
         "value": "http://marquitaas8.com/"
       }
     ],
-    "interests": []
+    "interests": [],
+    "identifiers": {
+      "personIds": [
+        "L0yG2Mp8Z4TVHxJK92GAxjWsTX6lrSfMBsQKvRsy5NzKnTm6"
+      ]
+    },
+    "triggers": {
+      "type": {
+        "collegeGraduate": "Y",
+        "emptyNester": "N",
+        "homeMarketValue": "D",
+        "income": "D",
+        "newAdultToFile": "N",
+        "newFirstChild0to2YearsOld": "N",
+        "newPreDriver": "N",
+        "newYoungAdultToFile": "N",
+        "nicheSwitch": "Niche A",
+        "valueScore": "D"
+      },
+      "date": {
+        "collegeGraduateChange": "200802",
+        "emptyNesterChange": "199804",
+        "firstChildChange": "200103",
+        "homeMarketValueChange": "200902",
+        "incomeChange": "200902",
+        "newAdultChange": "200503",
+        "newDriverChange": "201602",
+        "newYoungAdultToChange": "202008",
+        "nicheSwitch": "200212",
+        "valueScoreChange": "201308"
+      }
+    },
+    "marketTrends": {
+      "switchers": {
+        "alcoholBeverage": "Likely",
+        "beerBrand": "Highly Likely",
+        "breakfastMeatBrand": "Unlikely",
+        "chocolateCandyBrand": "Likely",
+        "cocaColaBrand": "Unlikely",
+        "coldCerealBrand": "Likely",
+        "energyDrink": "Likely",
+        "frozenFoodBrand": "Highly Likely",
+        "householdCleaningProductsBrand": "Highly Likely",
+        "insurance": "Highly Likely",
+        "job": "Unlikely",
+        "naturalCheeseSlicesBrand": "Highly Likely",
+        "naturalShreddedCheeseBrand": "Unlikely",
+        "nutritionalHealthBarBrand": "Highly Likely",
+        "refrigeratedLunchMeatBrand": "Likely",
+        "snackBarGranolaBarBrand": "Likely",
+        "softDrinksBrand": "Unlikely",
+        "spiritsBrand": "Unlikely",
+        "yogurtBrand": "Highly Likely"
+      },
+      "seekers": {
+        "freshFood": "Unlikely",
+        "homeCleaningNewProduct": "Likely",
+        "laundryNewProduct": "Unlikely",
+        "onlineDegreeEducation": "Likely",
+        "personalCareNewProduct": "Likely",
+        "premiumNaturalHomeCleaners": "Highly Likely",
+        "scent": "Unlikely",
+        "unscentedProduct": "Highly Likely"
+      },
+      "enthusiasts": {
+        "artHouseMovie": "Unlikely",
+        "baseball": "Highly Likely",
+        "basketball": "Likely",
+        "brandLoyalists": "Highly Likely",
+        "carryOut": "Likely",
+        "casualDining": "Likely",
+        "christianorGospelMusic": "Likely",
+        "cigarPipe": "Likely",
+        "convenienceHomeCleaners": "Highly Likely",
+        "countryMusic": "Likely",
+        "discountMovie": "Unlikely",
+        "domesticBeer": "Likely",
+        "extremeFitness": "Likely",
+        "fantasySports": "Likely",
+        "football": "Likely",
+        "freeStreaming": "Highly Likely",
+        "frequentMovie": "Likely",
+        "gamingnonMobileDevices": "Highly Likely",
+        "hardCider": "Unlikely",
+        "hardSeltzer": "Highly Likely",
+        "hockey": "Highly Likely",
+        "homeShoppingNetwork": "Highly Likely",
+        "importBeer": "Highly Likely",
+        "kroger": "Unlikely",
+        "latinMusic": "Highly Likely",
+        "liquor": "Unlikely",
+        "mobileGaming": "Highly Likely",
+        "openingWeekendMovie": "Likely",
+        "paidStreaming": "Likely",
+        "petsAreFamily": "Highly Likely",
+        "quickServiceRestaurant": "Highly Likely",
+        "redWine": "Unlikely",
+        "soccer": "Highly Likely",
+        "target": "Likely",
+        "valueChains": "Highly Likely",
+        "walmart": "Highly Likely",
+        "whiteWine": "Highly Likely",
+        "yogaPilates": "Likely"
+      },
+      "attendees": {
+        "amusementPark": "Highly Likely",
+        "culturalArtsEvents": "Unlikely",
+        "liveMusicConcert": "Unlikely",
+        "professionalSportsEvents": "Highly Likely"
+      },
+      "buyers": {
+        "autoInsuranceSelfServeOnline": "Highly Likely",
+        "christmasOrnamentsCollectibles": "Unlikely",
+        "heavyFiberFocusedFood": "Likely",
+        "heavyGlutenFreeFood": "Unlikely",
+        "heavyLowFatFood": "Highly Likely",
+        "onlineHomeCleaningProduct": "Likely",
+        "onlineInsurance": "Likely",
+        "onlineLaundryProduct": "Highly Likely",
+        "onlinePersonalCareProduct": "Likely",
+        "onlinePetFood": "Unlikely"
+      },
+      "chef": {
+        "experimental": "Likely",
+        "master": "Highly Likely",
+        "realIngredient": "Highly Likely"
+      },
+      "customers": {
+        "amazonPrime": "Likely",
+        "annuity": "Unlikely",
+        "autoInsurancePremiumDiscountviaTelematicsCustomer": "Likely",
+        "certificatesofDeposit": "Unlikely",
+        "clicktoCartHomeDelivery": "Likely",
+        "clicktoCartPickUp": "Likely",
+        "communityBankCustomer": "Unlikely",
+        "convenience": "Highly Likely",
+        "deposit": "Highly Likely",
+        "directMediaPreference": "Highly Likely",
+        "financialAdvisor": "Unlikely",
+        "frequentATM": "Unlikely",
+        "groceryLoyaltyCard": "Likely",
+        "interestCheckingPreference": "Unlikely",
+        "internetResearchPreference": "Unlikely",
+        "lending": "Likely",
+        "loyalFinancialInstitution": "Unlikely",
+        "mensBigandTallApparel": "Unlikely",
+        "nationalBankCustomer": "Highly Likely",
+        "plantoPurchaseSmartHomeProducts": "Highly Likely",
+        "regionalBankCustomer": "Highly Likely",
+        "restaurantLoyaltyCard": "Likely",
+        "selfInsuredDental": "Unlikely",
+        "smartHome": "Unlikely",
+        "socialMediaPreference": "Unlikely",
+        "studentLoan": "Unlikely",
+        "subscriptionorAutoShipmentHouseholdProduct": "Likely",
+        "womensPlusSizeApparel": "Likely",
+        "qsrcash": "Likely"
+      },
+      "consumers": {
+        "airlineUpgraders": "Highly Likely",
+        "autoInsurance": "Likely",
+        "autoInsuranceAgentSold": "Unlikely",
+        "autoInsuranceCallCenterSold": "Likely",
+        "cableBundlecableinternethomephone": "Likely",
+        "casinoGamer": "Highly Likely",
+        "coinsCollector": "Likely",
+        "conservativeInvestmentStyle": "Likely",
+        "contactlessPayApplication": "Highly Likely",
+        "cordCutters": "Highly Likely",
+        "creditCardAttritionHouseholds": "Likely",
+        "creditCardRevolvers": "Unlikely",
+        "creditUnionMember": "Likely",
+        "dietConsciousHouseholds": "Likely",
+        "doitYourselfer": "Highly Likely",
+        "employerProvidedHealthInsurancePolicyHolders": "Highly Likely",
+        "frequentOnlineMovieViewers": "Highly Likely",
+        "freshFoodDelivery": "Likely",
+        "futureInvestors": "Likely",
+        "gamers": "Unlikely",
+        "gigEconomyEmployees": "Likely",
+        "groceryStoreFrequenters": "Highly Likely",
+        "homeEntertainers": "Likely",
+        "homeRemodelers": "Unlikely",
+        "intheMarkettoGetaHomeLoan": "Likely",
+        "intheMarkettoPurchaseaHome": "Likely",
+        "intendtoPurchaseaSamsungmobiledevice": "Highly Likely",
+        "intendtopurchase5GService": "Likely",
+        "investmentTrustBankingPreference": "Highly Likely",
+        "likelyMortgageRefinancers": "Unlikely",
+        "likelyPlannedGivers": "Unlikely",
+        "likelytoUseanInvestmentBroker": "Unlikely",
+        "likelytohaveaMortgage": "Highly Likely",
+        "longRoadTripTakers": "Likely",
+        "longTermCare": "Unlikely",
+        "lowInterestCreditCard": "Likely",
+        "lowSodium": "Likely",
+        "mealKitDelivery": "Highly Likely",
+        "medicaidPotentialQualifiedHousehold": "Likely",
+        "medicareDualEligibleHousehold": "Likely",
+        "medicarePlanDPrescriptionDrugHealth": "Unlikely",
+        "mobileBrowsers": "Likely",
+        "movieLoyaltyProgramMembers": "Likely",
+        "naturalGreenProductHomeCleaners": "Unlikely",
+        "non401kMutualFundInvestors": "Likely",
+        "non401kStocksBondsInvestors": "Unlikely",
+        "pandemicLuxurySpenders": "Likely",
+        "pandemicRiskTolerant": "Likely",
+        "paychecktoPaycheck": "Unlikely",
+        "personalTraveler": "Likely",
+        "plantoPurchaseHomeSecuritySystems": "Highly Likely",
+        "plantogetFitnessMembership": "Likely",
+        "rentersandAutoInsuranceJointPolicyHolders": "Unlikely",
+        "retailTexters": "Unlikely",
+        "retiredbutStillWorking": "Likely",
+        "satelliteBundlesatelliteinethomeorwireless": "Likely",
+        "selfPayHealthInsurance": "Likely",
+        "seniorCaregivers": "Highly Likely",
+        "seniorLivingSearchers": "Unlikely",
+        "sociallyInfluenced": "Highly Likely",
+        "termLife": "Highly Likely",
+        "underbanked": "Unlikely",
+        "uninsuredforHealth": "Highly Likely",
+        "upcomingRetirees65andOlder": "Likely",
+        "vegetarians": "Highly Likely",
+        "vehicleDIYrs": "Highly Likely",
+        "weeklyOnlineBankers": "Highly Likely",
+        "wellnessHouseholdsHealth": "Unlikely",
+        "wholeLife": "Likely",
+        "wiredLineVideoConnectors": "Unlikely",
+        "workforSmallCompanyOfferingHealthInsurance": "Unlikely"
+      },
+      "donor": {
+        "animalWelfare": "Highly Likely",
+        "cancer": "Highly Likely",
+        "childrensCauses": "Likely",
+        "consistentReligious": "Unlikely",
+        "environmental": "Unlikely",
+        "highDollarOtherCausesnonReligious": "Unlikely",
+        "highDollarReligiousCauses": "Likely",
+        "liberalCauses": "Likely",
+        "university": "Highly Likely",
+        "veteran": "Likely"
+      },
+      "owners": {
+        "_401k": "Unlikely",
+        "androidSmartPhone": "Highly Likely",
+        "appleSmartPhone": "Unlikely",
+        "boat": "Likely",
+        "educationSavingsPlan": "Likely",
+        "multiPolicyInsurance": "Unlikely",
+        "prepaidCard": "Likely",
+        "secondHome": "Highly Likely",
+        "smartTV": "Likely",
+        "tablet": "Highly Likely",
+        "timeshare": "Likely",
+        "veterinarianInfluencedPet": "Unlikely"
+      },
+      "travellers": {
+        "business": "Unlikely",
+        "rvtripTakers": "Highly Likely"
+      },
+      "readers": {
+        "avidBook": "Likely",
+        "bibleDevotional": "Highly Likely",
+        "book": "Highly Likely",
+        "entertainment": "Highly Likely",
+        "label": "Likely",
+        "retailerCircular": "Unlikely",
+        "romance": "Unlikely",
+        "sports": "Highly Likely"
+      },
+      "voters": {
+        "democratic": "Highly Likely",
+        "independent": "Unlikely",
+        "likely": "Highly Likely",
+        "republican": "Likely",
+        "swing": "Likely"
+      },
+      "subscribers": {
+        "cableTVPremium": "Unlikely",
+        "financialHealthNewsletter": "Highly Likely",
+        "onlineMagazineNewspaper": "Unlikely",
+        "retailerEmail": "Likely",
+        "satelliteRadio": "Unlikely"
+      },
+      "planners": {
+        "budgetMeal": "Highly Likely",
+        "meal": "Highly Likely",
+        "preShop": "Unlikely"
+      },
+      "purchasers": {
+        "autoLoan": "Highly Likely",
+        "brandDrivenHomeCleaners": "Likely",
+        "frequentMobile": "Likely",
+        "frequentOnlineMusic": "Unlikely",
+        "greenProduct": "Unlikely",
+        "impulse": "Highly Likely",
+        "medicareAdvantagePlan": "Unlikely",
+        "midmarketTermLifeInsurance": "Unlikely",
+        "midmarketWholeLifeInsurance": "Unlikely",
+        "newLuxuryVehicle": "Unlikely",
+        "newnonLuxuryVehicle": "Highly Likely",
+        "organicFood": "Likely",
+        "organicProduct": "Highly Likely",
+        "petInsurance": "Unlikely",
+        "vehicle": "Likely",
+        "webSurferBrickMortar": "Highly Likely",
+        "webandBrickMortarViewerOnline": "Likely",
+        "rv": "Unlikely",
+        "acahealthInsurance": "Likely"
+      },
+      "spenders": {
+        "pandemicDecreasedSpenders": "Unlikely",
+        "vacationSpenders": "Likely"
+      },
+      "shoppers": {
+        "bargainHotel": "Likely",
+        "bargain": "Highly Likely",
+        "everydayLowPrice": "Highly Likely",
+        "financialInstitution": "Likely",
+        "multiRetailer": "Unlikely",
+        "oneStop": "Likely",
+        "priceMatchers": "Highly Likely",
+        "privateLabel": "Likely",
+        "stockUp": "Unlikely",
+        "whatsOnSale": "Unlikely"
+      },
+      "stores": {
+        "stockUpAtWalmart": "Unlikely"
+      },
+      "users": {
+        "app": "Highly Likely",
+        "brandMotivatedLaundry": "Unlikely",
+        "brandMotivatedPersonalCareProduct": "Likely",
+        "brandedRetailCreditCard": "Highly Likely",
+        "convenienceDrivenPersonalCareProduct": "Unlikely",
+        "creditCardBalanceTransfer": "Highly Likely",
+        "debitCardRewards": "Unlikely",
+        "debitCard": "Likely",
+        "groceryStoreApp": "Likely",
+        "heavyCoupon": "Likely",
+        "mobileBanking": "Likely",
+        "mobileShoppingList": "Likely",
+        "naturalProductPersonalCareProduct": "Likely",
+        "onlineBroker": "Unlikely",
+        "onlineSavings": "Highly Likely",
+        "paperShoppingList": "Unlikely",
+        "premiumNaturalPersonalCareProduct": "Unlikely",
+        "priceMotivatedLaundryProduct": "Unlikely",
+        "priceMotivatedPersonalCareProduct": "Likely",
+        "publicTransportation": "Unlikely",
+        "restaurantApp": "Unlikely",
+        "restaurantLoyaltyApp": "Highly Likely",
+        "rewardsCardCashBack": "Unlikely",
+        "rewardsCardOther": "Highly Likely",
+        "sociallyActiveonFacebook": "Unlikely",
+        "sociallyActiveonFacebookBrandLikers": "Unlikely",
+        "sociallyActiveonFacebookCategoryRecommenders": "Highly Likely",
+        "sociallyActiveonPinterest": "Likely",
+        "sociallyActiveonTwitter": "Unlikely",
+        "targetCartwheel": "Likely",
+        "uberOrLyft": "Likely",
+        "vehicleServiceCenter": "Highly Likely",
+        "walmartSavingCatcher": "Likely"
+      }
+    }
   },
   "isSandboxProfile": true,
   "updated": "1970-01-01"

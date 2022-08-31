@@ -43,7 +43,7 @@ public class PersonResponseTest {
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
     Assert.assertEquals("Marquita H Ross", response.getFullName());
-    Assert.assertEquals("37-47", response.getAgeRange());
+    Assert.assertEquals("40-49", response.getAgeRange());
     Assert.assertEquals("Female", response.getGender());
     Assert.assertEquals("San Francisco, California, United States", response.getLocation());
     Assert.assertEquals("Senior Petroleum Manager", response.getTitle());
@@ -59,15 +59,12 @@ public class PersonResponseTest {
     Assert.assertEquals("Marquita", response.getDetails().get().getName().getGiven());
     Assert.assertEquals("Ross", response.getDetails().get().getName().getFamily());
     Assert.assertEquals("Marquita H Ross", response.getDetails().get().getName().getFull());
-    Assert.assertEquals("35-44", response.getDetails().get().getAge().getRange());
+    Assert.assertEquals("40-49", response.getDetails().get().getAge().getRange());
     Assert.assertEquals(42, (int) response.getDetails().get().getAge().getValue());
     Assert.assertEquals("Female", response.getDetails().get().getGender());
-    Assert.assertEquals(
-        "Multi Family Dwelling/Apartment", response.getHomeInfo().get().getDwellingType());
-    Assert.assertEquals("PO Box", response.getLocationInfo().get().getCarrierRoute());
-    Assert.assertEquals(
-        "41860 - San Francisco-Oakland-Hayward, CA Metropolitan Statistical Area",
-        response.getLocationInfo().get().getCoreBasedStatisticalArea());
+    Assert.assertEquals("MFDU", response.getHomeInfo().get().getDwellingType());
+    Assert.assertEquals("C032", response.getLocationInfo().get().getCarrierRoute());
+    Assert.assertEquals("24660", response.getLocationInfo().get().getCoreBasedStatisticalArea());
     Assert.assertEquals(
         "marqross91", response.getDetails().get().getProfiles().getTwitter().getUsername());
     Assert.assertEquals(
