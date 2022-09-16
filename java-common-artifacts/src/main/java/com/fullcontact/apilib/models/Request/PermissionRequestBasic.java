@@ -1,10 +1,9 @@
 package com.fullcontact.apilib.models.Request;
 
 import com.fullcontact.apilib.FullContactException;
+import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @SuperBuilder(toBuilder = true)
 @EqualsAndHashCode

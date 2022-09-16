@@ -1,10 +1,11 @@
 {
-  "city": true,
-  "country": true,
-  "continent": true,
-  "postalCode": true,
-  "familyName": true,
-  "givenName": true,
-  "email": false,
-  "maid": false
+  "city" : "household",
+  "region" : "household",
+  "country" : "household",
+  "postalCode" : "household",
+  "givenName" : "unknown",
+  "familyName": "household",
+  "phone" : "tangled",
+  "email" : "self",
+  "risk" : 0.21
 }

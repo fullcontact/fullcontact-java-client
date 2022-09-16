@@ -1,9 +1,8 @@
 package com.fullcontact.apilib.models.Response;
 
+import com.fullcontact.apilib.models.Tag;
 import java.util.List;
 import java.util.Map;
-
-import com.fullcontact.apilib.models.Tag;
 import lombok.*;
 
 @Getter

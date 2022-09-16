@@ -1,12 +1,9 @@
 package com.fullcontact.apilib.enrich;
 
-import com.fullcontact.apilib.FCConstants;
-import okhttp3.HttpUrl;
+import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.io.IOException;
 
 public class FCOkHttpInterceptor implements Interceptor {
   @Override

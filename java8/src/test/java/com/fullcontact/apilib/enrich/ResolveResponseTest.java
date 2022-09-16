@@ -7,13 +7,12 @@ import com.fullcontact.apilib.models.Profile;
 import com.fullcontact.apilib.models.Request.ResolveRequest;
 import com.fullcontact.apilib.models.Response.ResolveResponse;
 import com.fullcontact.apilib.models.Response.ResolveResponseWithTags;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class ResolveResponseTest {
   private static HashMap<String, String> customHeader = new HashMap<>();
