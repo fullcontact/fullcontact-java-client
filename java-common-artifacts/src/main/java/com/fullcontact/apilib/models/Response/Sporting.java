@@ -9,29 +9,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Sporting {
-  private boolean other,
-      campingOrHiking,
-      baseball,
-      boating,
-      basketball,
-      fishing,
-      americanFootball,
-      fitness,
-      golf,
-      hockey,
-      hunting,
-      nascar,
-      snowSkiing,
-      walking,
-      running,
-      scuba,
-      tennis,
-      weightLifting,
-      biking,
-      extremeSports,
-      motocross,
-      skateboarding,
-      snowboarding,
-      rollerblading,
-      interests;
+  private String campingOrHiking;
+  private String fishing;
+  private String golf;
+  private String nascar;
+  private String boatingOrSailing;
+  private String cycling;
+  private String fitnessExcercise;
+  private String bigGameHunting;
+  private String huntingOrShooting;
+  private String sportsMerchandiseOrActivewearRecency;
+  private String runningOrJogging;
+  private String skiingOrSnowboarding;
+  private String sportsParticipation;
+  private String walkingForHealth;
+  private String yogaOrPilates;
 }

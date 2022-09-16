@@ -9,10 +9,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Purchase {
-  private boolean homeDecorating,
-      beautyProducts,
-      clubStores,
-      fastFoods,
-      specialtyBeautyProducts,
-      usesCoupons;
+  private String artsCraftsRecency;
+  private String beautyAndSpaRecency;
+  private String beveragesRecency;
+  private String booksRecency;
+  private String clubContinuity;
+  private String gardenAndBackyardRecency;
+  private String homeDecorRecency;
+  private String sweepstakes;
+  private String maleApparelRecency;
+  private String musicVideosRecency;
+  private String specialtyFoodsAndGiftsRecency;
+  private String sportsAndOutdoorRecency;
+  private String toolsAndElectronicsRecency;
+  private String femaleAndMaleRecency;
+  private String femaleBrandAndFitRecency;
 }

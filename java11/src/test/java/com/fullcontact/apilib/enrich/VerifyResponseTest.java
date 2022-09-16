@@ -42,7 +42,10 @@ public class VerifyResponseTest {
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    Assert.assertEquals("0.61", String.valueOf(response.getEmails()));
+    Assert.assertEquals("0.82", String.valueOf(response.getEmails()));
+    Assert.assertEquals("0.32", String.valueOf(response.getSocial()));
+    Assert.assertEquals("0.78", String.valueOf(response.getEmployment()));
+    Assert.assertEquals("0.91", String.valueOf(response.getOnline()));
   }
 
   @Test
@@ -55,14 +58,11 @@ public class VerifyResponseTest {
     Assert.assertTrue(response.isSuccessful());
     Assert.assertEquals(200, response.getStatusCode());
     Assert.assertEquals("OK", response.getMessage());
-    Assert.assertFalse(response.getEmail());
-    Assert.assertFalse(response.getMaid());
-    Assert.assertTrue(response.getGivenName());
-    Assert.assertTrue(response.getFamilyName());
-    Assert.assertTrue(response.getContinent());
-    Assert.assertTrue(response.getPostalCode());
-    Assert.assertTrue(response.getCountry());
-    Assert.assertTrue(response.getCity());
+    Assert.assertEquals("self", response.getEmail());
+    Assert.assertEquals("household", response.getFamilyName());
+    Assert.assertEquals("household", response.getPostalCode());
+    Assert.assertEquals("household", response.getCountry());
+    Assert.assertEquals("household", response.getCity());
   }
 
   @Test

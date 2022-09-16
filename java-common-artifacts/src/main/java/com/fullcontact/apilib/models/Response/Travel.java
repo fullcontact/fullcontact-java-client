@@ -9,16 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Travel {
-  private boolean general,
-      usBusiness,
-      internationalBusiness,
-      usPersonal,
-      internationalPersonal,
-      casinoVacations,
-      familyVacations,
-      frequentFlyer,
-      timeshare,
-      vacationCruises,
-      attractionsOrThemeParks,
-      rv;
+  private String timeshare;
+  private String business;
+  private String cruiseShipVacation;
+  private String international;
+  private String leisure;
+  private String rvVacations;
+  private String travelInTheUSA;
+  private String traveler;
 }

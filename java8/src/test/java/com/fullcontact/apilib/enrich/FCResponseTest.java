@@ -6,13 +6,12 @@ import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
 import com.fullcontact.apilib.models.Request.PermissionRequest;
 import com.fullcontact.apilib.models.Request.PurposeRequest;
 import com.fullcontact.apilib.models.Response.FCResponse;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class FCResponseTest {
   private static HashMap<String, String> customHeader = new HashMap<>();

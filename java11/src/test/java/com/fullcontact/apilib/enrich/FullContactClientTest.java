@@ -2,11 +2,10 @@ package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.auth.StaticApiKeyCredentialProvider;
+import java.util.HashMap;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.HashMap;
 
 public class FullContactClientTest {
   @Rule public ExpectedException exceptionRule = ExpectedException.none();

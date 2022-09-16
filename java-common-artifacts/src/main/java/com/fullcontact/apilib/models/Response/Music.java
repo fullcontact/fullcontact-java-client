@@ -9,15 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class Music {
-  private boolean general,
-      christianOrGospel,
-      classical,
-      country,
-      jazz,
-      other,
-      rhythmAndBlues,
-      rock,
-      softRock,
-      swing,
-      alternative;
+  private String christianOrGospel;
+  private String classical;
+  private String country;
+  private String jazz;
+  private String any;
+  private String rythmAndBlues;
+  private String rockNRoll;
 }

@@ -2,8 +2,6 @@ package com.fullcontact.apilib.models.Response;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

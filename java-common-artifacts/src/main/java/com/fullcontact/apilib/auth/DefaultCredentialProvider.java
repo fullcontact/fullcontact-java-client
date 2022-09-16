@@ -1,9 +1,9 @@
 package com.fullcontact.apilib.auth;
 
+import static com.fullcontact.apilib.auth.CredentialConstants.*;
+
 import com.fullcontact.apilib.FullContactException;
 import lombok.Getter;
-
-import static com.fullcontact.apilib.auth.CredentialConstants.*;
 
 /** Default way of providing authentication through Environment variables */
 @Getter

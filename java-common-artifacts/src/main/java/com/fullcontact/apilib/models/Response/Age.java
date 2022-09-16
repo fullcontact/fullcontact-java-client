@@ -12,4 +12,6 @@ public class Age {
   private String range;
   private int value;
   private Date birthday;
+  private String ageIn2YearRanges;
+  private String exactAge;
 }

@@ -2,12 +2,12 @@ package com.fullcontact.apilib.models.Request;
 
 import com.fullcontact.apilib.FullContactException;
 import com.fullcontact.apilib.models.Tag;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
 /** Class to create request for Resolve */
 @Getter
 @EqualsAndHashCode(callSuper = true)

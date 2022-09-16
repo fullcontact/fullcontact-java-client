@@ -2,12 +2,11 @@ package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.models.Response.ResolveResponse;
 import com.fullcontact.apilib.models.Response.ResolveResponseWithTags;
+import java.util.HashMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
 
 public class ResolveResponseTest {
   private static HashMap<String, String> customHeader = new HashMap<>();

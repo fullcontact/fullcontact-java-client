@@ -10,8 +10,6 @@ import com.fullcontact.apilib.retry.DefaultRetryHandler;
 import com.fullcontact.apilib.retry.RetryHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import lombok.Builder;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -28,6 +26,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.Builder;
 
 /**
  * The FullContact class represents FullContact client. It supports V3 Person Enrich, Company Enrich
@@ -81,7 +80,9 @@ public class FullContact implements AutoCloseable {
     headers.put("Authorization", "Bearer " + this.credentialsProvider.getApiKey());
     headers.put("Content-Type", "application/json");
     headers.put("User-Agent", FCConstants.USER_AGENT_Java11);
-    return headers.entrySet().stream()
+    return headers
+        .entrySet()
+        .stream()
         .filter(entry -> entry.getValue() != null)
         .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
         .collect(Collectors.toList())

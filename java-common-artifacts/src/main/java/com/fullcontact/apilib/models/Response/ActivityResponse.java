@@ -8,4 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 public class ActivityResponse extends FCResponse {
   Double emails;
+  Double online;
+  Double social;
+  Double employment;
 }

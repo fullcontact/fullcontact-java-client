@@ -1,12 +1,11 @@
 package com.fullcontact.apilib.enrich;
 
 import com.fullcontact.apilib.models.Response.AudienceResponse;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class AudienceResponseBuildTest {
   @Before
