@@ -55,7 +55,7 @@ at: https://platform.fullcontact.com/docs
 Add this dependency to your project's build file:
 
 ```groovy
-implementation 'com.fullcontact.client:java8:4.2.0'
+implementation 'com.fullcontact.client:java8:5.0.0'
 ```
 
 ### Maven users
@@ -66,7 +66,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.fullcontact.client</groupId>
   <artifactId>java8</artifactId>
-  <version>4.2.0</version>
+  <version>5.0.0</version>
 </dependency>
 ```
 
@@ -679,7 +679,7 @@ Assert.assertTrue(response.isEnabled());
 ```
 
 ## Changelog
-- v4.2.0 - Updated Response for Person Enrich.
+- v5.0.0 - Updated Response for Person Enrich.
 - v4.1.0 - Updated Verify Activity and Match Response.
 - v4.0.0 - Removed Company Search, Email Verification and verifiedPhysical support. Added Verify APIs.
 - v3.1.0 - Support got identity.mapResolve, panoramaId, generatePid. Remove 'expandedInterests'
